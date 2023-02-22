@@ -1,8 +1,8 @@
+#!/usr/bin/env python
 import sys
 import ply.lex as lex
 
 CONST_SPECIAL_CHARACTERS = u'\xf1\xe1\xe9\xed\xf3\xfa\xc1\xc9\xcd\xd3\xda\xd1'
-
 
 reserved = (
     "abstract",
@@ -64,7 +64,6 @@ reserved = (
     "permits",
     "sealed",
     "var",
-    "non-sealed",
     "provides",
     "to",
     "with",
@@ -137,6 +136,7 @@ tokens = reserved + (
     "LEFT_SHIFT_ASSIGN",
     "RIGHT_SHIFT_ASSIGN",
     "UNSIGNED_RIGHT_SHIFT_ASSIGN",
+    "NEWLINE",
 )
 
 # Regular expression rules for simple tokens
@@ -218,7 +218,7 @@ def t_NEWLINE(t):
 
 
 def t_comment(t):
-    r"/\*(.|\n)*?\*/ | //(.)*?\n"
+    r"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/|//.*?\n"
     t.lexer.lineno += t.value.count("\n")
 
 
@@ -228,12 +228,13 @@ def t_preprocessor(t):
 
 
 # A string containing ignored characters (spaces and tabs)
-t_ignore = " \t"
+# t_ignore = " \t"
 
 # Error handling rule
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
+    exit()
 
 
 lexer = lex.lex()
