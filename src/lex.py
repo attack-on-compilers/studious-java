@@ -75,15 +75,18 @@ reserved = (
 
 
 tokens = reserved + (
-    "IDENTIFIER",
     # Literal                     {IntegerLiteral}|{FloatingPointLiteral}|{BooleanLiteral}|{CharacterLiteral}|{StringLiteral}|{TextBlock}|{NullLiteral}
-    "INTEGER_LITERAL",
+    "INTEGER_LITERAL_OCTAL",
+    "INTEGER_LITERAL_HEXADEC",
+    "INTEGER_LITERAL_DEC",
+    "INTEGER_LITERAL_BINAR",
     "FLOATING_POINT_LITERAL",
     "BOOLEAN_LITERAL",
     "CHARACTER_LITERAL",
     "STRING_LITERAL",
     "TEXT_BLOCK",
     "NULL_LITERAL",
+    "IDENTIFIER",
     # Separator                   "("|")"|"{"|"}"|"["|"]"|";"|","|"."|"..."|"@"|"::"
     "LEFT_PAREN",
     "RIGHT_PAREN",
@@ -201,6 +204,53 @@ TYPE_NAMES = []
 
 
 # Implementations of the lexer rules
+
+def t_INTEGER_LITERAL_OCTAL(t):
+    r"0[0-7](?:_*[0-7])*[lL]?"
+    return t
+
+
+def t_INTEGER_LITERAL_HEXADEC(t):
+    r"0[xX][a-fA-F0-9](?:_*[a-fA-F0-9])*[lL]?"
+    return t
+
+
+def t_INTEGER_LITERAL_BINAR(t):
+    r"0[bB][01](?:_*[01])*[lL]?"
+    return t
+
+
+def t_INTEGER_LITERAL_DEC(t):
+    r"(?:0|[1-9](?:_*[0-9])*)[lL]?"
+    return t
+
+# def t_FLOATING_POINT_LITERAL(t):
+#     r""
+#     return t
+# TODO: implement floating point literals
+
+def t_STRING_LITERAL(t):
+    r'"(?:[^"\\]|\\.)*"'
+    return t
+
+def t_TEXT_BLOCK_LITERAL(t):
+    r'"""\s*(?:[^"]|"[^"]|""[^"])*\s*"""'
+    return t
+
+def t_NULL_LITERAL(t):
+    r"null"
+    return t
+
+
+def t_BOOLEAN_LITERAL(t):
+    r"(true|false)"
+    return t
+
+
+def t_CHARACTER_LITERAL(t):
+    r"'(?:[^'\\]|\\.)*'"
+    return t
+
 
 def t_IDENTIFIER(t):
     r"[A-Za-z_][\w_]*"
