@@ -76,7 +76,7 @@ reserved = (
 
 tokens = reserved + (
     "IDENTIFIER",
-# Literal                     {IntegerLiteral}|{FloatingPointLiteral}|{BooleanLiteral}|{CharacterLiteral}|{StringLiteral}|{TextBlock}|{NullLiteral}
+    # Literal                     {IntegerLiteral}|{FloatingPointLiteral}|{BooleanLiteral}|{CharacterLiteral}|{StringLiteral}|{TextBlock}|{NullLiteral}
     "INTEGER_LITERAL",
     "FLOATING_POINT_LITERAL",
     "BOOLEAN_LITERAL",
@@ -84,7 +84,7 @@ tokens = reserved + (
     "STRING_LITERAL",
     "TEXT_BLOCK",
     "NULL_LITERAL",
-# Separator                   "("|")"|"{"|"}"|"["|"]"|";"|","|"."|"..."|"@"|"::"
+    # Separator                   "("|")"|"{"|"}"|"["|"]"|";"|","|"."|"..."|"@"|"::"
     "LEFT_PAREN",
     "RIGHT_PAREN",
     "LEFT_BRACE",
@@ -97,7 +97,7 @@ tokens = reserved + (
     "ELLIPSIS",
     "AT",
     "COLON_COLON",
-# Operator                    "="|">"|"<"|"!"|"~"|"?"|":"|"->"|"=="|">="|"<="|"!="|"&&"|"||"|"++"|"--"|"+"|"-"|"*"|"/"|"&"|"|"|"^"|"%"|"<<"|">>"|">>>"|"+="|"-="|"*="|"/="|"&="|"|="|"^="|"%="|"<<="|">>="|">>>="
+    # Operator                    "="|">"|"<"|"!"|"~"|"?"|":"|"->"|"=="|">="|"<="|"!="|"&&"|"||"|"++"|"--"|"+"|"-"|"*"|"/"|"&"|"|"|"^"|"%"|"<<"|">>"|">>>"|"+="|"-="|"*="|"/="|"&="|"|="|"^="|"%="|"<<="|">>="|">>>="
     "ASSIGN",
     "GREATER",
     "LESS",
@@ -207,8 +207,8 @@ def t_IDENTIFIER(t):
     global EXPECTED_TYPENAMES
     t.type = disallowed_identifiers.get(t.value, "IDENTIFIER")
     # if t.type == "IDENTIFIER":
-        # if t.value in TYPE_NAMES:
-            # t.type = "TYPE_NAME"
+    # if t.value in TYPE_NAMES:
+    # t.type = "TYPE_NAME"
     return t
 
 
@@ -227,10 +227,6 @@ def t_preprocessor(t):
     t.lexer.lineno += 1
 
 
-# A string containing ignored characters (spaces and tabs)
-# t_ignore = " \t"
-
-# Error handling rule
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
