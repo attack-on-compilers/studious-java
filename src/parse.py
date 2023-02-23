@@ -15,13 +15,13 @@ import sys
 # )
 
 ############
-# program := package_decl imports_decl class_decl
+# program := package_decl imports_decl class_interface_decls
 ############
 
 
 def p_program(p):
-    """program : package_decl imports_decl"""
-    p[0] = p[1] + p[2]
+    """program : package_decl imports_decl class_interface_decls"""
+    p[0] = p[1] + p[2] + p[3]
 
 
 def p_package_decl(p):
@@ -69,11 +69,50 @@ def p_import_star(p):
         p[0] = ""
 
 
+def p_class_interface_decls(p):
+    """class_interface_decls : class_decl class_interface_decls
+        | interface_decl class_interface_decls
+        | SEMICOLON
+        | empty"""
+    if p[1] == ";":
+        p[0] = ";\r"
+    elif p[1] != "":
+        p[0] = str(p[1]) + str(p[2])
+    else:
+        p[0] = ""
+
+############
+# class_decl := CLASS IDENTIFIER class_body
+############
+
+def p_class_decl(p):
+    """class_decl : class_modifiers CLASS IDENTIFIER class_body"""
+    p[0] = str(p[1]) + "class " + p[3] + str(p[4])
+
+def p_class_modifiers(p):
+    """class_modifiers : class_modifier class_modifiers
+        | empty"""
+    if p[1] != "":
+        p[0] = str(p[1]) + str(p[2])
+    else:
+        p[0] = ""
+
+def p_class_modifier(p):
+    """class_modifier : PUBLIC
+        | PROTECTED
+        | PRIVATE
+        | ABSTRACT
+        | STATIC
+        | FINAL
+        | SEALED
+        | STRICTFP"""
+    p[0] = p[1] + " "
+
 def p_empty(p):
     "empty :"
 
 
-yacc.yacc()
+yacc.yacc(debug=True, debugfile="parser.out")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
