@@ -73,7 +73,7 @@ def p_empty(p):
     "empty :"
 
 
-yacc.yacc()
+yacc.yacc(debug=True, debugfile="parser.out")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
