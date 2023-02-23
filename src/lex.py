@@ -2,7 +2,7 @@
 import sys
 import ply.lex as lex
 
-CONST_SPECIAL_CHARACTERS = u'\xf1\xe1\xe9\xed\xf3\xfa\xc1\xc9\xcd\xd3\xda\xd1'
+CONST_SPECIAL_CHARACTERS = "\xf1\xe1\xe9\xed\xf3\xfa\xc1\xc9\xcd\xd3\xda\xd1"
 
 reserved = (
     "ABSTRACT",
@@ -206,6 +206,7 @@ TYPE_NAMES = []
 
 
 # Implementations of the lexer rules
+
 
 def t_INTEGER_LITERAL_OCTAL(t):
     r"0[0-7](?:_*[0-7])*[lL]?"
