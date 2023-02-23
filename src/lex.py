@@ -5,72 +5,73 @@ import ply.lex as lex
 CONST_SPECIAL_CHARACTERS = u'\xf1\xe1\xe9\xed\xf3\xfa\xc1\xc9\xcd\xd3\xda\xd1'
 
 reserved = (
-    "abstract",
-    "continue",
-    "for",
-    "new",
-    "switch",
-    "assert",
-    "default",
-    "if",
-    "package",
-    "synchronized",
-    "boolean",
-    "do",
-    "goto",
-    "private",
-    "this",
-    "break",
-    "double",
-    "implements",
-    "protected",
-    "throw",
-    "byte",
-    "else",
-    "import",
-    "public",
-    "throws",
-    "case",
-    "enum",
-    "instanceof",
-    "return",
-    "transient",
-    "catch",
-    "extends",
-    "int",
-    "short",
-    "try",
-    "char",
-    "final",
-    "interface",
-    "static",
-    "void",
-    "class",
-    "finally",
-    "long",
-    "strictfp",
-    "volatile",
-    "const",
-    "float",
-    "native",
-    "super",
-    "while",
+    "ABSTRACT",
+    "CONTINUE",
+    "FOR",
+    "NEW",
+    "SWITCH",
+    "ASSERT",
+    "DEFAULT",
+    "IF",
+    "PACKAGE",
+    "SYNCHRONIZED",
+    "BOOLEAN",
+    "DO",
+    "GOTO",
+    "PRIVATE",
+    "THIS",
+    "BREAK",
+    "DOUBLE",
+    "IMPLEMENTS",
+    "PROTECTED",
+    "THROW",
+    "BYTE",
+    "ELSE",
+    "IMPORT",
+    "PUBLIC",
+    "THROWS",
+    "CASE",
+    "ENUM",
+    "INSTANCEOF",
+    "RETURN",
+    "TRANSIENT",
+    "CATCH",
+    "EXTENDS",
+    "INT",
+    "SHORT",
+    "TRY",
+    "CHAR",
+    "FINAL",
+    "INTERFACE",
+    "STATIC",
+    "VOID",
+    "CLASS",
+    "FINALLY",
+    "LONG",
+    "STRICTFP",
+    "VOLATILE",
+    "CONST",
+    "FLOAT",
+    "NATIVE",
+    "SUPER",
+    "WHILE",
     "_",
-    "exports",
-    "opens",
-    "requires",
-    "uses",
-    "module",
-    "permits",
-    "sealed",
-    "var",
-    "provides",
-    "to",
-    "with",
-    "open",
-    "record",
-    "transitive",
-    "yield",
+    "EXPORTS",
+    "OPENS",
+    "REQUIRES",
+    "USES",
+    "MODULE",
+    "PERMITS",
+    "SEALED",
+    "VAR",
+    "PROVIDES",
+    "TO",
+    "WITH",
+    "OPEN",
+    "RECORD",
+    "TRANSITIVE",
+    "YIELD",
+    "DOTSTAR",
 )
 
 
@@ -194,6 +195,7 @@ t_PERCENT_ASSIGN = r"%="
 t_LEFT_SHIFT_ASSIGN = r"<<="
 t_RIGHT_SHIFT_ASSIGN = r">>="
 t_UNSIGNED_RIGHT_SHIFT_ASSIGN = r">>>="
+t_DOTSTAR = r"\.\*"
 
 t_ignore = " \t"
 
@@ -224,18 +226,19 @@ def t_INTEGER_LITERAL_DEC(t):
     r"(?:0|[1-9](?:_*[0-9])*)[lL]?"
     return t
 
-# def t_FLOATING_POINT_LITERAL(t):
-#     r""
-#     return t
+
 # TODO: implement floating point literals
+
 
 def t_STRING_LITERAL(t):
     r'"(?:[^"\\]|\\.)*"'
     return t
 
+
 def t_TEXT_BLOCK_LITERAL(t):
     r'"""\s*(?:[^"]|"[^"]|""[^"])*\s*"""'
     return t
+
 
 def t_NULL_LITERAL(t):
     r"null"
