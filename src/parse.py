@@ -25,8 +25,8 @@ def p_program(p):
 
 
 def p_OrdinaryCompilationUnit(p):
-    """OrdinaryCompilationUnit : BetaPackageDeclaration AlphaImportDeclaration"""# AlphaTopLevelClassOrInterfaceDeclaration"""
-    p[0] = p[1] + p[2] #+ p[3]
+    """OrdinaryCompilationUnit : BetaPackageDeclaration AlphaImportDeclaration AlphaTopLevelClassOrInterfaceDeclaration"""
+    p[0] = p[1] + p[2] + p[3]
 
 
 def p_BetaPackageDeclaration(p):
@@ -39,10 +39,10 @@ def p_BetaPackageDeclaration(p):
 
 
 def p_AlphaDotIdentifier(p):
-    """AlphaDotIdentifier : DOT IDENTIFIER AlphaDotIdentifier
+    """AlphaDotIdentifier : AlphaDotIdentifier DOT IDENTIFIER
     | empty"""
-    if p[1] == ".":
-        p[0] = "." + p[2] + p[3]
+    if p[1]:
+        p[0] = p[1] + p[2] + p[3]
     else:
         p[0] = ""
 
@@ -74,41 +74,234 @@ def p_BetaImportStar(p):
         p[0] = ""
 
 
+######
+# Class and Interface Declarations
+######
 
 
-############
-# class_decl := CLASS IDENTIFIER class_body
-############
+def p_AlphaTopLevelClassOrInterfaceDeclaration(p):
+    """AlphaTopLevelClassOrInterfaceDeclaration : TopLevelClassOrInterfaceDeclaration AlphaTopLevelClassOrInterfaceDeclaration
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
 
 
-# def p_class_decl(p):
-#     """class_decl : class_modifiers CLASS IDENTIFIER type_params class_body"""
-#     p[0] = str(p[1]) + "class " + p[3] + str(p[4])
+def p_TopLevelClassOrInterfaceDeclaration(p):
+    """TopLevelClassOrInterfaceDeclaration : ClassDeclaration"""
+    p[0] = p[1]
+    #  """TopLevelClassOrInterfaceDeclaration : ClassDeclaration
+    #     | InterfaceDeclaration
+    #     | SEMICOLON"""
 
 
-# def p_class_modifiers(p):
-#     """class_modifiers : class_modifier class_modifiers
-#     | empty"""
-#     if p[1] != "":
-#         p[0] = str(p[1]) + str(p[2])
-#     else:
-#         p[0] = ""
+def p_ClassDeclaration(p):
+    """ClassDeclaration : NormalClassDeclaration"""
+    # ClassDeclaration        :   NormalClassDeclaration
+    #                     |   EnumDeclaration
+    #                     |   RecordDeclaration
+    #                     ;
+    p[0] = p[1]
 
 
-# def p_class_modifier(p):
-#     """class_modifier : PUBLIC
-#     | PROTECTED
-#     | PRIVATE
-#     | ABSTRACT
-#     | STATIC
-#     | FINAL
-#     | SEALED
-#     | STRICTFP"""
-#     p[0] = p[1] + " "
+def p_NormalClassDeclaration(p):
+    """NormalClassDeclaration : AlphaClassModifier CLASS IDENTIFIER BetaTypeParameters"""  # BetaClassExtends BetaClassImplements BetaClassPermits ClassBody"""
+    p[0] = p[1] + "class " + p[3] + p[4]  # + p[5] + p[6] + p[7] + p[8]
+
+
+def p_AlphaClassModifier(p):
+    """AlphaClassModifier : ClassModifier AlphaClassModifier
+    | empty"""
+    if p[2]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+
+def p_ClassModifier(p):
+    """ClassModifier : PUBLIC
+    | PROTECTED
+    | PRIVATE
+    | ABSTRACT
+    | STATIC
+    | FINAL
+    | SEALED
+    | NON_SEALED
+    | STRICTFP"""
+    p[0] = p[1] + " "
+
+
+def p_BetaTypeParameters(p):
+    """BetaTypeParameters : LESS TypeParameterList GREATER
+    | empty"""
+    if p[1] == "<":
+        p[0] = "<" + p[2] + ">"
+    else:
+        p[0] = ""
+
+
+def p_TypeParameterList(p):
+    """TypeParameterList : TypeParameter AlphaCommaTypeParameter"""
+    p[0] = p[1] + p[2]
+
+
+def p_AlphaCommaTypeParameter(p):
+    """AlphaCommaTypeParameter : COMMA TypeParameter AlphaCommaTypeParameter
+    | empty"""
+    if p[1] == ",":
+        p[0] = ", " + p[2] + p[3]
+    else:
+        p[0] = ""
+
+
+def p_TypeParameter(p):
+    """TypeParameter : IDENTIFIER BetaTypeBound"""
+    p[0] = p[1] + p[2]
+
+
+def p_BetaTypeBound(p):
+    """BetaTypeBound : EXTENDS TypeBound_1
+    | empty"""
+    if p[1] == "extends":
+        p[0] = " extends " + p[2]
+    else:
+        p[0] = ""
+
+
+def p_TypeBound_1(p):
+    """TypeBound_1 : IDENTIFIER
+    | ClassOrInterfaceType AlphaAdditionalBound"""
+    if p[2]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = p[1]
+
+
+def p_AlphaAdditionalBound(p):
+    """AlphaAdditionalBound : AMPERSAND InterfaceType AlphaAdditionalBound
+    | empty"""
+    if p[1] == "&":
+        p[0] = " & " + p[2] + p[3]
+    else:
+        p[0] = ""
+
+
+def p_ClassOrInterfaceType(p):
+    """ClassOrInterfaceType : ClassType
+    | InterfaceType"""
+    p[0] = p[1]
+
+
+def p_InterfaceType(p):
+    """InterfaceType : ClassType"""
+    p[0] = p[1]
+
+
+def p_ClassType(p):
+    """ClassType : IDENTIFIER BetaTypeArguments
+    | IDENTIFIER AlphaDotIdentifier BetaTypeArguments
+    | ClassOrInterfaceType DOT IDENTIFIER BetaTypeArguments"""
+    if p[2] == ".":
+        p[0] = p[1] + "." + p[3] + p[4]
+    else:
+        p[0] = p[1] + p[2]
+
+
+def p_BetaTypeArguments(p):
+    """BetaTypeArguments : TypeArguments BetaTypeArguments
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+
+def p_TypeArguments(p):
+    """TypeArguments : LESS TypeArgumentList GREATER"""
+    p[0] = "<" + p[2] + ">"
+
+
+def p_TypeArgumentList(p):
+    """TypeArgumentList : TypeArgument AlphaCommaTypeArgument"""
+    p[0] = p[1] + p[2]
+
+
+def p_AlphaCommaTypeArgument(p):
+    """AlphaCommaTypeArgument : COMMA TypeArgument AlphaCommaTypeArgument
+    | empty"""
+    if p[1] == ",":
+        p[0] = "," + p[2] + p[3]
+    else:
+        p[0] = ""
+
+
+def p_TypeArgument(p):
+    """TypeArgument : ReferenceType
+    | Wildcard"""
+    p[0] = p[1]
+
+
+def p_ReferenceType(p):
+    """ReferenceType : ClassOrInterfaceType
+    | TypeVariable
+    | ArrayType"""
+    p[0] = p[1]
+
+
+def p_TypeVariable(p):
+    """TypeVariable : IDENTIFIER"""
+    p[0] = p[1]
+
+
+def p_ArrayType(p):
+    """ArrayType : PrimitiveType Dims
+    | ClassOrInterfaceType Dims
+    | TypeVariable Dims"""
+    p[0] = p[1] + p[2]
+
+
+def p_PrimitiveType(p):
+    """PrimitiveType : BOOLEAN
+    | BYTE
+    | SHORT
+    | INT
+    | LONG
+    | CHAR
+    | FLOAT
+    | DOUBLE"""
+    p[0] = p[1]
+
+
+def p_Dims(p):
+    """Dims : LEFT_BRACKET RIGHT_BRACKET Dims
+    | LEFT_BRACKET RIGHT_BRACKET"""
+    if p[3]:
+        p[0] = "[]" + p[3]
+    else:
+        p[0] = "[]"
+
+
+def p_Wildcard(p):
+    """Wildcard : QUESTION BetaWildcardBounds"""
+    p[0] = "?" + p[2]
+
+
+def p_BetaWildcardBounds(p):
+    """BetaWildcardBounds : EXTENDS ReferenceType
+    | SUPER ReferenceType
+    | empty"""
+    if p[1] == "extends":
+        p[0] = " extends " + p[2]
+    elif p[1] == "super":
+        p[0] = " super " + p[2]
+    else:
+        p[0] = ""
 
 
 def p_empty(p):
     "empty :"
+    p[0] = None
 
 
 yacc.yacc(debug=True, debugfile="parser.out")
