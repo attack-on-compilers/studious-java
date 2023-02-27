@@ -563,11 +563,39 @@ def p_Block(p):
     """Block : LEFT_BRACE BetaBlockStatements RIGHT_BRACE"""
     p[0] = "{" + p[2] + "}"
 
-
 def p_BetaBlockStatements(p):
-    """BetaBlockStatements : empty"""
+    """BetaBlockStatements : empty
+    | BlockStatements"""
     p[0] = p[1]
 
+def p_BlockStatements(p):
+    """BlockStatements : BlockStatement AlphaBlockStatement"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaBlockStatement(p):
+    """AlphaBlockStatement : BlockStatement AlphaBlockStatement
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+def p_BlockStatement(p):
+    """BlockStatement : LocalClassOrInterfaceDeclaration
+    | LocalVariableDeclarationStatement
+    | Statement"""
+    p[0] = p[1]
+
+
+def p_LocalClassOrInterfaceDeclaration(p):
+    """LocalClassOrInterfaceDeclaration : ClassDeclaration
+    | NormalInterfaceDeclaration"""
+    p[0] = p[1]
+
+
+def p_LocalVariableDeclarationStatement(p):
+    """LocalVariableDeclarationStatement : LocalVariableDeclaration SEMICOLON"""
+    p[0] = p[1] + ";"
 
 def p_error(p):
     print("Syntax error in input!")
