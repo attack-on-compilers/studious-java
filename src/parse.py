@@ -466,12 +466,6 @@ def p_MethodHeader(p):
     p[0] = ("MethodHeader",) + tuple(p[-len(p) + 1 :])
 
 
-def p_BetaTypeParameters(p):
-    """BetaTypeParameters : TypeParameters
-    | empty"""
-    p[0] = ("BetaTypeParameters",) + tuple(p[-len(p) + 1 :])
-
-
 def p_TypeParameters(p):
     """TypeParameters : LESS TypeParameterList GREATER"""
     p[0] = ("TypeParameters",) + tuple(p[-len(p) + 1 :])
