@@ -377,8 +377,8 @@ def p_ClassMemberDeclaration(p):
     """ClassMemberDeclaration : FieldDeclaration
     | MethodDeclaration
     | SEMICOLON"""
-    # | ClassDeclaration        (Never to be implemneted)
-    # | InterfaceDeclaration
+    # | ClassDeclaration        # (Never to be implemneted)
+    # | InterfaceDeclaration    # (Never to be implemneted)
     p[0] = p[1]
 
 
@@ -580,11 +580,11 @@ def p_AlphaBlockStatement(p):
     else:
         p[0] = ""
 
-def p_BlockStatement(p):
-    """BlockStatement : LocalClassOrInterfaceDeclaration
-    | LocalVariableDeclarationStatement
-    | Statement"""
-    p[0] = p[1]
+# def p_BlockStatement(p):
+#     """BlockStatement : LocalClassOrInterfaceDeclaration
+#     | LocalVariableDeclarationStatement
+#     | Statement"""
+#     p[0] = p[1]
 
 
 def p_LocalClassOrInterfaceDeclaration(p):
@@ -894,7 +894,7 @@ def p_CatchType(p):
     p[0] = p[1] 
 
 def p_AlphaPipeCatchType(p):
-    """AlphaPipeCatchType : PIPE CatchType AlphaPipeCatchType
+    """AlphaPipeCatchType : BAR CatchType AlphaPipeCatchType
     | empty"""
     if p[1]:
         p[0] = p[1] + p[2] + p[3]
@@ -949,15 +949,440 @@ def p_TypePattern(p):
     p[0] = p[1]   
 
 
+# Productions from §15 (Blocks, Statements, and Patterns) 
 
-
-
+def p_VaraibleAccess(p):
+    """VariableAccess : ExpressionName
+    | FieldAccess"""
+    p[0] = p[1]
         
+# Productions from §15 (Expressions) 
+
+def p_Primary(p):
+    """Primary : PrimaryNoNewArray
+    | ArrayCreationExpression"""
+    p[0] = p[1]
+
+def p_PrimaryNoNewArray(p):
+    """PrimaryNoNewArray : Literal
+    | ClassLiteral
+    | THIS
+    | TypeName PERIOD THIS
+    | LEFT_PAREN Expression RIGHT_PAREN
+    | ClassInstanceCreationExpression
+    | FieldAccess
+    | ArrayAccess
+    | MethodInvocation
+    | MethodReference"""
+    if p[1] == "this":
+        p[0] = "this"
+    elif p[1] == "(":
+        p[0] = "(" + p[2] + ")"
+    elif p[1] == "new":
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = p[1]
+
+def p_ClassLiteral(p):
+    """ClassLiteral : TypeName AlphaSquareBrackets PERIOD CLASS
+    | NumericType AlphaSquareBrackets PERIOD CLASS
+    | BOOLEAN AlphaSquareBrackets CLASS
+    | VOID PERIOD CLASS"""
+    if p[1] == "void":
+        p[0] = "void.class"
+    elif p[1] == "boolean":
+        p[0] = "boolean.class"
+    else:
+        p[0] = p[1] + p[2] + ".class"
+
+def p_AlphaSquareBrackets(p):
+    """AlphaSquareBrackets : 
+    | LEFT_BRACKET RIGHT_BRACKET AlphaSquareBrackets"""
+    if len(p) == 2:
+        p[0] = ""
+    else:
+        p[0] = "[]" + p[3]        
+
+def p_ClassInstanceCreationExpression(p):
+    """ClassInstanceCreationExpression : UnqualifiedClassInstanceCreationExpression
+    | ExpressionName PERIOD UnqualifiedClassInstanceCreationExpression
+    | Primary PERIOD UnqualifiedClassInstanceCreationExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    elif len(p) == 4:
+        p[0] = p[1] + "." + p[3]
+
+def p_UnqualifiedClassInstanceCreationExpression(p):
+    """UnqualifiedClassInstanceCreationExpression : NEW BetaTypeArguments ClassOrInterfaceTypeToInstantiate LEFT_PAREN BetaArgumentList RIGHT_PAREN BetaClassBody
+    | NEW BetaTypeArguments ClassOrInterfaceTypeToInstantiate LEFT_PAREN RIGHT_PAREN BetaClassBody"""
+    if len(p) == 7:
+        p[0] = "new " + p[2] + p[3] + "(" + p[5] + ")" + p[6]
+    else:
+        p[0] = "new " + p[2] + p[3] + "()" + p[6]
+
+def p_ClassOrInterfaceTypeToInstantiate(p):
+    """ClassOrInterfaceTypeToInstantiate : AlphaAnnotation Identifier AlphaDotAlphaAnnotationIdentifier BetaTypeArgumentsOrDiamond"""
+    p[0] = p[1] + p[2] + p[3] + p[4]     
+
+def p_AlphaDotAlphaAnnotationIdentifier(p):
+    """AlphaDotAlphaAnnotationIdentifier : 
+    | PERIOD AlphaAnnotation Identifier AlphaDotAlphaAnnotationIdentifier"""
+    if len(p) == 2:
+        p[0] = ""
+    else:
+        p[0] = "." + p[2] + p[3] + p[4]
+
+def p_BetaTypeArgumentsOrDiamond(p):
+    """BetaTypeArgumentsOrDiamond : TypeArgumentsOrDiamond
+    | empty"""
+    p[0] = p[1]    
+
+def p_TypeArgumentsOrDiamond(p):
+    """TypeArgumentsOrDiamond : TypeArguments
+    | LESS GREATER"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = "<>"
+
+def p_FieldAccess(p):
+    """FieldAccess : Primary PERIOD Identifier
+    | SUPER PERIOD Identifier
+    | TypeName PERIOD SUPER PERIOD Identifier"""
+    if len(p) == 4:
+        p[0] = p[1] + "." + p[3]
+    else:
+        p[0] = p[1] + "." + p[3] + "." + p[5]
+
+def p_ArrayAccess(p):
+    """ArrayAccess : ExpressionName LEFT_BRACKET Expression RIGHT_BARCKET
+    | PrimaryNoNewArray LEFT_BRACKET Expression RIGHT_BARCKET"""
+    if len(p) == 5:
+        p[0] = p[1] + "[" + p[3] + "]"
+    else:
+        p[0] = p[1] + "[" + p[3] + "]"          
+
+def p_MethodInvocation(p):
+    """MethodInvocation : MethodName LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | TypeName PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | ExpressionName PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | Primary PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | SUPER PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | TypeName PERIOD SUPER PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN"""
+    if len(p) == 5:
+        p[0] = p[1] + "(" + p[3] + ")"
+    else:
+        p[0] = p[1] + "." + p[3] + p[4] + "(" + p[6] + ")"
+
+def p_ArgumentList(p):
+    """ArgumentList : Expression AlphaCommaExpression"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaCommaExpression(p):
+    """AlphaCommaExpression : 
+    | COMMA Expression AlphaCommaExpression"""
+    if len(p) == 2:
+        p[0] = ""
+    else:
+        p[0] = "," + p[2] + p[3]
+
+def p_MethodReference(p):
+    """MethodReference : ExpressionName COLON_COLON BetaTypeArguments Identifier
+    | Primary COLON_COLON BetaTypeArguments Identifier
+    | ReferenceType COLON_COLON BetaTypeArguments Identifier
+    | SUPER COLON_COLON BetaTypeArguments Identifier
+    | TypeName PERIOD SUPER COLON_COLON BetaTypeArguments Identifier
+    | ClassType COLON_COLON BetaTypeArguments NEW
+    | ArrayType COLON_COLON NEW"""
+    if len(p) == 5:
+        p[0] = p[1] + "::" + p[3] + p[4]
+    elif len(p) == 4:
+        p[0] = p[1] + "::" + p[3]
+    else:
+        p[0] = p[1] + "::new"
+
+def p_ArrayCreationExpression(p):
+    """ArrayCreationExpression : NEW PrimitiveType DimExprs BetaDims
+    | NEW ClassOrInterfaceType DimExprs BetaDims
+    | NEW PrimitiveType Dims ArrayInitializer
+    | NEW ClassOrInterfaceTypeToInstantiate Dims ArrayInitializer"""
+    if len(p) == 4:
+        p[0] = "new " + p[2] + p[3] + p[4]
+    else:
+        p[0] = "new " + p[2] + p[3] + p[4]
+
+def p_DimExprs(p):
+    """DimExprs : DimExpr AlphaDimExpr"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaDimExpr(p):
+    """AlphaDimExpr : 
+    | DimExpr AlphaDimExpr"""
+    if len(p) == 2:
+        p[0] = ""
+    else:
+        p[0] = p[1] + p[2]                    
+
+def p_DimExpr(p):
+    """DimExpr : OPEN_BRACKET Expression CLOSE_BRACKET"""
+    p[0] = "[" + p[2] + "]"
+
+def p_Expression(p):
+    """Expression : LambdaExpression
+    | AssignmentExpression"""
+    p[0] = p[1]
+
+def p_LambdaExpression(p):
+    """LambdaExpression : LambdaParameters ARROW LambdaBody"""  
+    p[0] = p[1] + "->" + p[3]
+
+def p_LambdaParameters(p):
+    """LambdaParameters : OPEN_PAREN BetaLambdaParameterList CLOSE_PAREN
+    | Identifier"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = "(" + p[2] + ")"
+
+def p_BetaLambdaParameterList(p):
+    """BetaLambdaParameterList : LambdaParameterList
+    | empty"""
+    p[0] = p[1]
+
+def p_LambdaParameterList(p):
+    """LambdaParameterList : LambdaParameter AlphaCommaLambdaParameter
+    | Identifier AlphaCommaIdentifier"""
+    if len(p) == 3:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = p[1] + p[2]
+
+def p_AlphaCommaLambdaParameter(p):
+    """AlphaCommaLambdaParameter : 
+    | COMMA LambdaParameter AlphaCommaLambdaParameter"""
+    if len(p) == 2:
+        p[0] = ""
+    else:
+        p[0] = "," + p[2] + p[3]
+
+def p_AlphaCommaIdentifier(p):
+    """AlphaCommaIdentifier : 
+    | COMMA Identifier AlphaCommaIdentifier"""
+    if len(p) == 2:
+        p[0] = ""
+    else:
+        p[0] = "," + p[2] + p[3]
+
+def p_LambdaParameter(p):
+    """LambdaParameter : AlphaVariableModifier LambdaParameterType VariableDeclaratorId
+    | VariableArityParameter"""
+    p[0] = p[1] + p[2] + p[3]    
+
+def p_LambdaParameterType(p):
+    """LambdaParameterType : Type
+    | VAR"""
+    p[0] = p[1]     
+
+def p_LambdaBody(p):
+    """LambdaBody : Expression
+    | Block"""
+    p[0] = p[1]
+
+def p_AssignmentExpression(p):
+    """AssignmentExpression : ConditionalExpression
+    | Assignment"""
+    p[0] = p[1]
+
+def p_Assignment(p):
+    """Assignment : LeftHandSide AssignmentOperator Expression"""
+    p[0] = p[1] + p[2] + p[3]
+
+def p_LeftHandSide(p):
+    """LeftHandSide : ExpressionName
+    | FieldAccess
+    | ArrayAccess"""
+    p[0] = p[1]
+
+def p_AssignmentOperator(p):
+    """AssignmentOperator : EQUALS
+    | STAREQUALS
+    | SLASHEQUALS
+    | PERCENTEQUALS
+    | PLUSEQUALS
+    | MINUSEQUALS
+    | LESSLESSEQUALS
+    | GREATERGREATEREQUALS
+    | GREATERGREATERGREATEREQUALS
+    | ANDEQUALS
+    | CARETEQUALS
+    | PIPEEQUALS"""
+    p[0] = p[1]    
+
+def p_ConditionalExpression(p):
+    """ConditionalExpression : ConditionalOrExpression
+    | ConditionalOrExpression QUESTION Expression COLON ConditionalExpression
+    | ConditionalOrExpression QUESTION Expression COLON LambdaExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + "?" + p[3] + ":" + p[5]  
+def p_ConditionalOrExpression(p):
+    """ConditionalOrExpression : ConditionalAndExpression
+    | ConditionalOrExpression BAR_BAR ConditionalAndExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + "||" + p[3]
+
+def p_ConditionalAndExpression(p):
+    """ConditionalAndExpression : InclusiveOrExpression
+    | ConditionalAndExpression ANDAND InclusiveOrExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + "&&" + p[3]
+
+def p_InclusiveOrExpression(p):
+    """InclusiveOrExpression : ExclusiveOrExpression
+    | InclusiveOrExpression BAR ExclusiveOrExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + "|" + p[3]     
+
+def p_ExclusiveOrExpression(p):
+    """ExclusiveOrExpression : AndExpression
+    | ExclusiveOrExpression CARET AndExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + "^" + p[3]      
+
+def p_AndExpression(p):
+    """AndExpression : EqualityExpression
+    | AndExpression AMP EqualityExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + "&" + p[3]
+
+def p_EqualityExpression(p):
+    """EqualityExpression : RelationalExpression
+    | EqualityExpression EQUALSEQUALS RelationalExpression
+    | EqualityExpression NOTEQUALS RelationalExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + p[2] + p[3]        
+
+def p_RelationalExpression(p):
+    """RelationalExpression : ShiftExpression
+    | RelationalExpression OPENANGLE ShiftExpression
+    | RelationalExpression CLOSEANGLE ShiftExpression
+    | RelationalExpression LESSEQUALS ShiftExpression
+    | RelationalExpression GREATEREQUALS ShiftExpression
+    | InstanceofExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + p[2] + p[3]
+
+def p_InstanceofExpression(p):
+    """InstanceofExpression : RelationalExpression INSTANCEOF ReferenceType"""
+    p[0] = p[1] + "instanceof" + p[3]
+
+def p_ShiftExpression(p):
+    """ShiftExpression : AdditiveExpression
+    | ShiftExpression LEFT_SHIFT AdditiveExpression
+    | ShiftExpression RIGHT_SHIFT AdditiveExpression
+    | ShiftExpression UNSIGNED_RIGHT_SHIFT AdditiveExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + p[2] + p[3]  
+
+def p_AdditiveExpression(p):
+    """AdditiveExpression : MultiplicativeExpression
+    | AdditiveExpression PLUS MultiplicativeExpression
+    | AdditiveExpression MINUS MultiplicativeExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + p[2] + p[3]       
+
+def p_MultiplicativeExpression(p):
+    """MultiplicativeExpression : UnaryExpression
+    | MultiplicativeExpression STAR UnaryExpression
+    | MultiplicativeExpression SLASH UnaryExpression
+    | MultiplicativeExpression PERCENT UnaryExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + p[2] + p[3]    
+
+def p_UnaryExpression(p):
+    """UnaryExpression : PreIncrementExpression
+    | PreDecrementExpression
+    | PLUS UnaryExpression
+    | MINUS UnaryExpression
+    | UnaryExpressionNotPlusMinus"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + p[2]     
+
+def p_PreIncrementExpression(p):
+    """PreIncrementExpression : PLUS_PLUS UnaryExpression"""
+    p[0] = p[1] + p[2]
+
+def p_DecrementExpression(p):
+    """PreDecrementExpression : MINUS_MINUS UnaryExpression"""
+    p[0] = p[1] + p[2]             
+
+def p_UnaryExpressionNotPlusMinus(p):
+    """UnaryExpressionNotPlusMinus : PostfixExpression
+    | TILDE UnaryExpression
+    | EXCLAMATION UnaryExpression
+    | CastExpression
+    | SwitchExpression"""
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[1] + p[2] + p[3]
 
 
-        
+def p_PostfixExpression(p):
+    """PostfixExpression : Primary
+    | ExpressionName
+    | PostIncrementExpression
+    | PostDecrementExpression"""
+    p[0] = p[1]
 
-       
+def p_PostIncrementExpression(p):
+    """PostIncrementExpression : PostfixExpression PLUS_PLUS"""
+    p[0] = p[1] + p[2]
+
+
+def p_PostDecrementExpression(p):
+    """PostDecrementExpression : PostfixExpression MINUS_MINUS"""
+    p[0] = p[1] + p[2]
+
+def p_CastExpression(p):
+    """CastExpression : LEFT_PAREN PrimitiveType RIGHT_PAREN UnaryExpression  
+    | LEFT_PAREN ReferenceType AlphaAdditionalBound RIGHT_PAREN UnaryExpressionNotPlusMinus
+    | LEFT_PAREN ReferenceType AlphaAdditionalBound RIGHT_PAREN LambdaExpression"""
+    if len(p) == 5:
+        p[0] = p[1] + p[2] + p[3] + p[4]
+    else:
+        p[0] = p[1] + p[2] + p[3] + p[4] + p[5] 
+
+def p_SwitchExpression(p):
+    """SwitchExpression : SWITCH LEFT_PAREN Expression RIGHT_PAREN SwitchBlock"""
+    p[0] = p[1] + p[2] + p[3] + p[4] + p[5]
+
+def p_ConstantExpression(p):
+    """ConstantExpression : Expression"""
+    p[0] = p[1]
 
 def p_error(p):
     print("Syntax error in input!")
