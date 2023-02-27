@@ -358,12 +358,13 @@ def p_BetaArgumentList(p):
 
 
 def p_ArgumentList(p):
-    """ArgumentList : TRANSITIVE"""
+    """ArgumentList : Expression AlphaCommaExpression"""
     p[0] = ("ArgumentList",) + tuple(p[-len(p) + 1 :])
 
 
 def p_Primary(p):
-    """Primary : TRANSITIVE"""
+    """Primary : PrimaryNoNewArray
+    | ArrayCreationExpression"""
     p[0] = ("Primary",) + tuple(p[-len(p) + 1 :])
 
 
@@ -434,7 +435,7 @@ def p_VariableDeclaratorId(p):
 
 
 def p_VariableInitializer(p):
-    """VariableInitializer : TRANSITIVE
+    """VariableInitializer : Expression
     | ArrayInitializer"""
     p[0] = ("VariableInitializer",) + tuple(p[-len(p) + 1 :])
 

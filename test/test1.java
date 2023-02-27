@@ -12,11 +12,11 @@ public class yo <a, a extends b & c > extends b implements d,e,f permits a,b,c
 public class yo <a, a extends b & c > extends b implements d,e,f permits a,b,c
 {
     ;
-    public private static int a[][][][] = transitive ;
-    public private static int [][][][]a = transitive ;
+    public private static int a[][][][] = 5 ;
+    public private static int [][][][]a = 6 ;
     ;
-    void a  = transitive ;
-    int a = transitive ;
+    void a  = 0x7 ;
+    int a = "transitive" ;
     int a () {
         
     }
