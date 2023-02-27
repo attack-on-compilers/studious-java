@@ -115,7 +115,7 @@ def p_ClassModifier(p):
 
 
 def p_BetaTypeParameters(p):
-    """BetaTypeParameters : LESS TypeParameterList GREATER
+    """BetaTypeParameters : TypeParameters
     | empty"""
     p[0] = ("BetaTypeParameters",) + tuple(p[-len(p) + 1 :])
 
