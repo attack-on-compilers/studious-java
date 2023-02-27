@@ -91,11 +91,10 @@ def p_AlphaTopLevelClassOrInterfaceDeclaration(p):
 
 
 def p_TopLevelClassOrInterfaceDeclaration(p):
-    """TopLevelClassOrInterfaceDeclaration : ClassDeclaration"""
+    """TopLevelClassOrInterfaceDeclaration : ClassDeclaration
+    | InterfaceDeclaration
+    | SEMICOLON"""
     p[0] = p[1]
-    #  """TopLevelClassOrInterfaceDeclaration : ClassDeclaration
-    #     | InterfaceDeclaration
-    #     | SEMICOLON"""
 
 
 def p_ClassDeclaration(p):
@@ -249,6 +248,7 @@ def p_Type(p):
     | PrimitiveType"""
     p[0] = p[1]
 
+
 def p_ReferenceType(p):
     """ReferenceType : ClassType
     | TypeVariable
@@ -314,6 +314,7 @@ def p_BetaClassExtends(p):
     else:
         p[0] = ""
 
+
 def p_BetaClassImplements(p):
     """BetaClassImplements : IMPLEMENTS ClassTypeList
     | empty"""
@@ -322,9 +323,11 @@ def p_BetaClassImplements(p):
     else:
         p[0] = ""
 
+
 def p_ClassTypeList(p):
     """ClassTypeList : ClassType AlphaCommaClassType"""
     p[0] = p[1] + p[2]
+
 
 def p_AlphaCommaClassType(p):
     """AlphaCommaClassType : COMMA ClassType AlphaCommaClassType
@@ -334,29 +337,24 @@ def p_AlphaCommaClassType(p):
     else:
         p[0] = ""
 
+
 def p_BetaClassPermits(p):
-    """BetaClassPermits : PERMITS TypeName AlphaCommaTypeName
+    """BetaClassPermits : PERMITS IDENTIFIER AlphaDotIdentifier AlphaCommaTypeName
     | empty"""
     if p[1] == "permits":
         p[0] = " permits " + p[2]
     else:
         p[0] = ""
 
+
 def p_AlphaCommaTypeName(p):
-    """AlphaCommaTypeName : COMMA TypeName AlphaCommaTypeName
+    """AlphaCommaTypeName : COMMA IDENTIFIER AlphaDotIdentifier AlphaCommaTypeName
     | empty"""
     if p[1] == ",":
         p[0] = ", " + p[2] + p[3]
     else:
         p[0] = ""
 
-def p_TypeName(p):
-    """TypeName : IDENTIFIER
-    | IDENTIFIER AlphaDotIdentifier"""
-    if p[1]=="IDENTIFIER":
-        p[0] = p[1] + "." + p[2]
-    else:
-        p[0] = p[1]
 
 def p_empty(p):
     "empty :"
@@ -367,12 +365,14 @@ def p_ClassBody(p):
     """ClassBody : LEFT_BRACE ClassBodyDeclaration RIGHT_BRACE"""
     p[0] = "{" + p[2] + "}"
 
+
 def p_ClassBodyDeclaration(p):
-    """ClassBodyDeclaration : ClassMemberDeclaration""" 
+    """ClassBodyDeclaration : ClassMemberDeclaration"""
     # | InstanceInitializer
     # | StaticInitializer
     # | ConstructorDeclaration"""
     p[0] = p[1]
+
 
 def p_ClassMemberDeclaration(p):
     """ClassMemberDeclaration : FieldDeclaration
@@ -382,9 +382,11 @@ def p_ClassMemberDeclaration(p):
     # | InterfaceDeclaration
     p[0] = p[1]
 
+
 def p_FieldDeclaration(p):
     """FieldDeclaration : AlphaFieldModifier Type VariableDeclaratorList SEMICOLON"""
     p[0] = p[1] + " " + p[2] + " " + p[3] + ";"
+
 
 def p_AlphaFieldModifier(p):
     """AlphaFieldModifier : FieldModifier AlphaFieldModifier
@@ -393,6 +395,7 @@ def p_AlphaFieldModifier(p):
         p[0] = p[1] + " " + p[2]
     else:
         p[0] = ""
+
 
 def p_FieldModifier(p):
     """FieldModifier : PUBLIC
@@ -404,9 +407,11 @@ def p_FieldModifier(p):
     | VOLATILE"""
     p[0] = p[1]
 
+
 def p_VariableDeclaratorList(p):
     """VariableDeclaratorList : VariableDeclarator AlphaCommaVariableDeclarator"""
     p[0] = p[1] + p[2]
+
 
 def p_AlphaCommaVariableDeclarator(p):
     """AlphaCommaVariableDeclarator : COMMA VariableDeclarator AlphaCommaVariableDeclarator
@@ -416,6 +421,7 @@ def p_AlphaCommaVariableDeclarator(p):
     else:
         p[0] = ""
 
+
 def p_VariableDeclarator(p):
     """VariableDeclarator : VariableDeclaratorId
     | VariableDeclaratorId ASSIGN VariableInitializer"""
@@ -423,6 +429,7 @@ def p_VariableDeclarator(p):
         p[0] = p[1] + " = " + p[3]
     else:
         p[0] = p[1]
+
 
 def p_VariableDeclaratorId(p):
     """VariableDeclaratorId : IDENTIFIER
@@ -432,10 +439,12 @@ def p_VariableDeclaratorId(p):
     else:
         p[0] = p[1]
 
+
 def p_VariableInitializer(p):
     """VariableInitializer : TRANSITIVE
     | ArrayInitializer"""
     p[0] = p[1]
+
 
 def p_ArrayInitializer(p):
     """ArrayInitializer : LEFT_BRACE VariableInitializerList RIGHT_BRACE
@@ -445,9 +454,11 @@ def p_ArrayInitializer(p):
     else:
         p[0] = "{" + p[2] + "}"
 
+
 def p_VariableInitializerList(p):
     """VariableInitializerList : VariableInitializer AlphaCommaVariableInitializer"""
     p[0] = p[1] + p[2]
+
 
 def p_AlphaCommaVariableInitializer(p):
     """AlphaCommaVariableInitializer : COMMA VariableInitializer AlphaCommaVariableInitializer
@@ -457,9 +468,11 @@ def p_AlphaCommaVariableInitializer(p):
     else:
         p[0] = ""
 
+
 def p_MethodDeclaration(p):
     """MethodDeclaration : AlphaMethodModifier MethodHeader MethodBody"""
     p[0] = p[1] + p[2]
+
 
 def p_AlphaMethodModifier(p):
     """AlphaMethodModifier : MethodModifier AlphaMethodModifier
@@ -468,6 +481,7 @@ def p_AlphaMethodModifier(p):
         p[0] = p[1] + " " + p[2]
     else:
         p[0] = ""
+
 
 def p_MethodModifier(p):
     """MethodModifier : PUBLIC
@@ -481,18 +495,22 @@ def p_MethodModifier(p):
     | STRICTFP"""
     p[0] = p[1]
 
+
 def p_MethodHeader(p):
     """MethodHeader : Result MethodDeclarator BetaThrows
     | TypeParameters Result MethodDeclarator BetaThrows"""
+
 
 def p_TypeParameters(p):
     """TypeParameters : LESS TypeParameterList GREATER"""
     p[0] = "<" + p[2] + ">"
 
+
 def p_Result(p):
     """Result : Type
     | VOID"""
     p[0] = p[1]
+
 
 def p_MethodDeclarator(p):
     """MethodDeclarator : IDENTIFIER LEFT_PAREN FormalParameterList RIGHT_PAREN
@@ -502,9 +520,11 @@ def p_MethodDeclarator(p):
     else:
         p[0] = p[1] + "(" + p[3] + ")"
 
+
 def p_FormalParameterList(p):
     """FormalParameterList : FormalParameter AlphaCommaFormalParameter"""
     p[0] = p[1] + p[2]
+
 
 def p_AlphaCommaFormalParameter(p):
     """AlphaCommaFormalParameter : COMMA FormalParameter AlphaCommaFormalParameter
@@ -514,9 +534,11 @@ def p_AlphaCommaFormalParameter(p):
     else:
         p[0] = ""
 
+
 def p_FormalParameter(p):
     """FormalParameter : AlphaVariableModifier Type VariableDeclaratorId VariableArityParameter"""
     p[0] = p[1] + " " + p[2] + " " + p[3] + p[4]
+
 
 def p_AlphaVariableModifier(p):
     """AlphaVariableModifier : VariableModifier AlphaVariableModifier
@@ -526,9 +548,11 @@ def p_AlphaVariableModifier(p):
     else:
         p[0] = ""
 
+
 def p_VariableModifier(p):
     """VariableModifier : FINAL"""
     p[0] = p[1]
+
 
 def p_VariableArityParameter(p):
     """VariableArityParameter : AlphaVariableModifier Type ELLIPSIS IDENTIFIER"""
@@ -536,6 +560,7 @@ def p_VariableArityParameter(p):
         p[0] = "..."
     else:
         p[0] = ""
+
 
 def p_BetaThrows(p):
     """BetaThrows : THROWS ClassTypeList
@@ -545,19 +570,92 @@ def p_BetaThrows(p):
     else:
         p[0] = ""
 
+
 def p_MethodBody(p):
     """MethodBody : Block
     | SEMICOLON"""
     p[0] = p[1]
 
+
 def p_Block(p):
     """Block : LEFT_BRACE BetaBlockStatements RIGHT_BRACE"""
     p[0] = "{" + p[2] + "}"
+
 
 def p_BetaBlockStatements(p):
     """BetaBlockStatements : empty"""
     p[0] = p[1]
 
+
+def p_error(p):
+    print("Syntax error in input!")
+
+
+def p_InterfaceDeclaration(p):
+    """InterfaceDeclaration : NormalInterfaceDeclaration"""
+    p[0] = p[1]
+
+
+def p_NormalInterfaceDeclaration(p):
+    """NormalInterfaceDeclaration : AlphaClassModifier INTERFACE IDENTIFIER BetaTypeParameters BetaClassExtends BetaClassPermits InterfaceBody"""
+    p[0] = "interface " + p[2] + p[3] + p[4] + p[5] + p[6] + p[7]
+
+
+def p_InterfaceBody(p):
+    """InterfaceBody : LEFT_BRACE AlphaInterfaceMemberDeclaration RIGHT_BRACE"""
+    p[0] = "{" + p[2] + "}"
+
+
+def p_AlphaInterfaceMemberDeclaration(p):
+    """AlphaInterfaceMemberDeclaration : InterfaceMemberDeclaration AlphaInterfaceMemberDeclaration
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+
+def p_InterfaceMemberDeclaration(p):
+    """InterfaceMemberDeclaration : ConstantDeclaration
+    | InterfaceMethodDeclaration
+    | SEMICOLON"""
+    p[0] = p[1]
+
+
+def p_InterfaceMethodDeclaration(p):
+    """InterfaceMethodDeclaration : AlphaConstantModifier MethodHeader MethodBody"""
+    p[0] = p[1] + p[2] + p[3] + "(" + p[5] + ")" + p[7] + p[8] + ";"
+
+
+def p_ConstantDeclaration(p):
+    """ConstantDeclaration : AlphaConstantModifier UnannType VariableDeclaratorList SEMICOLON"""
+    p[0] = p[1] + p[2] + p[3] + ";"
+
+
+def p_UnannType(p):
+    """UnannType : PrimitiveType
+    | ReferenceType"""
+    p[0] = p[1]
+
+
+def p_AlphaConstantModifier(p):
+    """AlphaConstantModifier : ConstantModifier AlphaConstantModifier
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+
+def p_ConstantModifier(p):
+    """ConstantModifier :| PUBLIC
+    | STATIC
+    | FINAL
+    | ABSTRACT
+    | DEFAULT
+    | STRICT
+    | STRICTFP"""
+    p[0] = p[1]
 
 
 yacc.yacc(debug=True, debugfile="parser.out")
