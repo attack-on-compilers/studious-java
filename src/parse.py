@@ -306,8 +306,8 @@ def p_ClassMemberDeclaration(p):
     """ClassMemberDeclaration : FieldDeclaration
     | MethodDeclaration
     | SEMICOLON"""
-    # | ClassDeclaration        (Never to be implemneted)
-    # | InterfaceDeclaration
+    # | ClassDeclaration        # (Never to be implemneted)
+    # | InterfaceDeclaration    # (Never to be implemented)
     p[0] = ("ClassMemberDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
