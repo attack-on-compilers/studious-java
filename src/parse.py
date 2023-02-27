@@ -486,23 +486,21 @@ def p_MethodDeclaration(p):
 
 
 def p_MethodHeader(p):
-    """MethodHeader : Result MethodDeclarator BetaThrows
-    | TypeParameters Result MethodDeclarator BetaThrows"""
-    if p[1] == "<":
-        p[0] = p[1] + p[2] + p[3] + p[4]
-    else:
-        p[0] = p[1] + p[2] + p[3]
+    """MethodHeader : BetaTypeParameters Result MethodDeclarator BetaThrows"""
+    p[0] = p[1] + p[2] + p[3] + p[4]
 
 def p_BetaTypeParameters(p):
     """BetaTypeParameters : TypeParameters
     | empty"""
-    p[0] = p[1]
+    if p[1]:
+        p[0] = p[1]
+    else:
+        p[0] = ""
+
 
 def p_TypeParameters(p):
     """TypeParameters : LESS TypeParameterList GREATER"""
     p[0] = "<" + p[2] + ">"
-    if p[1] == "<":
-        p[0] = p[1] + p[2] + p[3]
 
 
 def p_Result(p):
