@@ -10,4 +10,9 @@ public class yo <a, a extends b & c > extends b implements d,e,f permits a,b,c
 }
 
 public class yo <a, a extends b & c > extends b implements d,e,f permits a,b,c
-{;int a = 5 ;;}
+{
+    ;
+    public private static int a[][][][] = transitive ;
+    public private static int [][][][]a = transitive ;
+    ;
+}

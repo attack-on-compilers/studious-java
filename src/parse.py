@@ -282,9 +282,9 @@ def p_PrimitiveType(p):
 def p_Dims(p):
     """Dims : LEFT_BRACKET RIGHT_BRACKET Dims
     | LEFT_BRACKET RIGHT_BRACKET"""
-    if p[3]:
+    try :
         p[0] = "[]" + p[3]
-    else:
+    except:
         p[0] = "[]"
 
 
