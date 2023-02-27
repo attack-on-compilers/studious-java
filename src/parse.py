@@ -437,9 +437,9 @@ def p_VariableDeclarator(p):
 def p_VariableDeclaratorId(p):
     """VariableDeclaratorId : IDENTIFIER
     | IDENTIFIER Dims"""
-    if p[2]:
+    try:
         p[0] = p[1] + p[2]
-    else:
+    except IndexError:
         p[0] = p[1]
 
 
