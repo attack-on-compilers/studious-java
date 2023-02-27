@@ -18,6 +18,8 @@ import sys
 # program := package_decl imports_decl class_interface_decls
 ############
 
+start = "program"
+
 
 def p_program(p):
     """program : OrdinaryCompilationUnit"""
@@ -106,7 +108,7 @@ def p_ClassDeclaration(p):
 
 
 def p_NormalClassDeclaration(p):
-    """NormalClassDeclaration : AlphaClassModifier CLASS IDENTIFIER BetaTypeParameters BetaClassExtends BetaClassImplements BetaClassPermits"""  #    ClassBody"""
+    """NormalClassDeclaration : AlphaClassModifier CLASS IDENTIFIER BetaTypeParameters BetaClassExtends BetaClassImplements BetaClassPermits ClassBody"""  #    ClassBody"""
     p[0] = p[1] + "class " + p[3] + p[4]  # + p[5] + p[6] + p[7] + p[8]
 
 
@@ -354,6 +356,146 @@ def p_TypeName(p):
 def p_empty(p):
     "empty :"
     p[0] = None
+
+
+def p_ClassBody(p):
+    """ClassBody : LEFT_BRACE ClassBodyDeclaration RIGHT_BRACE"""
+    p[0] = "{" + p[2] + "}"
+
+def p_ClassBodyDeclaration(p):
+    """ClassBodyDeclaration : ClassMemberDeclaration""" 
+    # | InstanceInitializer
+    # | StaticInitializer
+    # | ConstructorDeclaration"""
+    p[0] = p[1]
+
+def p_ClassMemberDeclaration(p):
+    """ClassMemberDeclaration : FieldDeclaration
+    | MethodDeclaration
+    | SEMICOLON"""
+    # | ClassDeclaration        (Never to be implemneted)
+    # | InterfaceDeclaration
+    p[0] = p[1]
+
+def p_FieldDeclaration(p):
+    """FieldDeclaration : AlphaFieldModifier Type VariableDeclaratorList SEMICOLON"""
+    p[0] = p[1] + " " + p[2] + " " + p[3] + ";"
+
+def p_AlphaFieldModifier(p):
+    """AlphaFieldModifier : FieldModifier AlphaFieldModifier
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + " " + p[2]
+    else:
+        p[0] = ""
+
+def p_FieldModifier(p):
+    """FieldModifier : PUBLIC
+    | PROTECTED
+    | PRIVATE
+    | STATIC
+    | FINAL
+    | TRANSIENT
+    | VOLATILE"""
+    p[0] = p[1]
+
+def p_VariableDeclaratorList(p):
+    """VariableDeclaratorList : VariableDeclarator AlphaCommaVariableDeclarator"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaCommaVariableDeclarator(p):
+    """AlphaCommaVariableDeclarator : COMMA VariableDeclarator AlphaCommaVariableDeclarator
+    | empty"""
+    if p[1] == ",":
+        p[0] = ", " + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_VariableDeclarator(p):
+    """VariableDeclarator : VariableDeclaratorId
+    | VariableDeclaratorId ASSIGN VariableInitializer"""
+    if p[2] == "=":
+        p[0] = p[1] + " = " + p[3]
+    else:
+        p[0] = p[1]
+
+def p_VariableDeclaratorId(p):
+    """VariableDeclaratorId : IDENTIFIER
+    | IDENTIFIER Dims"""
+    if p[2]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = p[1]
+
+def p_VariableInitializer(p):
+    """VariableInitializer : Expression
+    | ArrayInitializer"""
+    p[0] = p[1]
+
+def p_ArrayInitializer(p):
+    """ArrayInitializer : LEFT_BRACE VariableInitializerList RIGHT_BRACE
+    | LEFT_BRACE VariableInitializerList COMMA RIGHT_BRACE"""
+    if p[3] == ",":
+        p[0] = "{" + p[2] + ",}"
+    else:
+        p[0] = "{" + p[2] + "}"
+
+def p_VariableInitializerList(p):
+    """VariableInitializerList : VariableInitializer AlphaCommaVariableInitializer"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaCommaVariableInitializer(p):
+    """AlphaCommaVariableInitializer : COMMA VariableInitializer AlphaCommaVariableInitializer
+    | empty"""
+    if p[1] == ",":
+        p[0] = ", " + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_MethodDeclaration(p):
+    """MethodDeclaration : AlphaMethodModifier MethodHeader MethodBody"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaMethodModifier(p):
+    """AlphaMethodModifier : MethodModifier AlphaMethodModifier
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + " " + p[2]
+    else:
+        p[0] = ""
+
+def p_MethodModifier(p):
+    """MethodModifier : PUBLIC
+    | PROTECTED
+    | PRIVATE
+    | STATIC
+    | ABSTRACT
+    | FINAL
+    | SYNCHRONIZED
+    | NATIVE
+    | STRICTFP"""
+    p[0] = p[1]
+
+def p_MethodHeader(p):
+    """MethodHeader : Result MethodDeclarator BetaThrows
+    | TypeParameters Result MethodDeclarator BetaThrows"""
+
+def p_Result(p):
+    """Result : Type
+    | VOID"""
+    p[0] = p[1]
+
+def p_MethodDeclarator(p):
+    """MethodDeclarator : IDENTIFIER LEFT_PARENTHESIS FormalParameterList RIGHT_PARENTHESIS
+    | IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS"""
+    if p[3] == "(":
+        p[0] = p[1] + "(" + p[3] + ")"
+    else:
+        p[0] = p[1] + "(" + p[3] + ")"
+
+
+
+
 
 
 yacc.yacc(debug=True, debugfile="parser.out")
