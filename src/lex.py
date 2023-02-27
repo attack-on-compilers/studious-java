@@ -72,6 +72,7 @@ reserved = (
     "TRANSITIVE",
     "YIELD",
     "DOTSTAR",
+    "NON_SEALED",
 )
 
 
@@ -200,6 +201,7 @@ t_DOTSTAR = r"\.\*"
 t_ignore = " \t"
 
 disallowed_identifiers = {r.lower(): r for r in reserved}
+disallowed_identifiers["non-sealed"] = "NON_SEALED"
 disallowed_identifiers["__asm_direc"] = "ASSEMBLY_DIRECTIVE"
 
 TYPE_NAMES = []
