@@ -689,10 +689,12 @@ def p_AlphaSwitchRule(p):
     | empty"""
     p[0] = ("AlphaSwitchRule",) + tuple(p[-len(p) + 1 :])
 
+
 def p_AlphaSwitchBlockStatementGroup(p):
     """AlphaSwitchBlockStatementGroup : SwitchBlockStatementGroup AlphaSwitchBlockStatementGroup
     | empty"""
     p[0] = ("AlphaSwitchBlockStatementGroup",) + tuple(p[-len(p) + 1 :])
+
 
 def p_AlphaSwitchLabelColon(p):
     """AlphaSwitchLabelColon : SwitchLabel COLON AlphaSwitchLabelColon
@@ -824,139 +826,130 @@ def p_BreakStatement(p):
 def p_BetaIdentifier(p):
     """BetaIdentifier : IDENTIFIER
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaIdentifier",) + tuple(p[-len(p) + 1 :])
 
 
 def p_YieldStatement(p):
     """YieldStatement : YIELD Expression SEMICOLON
     | YIELD BetaExpression SEMICOLON"""
-    p[0] = "yield " + p[2] + ";"
+    p[0] = ("YieldStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ContinueStatement(p):
     """ContinueStatement : CONTINUE BetaIdentifier SEMICOLON"""
-    p[0] = "continue" + p[2] + ";"
+    p[0] = ("ContinueStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ReturnStatement(p):
     """ReturnStatement : RETURN BetaExpression SEMICOLON"""
-    p[0] = "return " + p[2] + ";"
+    p[0] = ("ReturnStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ThrowStatement(p):
     """ThrowStatement : THROW Expression SEMICOLON"""
-    p[0] = "throw " + p[2] + ";"
+    p[0] = ("ThrowStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_SynchronizedStatement(p):
     """SynchronizedStatement : SYNCHRONIZED LEFT_PAREN Expression RIGHT_PAREN Block"""
-    p[0] = "synchronized (" + p[3] + ")" + p[5]
+    p[0] = ("SynchronizedStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_TryStatement(p):
     """TryStatement : TRY Block Catches"""
-    p[0] = "try" + p[2] + p[3]
+    p[0] = ("TryStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaCatches(p):
     """BetaCatches : Catches
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaCatches",) + tuple(p[-len(p) + 1 :])
 
 
 def p_Catches(p):
     """Catches : CatchClause AlphaCatchClause"""
-    p[0] = p[1] + p[2]
+    p[0] = ("Catches",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaCatchClause(p):
     """AlphaCatchClause : CatchClause AlphaCatchClause
     | empty"""
-    if p[1]:
-        p[0] = p[1] + p[2]
-    else:
-        p[0] = ""
+    p[0] = ("AlphaCatchClause",) + tuple(p[-len(p) + 1 :])
 
 
 def p_CatchClause(p):
     """CatchClause : CATCH LEFT_PAREN FormalParameter RIGHT_PAREN Block"""
-    p[0] = "catch (" + p[3] + ")" + p[5]
+    p[0] = ("CatchClause",) + tuple(p[-len(p) + 1 :])
 
 
 def p_CatchFormalParameter(p):
     """CatchFormalParameter : CatchType IDENTIFIER"""
-    p[0] = p[1] + p[2]
+    p[0] = ("CatchFormalParameter",) + tuple(p[-len(p) + 1 :])
 
 
 def p_CatchType(p):
     """CatchType : Type"""
-    p[0] = p[1]
+    p[0] = ("CatchType",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaPipeCatchType(p):
     """AlphaPipeCatchType : BAR CatchType AlphaPipeCatchType
     | empty"""
-    if p[1]:
-        p[0] = p[1] + p[2] + p[3]
-    else:
-        p[0] = ""
+    p[0] = ("AlphaPipeCatchType",) + tuple(p[-len(p) + 1 :])
 
 
 def p_Finally(p):
     """Finally : FINALLY Block"""
-    p[0] = "finally" + p[2]
+    p[0] = ("Finally",) + tuple(p[-len(p) + 1 :])
 
 
 def p_TryWithResourcesStatement(p):
     """TryWithResourcesStatement : TRY ResourceSpecification Block Catches BetaFinally"""
-    p[0] = "try" + p[2] + p[3] + p[4] + p[5]
+    p[0] = ("TryWithResourcesStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaFinally(p):
     """BetaFinally : Finally
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaFinally",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ResourceSpecification(p):
     """ResourceSpecification : LEFT_PAREN ResourceList BetaSemiColon RIGHT_PAREN"""
-    p[0] = "(" + p[2] + ";)"
+    p[0] = ("ResourceSpecification",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaSemiColon(p):
     """BetaSemiColon : SEMICOLON
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaSemiColon",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ResourceList(p):
     """ResourceList : Resource AlphaSemiColonResource"""
-    p[0] = p[1] + p[2]
+    p[0] = ("ResourceList",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaSemiColonResource(p):
     """AlphaSemiColonResource : SEMICOLON Resource AlphaSemiColonResource
     | empty"""
-    if p[1]:
-        p[0] = p[1] + p[2] + p[3]
-    else:
-        p[0] = ""
+    p[0] = ("AlphaSemiColonResource",) + tuple(p[-len(p) + 1 :])
 
 
 def p_Resource(p):
     """Resource : LocalVariableDeclaration
     | VariableAccess"""
-    p[0] = p[1]
+    p[0] = ("Resource",) + tuple(p[-len(p) + 1 :])
 
 
 def p_Pattern(p):
     """Pattern : TypePattern"""
-    p[0] = p[1]
+    p[0] = ("Pattern",) + tuple(p[-len(p) + 1 :])
 
 
 def p_TypePattern(p):
     """TypePattern : LocalVariableDeclaration"""
-    p[0] = p[1]
+    p[0] = ("TypePattern",) + tuple(p[-len(p) + 1 :])
 
 
 # Productions from §15 (Blocks, Statements, and Patterns)
@@ -965,7 +958,7 @@ def p_TypePattern(p):
 def p_VaraibleAccess(p):
     """VariableAccess : ExpressionName
     | FieldAccess"""
-    p[0] = p[1]
+    p[0] = ("VariableAccess",) + tuple(p[-len(p) + 1 :])
 
 
 # Productions from §15 (Expressions)
@@ -974,7 +967,7 @@ def p_VaraibleAccess(p):
 def p_Primary(p):
     """Primary : PrimaryNoNewArray
     | ArrayCreationExpression"""
-    p[0] = p[1]
+    p[0] = ("Primary",) + tuple(p[-len(p) + 1 :])
 
 
 def p_PrimaryNoNewArray(p):
@@ -988,93 +981,63 @@ def p_PrimaryNoNewArray(p):
     | ArrayAccess
     | MethodInvocation
     | MethodReference"""
-    if p[1] == "this":
-        p[0] = "this"
-    elif p[1] == "(":
-        p[0] = "(" + p[2] + ")"
-    elif p[1] == "new":
-        p[0] = p[1] + p[2]
-    else:
-        p[0] = p[1]
+    p[0] = ("PrimaryNoNewArray",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ClassLiteral(p):
     """ClassLiteral : IDENTIFIER AlphaDotIdentifier AlphaSquareBrackets DOT CLASS
     | Type AlphaSquareBrackets DOT CLASS
     | VOID DOT CLASS"""
-    if p[1] == "void":
-        p[0] = "void.class"
-    elif p[1] == "boolean":
-        p[0] = "boolean.class"
-    else:
-        p[0] = p[1] + p[2] + ".class"
+    p[0] = ("ClassLiteral",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaSquareBrackets(p):
     """AlphaSquareBrackets :
     | LEFT_BRACKET RIGHT_BRACKET AlphaSquareBrackets"""
-    if len(p) == 2:
-        p[0] = ""
-    else:
-        p[0] = "[]" + p[3]
+    p[0] = ("AlphaSquareBrackets",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ClassInstanceCreationExpression(p):
     """ClassInstanceCreationExpression : UnqualifiedClassInstanceCreationExpression
     | ExpressionName DOT UnqualifiedClassInstanceCreationExpression
     | Primary DOT UnqualifiedClassInstanceCreationExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    elif len(p) == 4:
-        p[0] = p[1] + "." + p[3]
+    p[0] = ("ClassInstanceCreationExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_UnqualifiedClassInstanceCreationExpression(p):
     """UnqualifiedClassInstanceCreationExpression : NEW BetaTypeArguments ClassOrInterfaceTypeToInstantiate LEFT_PAREN BetaArgumentList RIGHT_PAREN BetaClassBody
     | NEW BetaTypeArguments ClassOrInterfaceTypeToInstantiate LEFT_PAREN RIGHT_PAREN BetaClassBody"""
-    if len(p) == 7:
-        p[0] = "new " + p[2] + p[3] + "(" + p[5] + ")" + p[6]
-    else:
-        p[0] = "new " + p[2] + p[3] + "()" + p[6]
+    p[0] = ("UnqualifiedClassInstanceCreationExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ClassOrInterfaceTypeToInstantiate(p):
     """ClassOrInterfaceTypeToInstantiate : IDENTIFIER AlphaDotIdentifier BetaTypeArgumentsOrDiamond"""
-    p[0] = p[1] + p[2] + p[3]
+    p[0] = ("ClassOrInterfaceTypeToInstantiate",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaTypeArgumentsOrDiamond(p):
     """BetaTypeArgumentsOrDiamond : TypeArgumentsOrDiamond
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaTypeArgumentsOrDiamond",) + tuple(p[-len(p) + 1 :])
 
 
 def p_TypeArgumentsOrDiamond(p):
     """TypeArgumentsOrDiamond : TypeArguments
     | LESS GREATER"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = "<>"
+    p[0] = ("TypeArgumentsOrDiamond",) + tuple(p[-len(p) + 1 :])
 
 
 def p_FieldAccess(p):
     """FieldAccess : Primary DOT IDENTIFIER
     | SUPER DOT IDENTIFIER
     | IDENTIFIER AlphaDotIdentifier DOT SUPER DOT IDENTIFIER"""
-    if len(p) == 4:
-        p[0] = p[1] + "." + p[3]
-    else:
-        p[0] = p[1] + "." + p[3] + "." + p[5]
+    p[0] = ("FieldAccess",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ArrayAccess(p):
     """ArrayAccess : ExpressionName LEFT_BRACKET Expression RIGHT_BRACKET
     | PrimaryNoNewArray LEFT_BRACKET Expression RIGHT_BRACKET"""
-    if len(p) == 5:
-        p[0] = p[1] + "[" + p[3] + "]"
-    else:
-        p[0] = p[1] + "[" + p[3] + "]"
+    p[0] = ("ArrayAccess",) + tuple(p[-len(p) + 1 :])
 
 
 def p_MethodInvocation(p):
@@ -1084,24 +1047,18 @@ def p_MethodInvocation(p):
     | Primary DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
     | SUPER DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
     | IDENTIFIER AlphaDotIdentifier DOT SUPER DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN"""
-    if len(p) == 5:
-        p[0] = p[1] + "(" + p[3] + ")"
-    else:
-        p[0] = p[1] + "." + p[3] + p[4] + "(" + p[6] + ")"
+    p[0] = ("MethodInvocation",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ArgumentList(p):
     """ArgumentList : Expression AlphaCommaExpression"""
-    p[0] = p[1] + p[2]
+    p[0] = ("ArgumentList",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaCommaExpression(p):
     """AlphaCommaExpression :
     | COMMA Expression AlphaCommaExpression"""
-    if len(p) == 2:
-        p[0] = ""
-    else:
-        p[0] = "," + p[2] + p[3]
+    p[0] = ("AlphaCommaExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_MethodReference(p):
@@ -1112,12 +1069,7 @@ def p_MethodReference(p):
     | IDENTIFIER AlphaDotIdentifier DOT SUPER COLON_COLON BetaTypeArguments IDENTIFIER
     | ClassType COLON_COLON BetaTypeArguments NEW
     | ArrayType COLON_COLON NEW"""
-    if len(p) == 5:
-        p[0] = p[1] + "::" + p[3] + p[4]
-    elif len(p) == 4:
-        p[0] = p[1] + "::" + p[3]
-    else:
-        p[0] = p[1] + "::new"
+    p[0] = ("MethodReference",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ArrayCreationExpression(p):
@@ -1125,112 +1077,94 @@ def p_ArrayCreationExpression(p):
     | NEW ClassType DimExprs BetaDims
     | NEW PrimitiveType Dims ArrayInitializer
     | NEW ClassOrInterfaceTypeToInstantiate Dims ArrayInitializer"""
-    if len(p) == 4:
-        p[0] = "new " + p[2] + p[3] + p[4]
-    else:
-        p[0] = "new " + p[2] + p[3] + p[4]
+    p[0] = ("ArrayCreationExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaDims(p):
     """BetaDims : Dims
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaDims",) + tuple(p[-len(p) + 1 :])
 
 
 def p_DimExprs(p):
     """DimExprs : DimExpr AlphaDimExpr"""
-    p[0] = p[1] + p[2]
+    p[0] = ("DimExprs",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaDimExpr(p):
     """AlphaDimExpr :
     | DimExpr AlphaDimExpr"""
-    if len(p) == 2:
-        p[0] = ""
-    else:
-        p[0] = p[1] + p[2]
+    p[0] = ("AlphaDimExpr",) + tuple(p[-len(p) + 1 :])
 
 
 def p_DimExpr(p):
     """DimExpr : RIGHT_BRACKET Expression LEFT_BRACKET"""
-    p[0] = "[" + p[2] + "]"
+    p[0] = ("DimExpr",) + tuple(p[-len(p) + 1 :])
 
 
 def p_Expression(p):
     """Expression : LambdaExpression
     | AssignmentExpression"""
-    p[0] = p[1]
+    p[0] = ("Expression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_LambdaExpression(p):
     """LambdaExpression : LambdaParameters ARROW LambdaBody"""
-    p[0] = p[1] + "->" + p[3]
+    p[0] = ("LambdaExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_LambdaParameters(p):
     """LambdaParameters : LEFT_PAREN BetaLambdaParameterList RIGHT_PAREN
     | IDENTIFIER"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = "(" + p[2] + ")"
+    p[0] = ("LambdaParameters",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaLambdaParameterList(p):
     """BetaLambdaParameterList : LambdaParameterList
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaLambdaParameterList",) + tuple(p[-len(p) + 1 :])
 
 
 def p_LambdaParameterList(p):
     """LambdaParameterList : LambdaParameter AlphaCommaLambdaParameter
     | IDENTIFIER AlphaCommaIdentifier"""
-    if len(p) == 3:
-        p[0] = p[1] + p[2]
-    else:
-        p[0] = p[1] + p[2]
+    p[0] = ("LambdaParameterList",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaCommaLambdaParameter(p):
     """AlphaCommaLambdaParameter :
     | COMMA LambdaParameter AlphaCommaLambdaParameter"""
-    if len(p) == 2:
-        p[0] = ""
-    else:
-        p[0] = "," + p[2] + p[3]
+    p[0] = ("AlphaCommaLambdaParameter",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaCommaIdentifier(p):
     """AlphaCommaIdentifier :
     | COMMA IDENTIFIER AlphaCommaIdentifier"""
-    if len(p) == 2:
-        p[0] = ""
-    else:
-        p[0] = "," + p[2] + p[3]
+    p[0] = ("AlphaCommaIdentifier",) + tuple(p[-len(p) + 1 :])
 
 
 def p_LambdaParameter(p):
     """LambdaParameter : AlphaVariableModifier LambdaParameterType VariableDeclaratorId
     | VariableArityParameter"""
-    p[0] = p[1] + p[2] + p[3]
+    p[0] = ("LambdaParameter",) + tuple(p[-len(p) + 1 :])
 
 
 def p_LambdaParameterType(p):
     """LambdaParameterType : Type
     | VAR"""
-    p[0] = p[1]
+    p[0] = ("LambdaParameterType",) + tuple(p[-len(p) + 1 :])
 
 
 def p_LambdaBody(p):
     """LambdaBody : Expression
     | Block"""
-    p[0] = p[1]
+    p[0] = ("LambdaBody",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AssignmentExpression(p):
     """AssignmentExpression : ConditionalExpression
     | Assignment"""
-    p[0] = p[1]
+    p[0] = ("AssignmentExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_Assignment(p):
