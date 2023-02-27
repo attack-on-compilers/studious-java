@@ -956,7 +956,7 @@ def p_TypePattern(p):
 # Productions from §15 (Blocks, Statements, and Patterns)
 
 
-def p_VaraibleAccess(p):
+def p_VariableAccess(p):
     """VariableAccess : ExpressionName
     | FieldAccess"""
     p[0] = ("VariableAccess",) + tuple(p[-len(p) + 1 :])
