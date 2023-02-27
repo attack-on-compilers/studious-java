@@ -361,9 +361,16 @@ def p_empty(p):
 
 
 def p_ClassBody(p):
-    """ClassBody : LEFT_BRACE ClassBodyDeclaration RIGHT_BRACE"""
+    """ClassBody : LEFT_BRACE AlphaClassBodyDeclaration RIGHT_BRACE"""
     p[0] = "{" + p[2] + "}"
 
+def p_AlphaClassBodyDeclaration(p):
+    """AlphaClassBodyDeclaration : ClassBodyDeclaration AlphaClassBodyDeclaration
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
 
 def p_ClassBodyDeclaration(p):
     """ClassBodyDeclaration : ClassMemberDeclaration"""
