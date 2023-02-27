@@ -112,8 +112,27 @@ def p_AlphaAdditionalBound(p):
     p[0] = ("AlphaAdditionalBound",) + tuple(p[-len(p) + 1 :])
 
 def p_AdditionalBound(p):
-    """AdditionalBound : AMP ClassOrInterfaceType"""
+    """AdditionalBound : AMPERSAND ClassType"""
     p[0] = ("AdditionalBound",) + tuple(p[-len(p) + 1 :])
+
+def p_TypeArguments(p):
+    """TypeArguments : LANGLE TypeArgumentList RANGLE"""
+    p[0] = ("TypeArguments",) + tuple(p[-len(p) + 1 :])
+
+def p_TypeArgumentList(p):
+    """TypeArgumentList : TypeArgument AlphaCommaTypeArgument"""
+    p[0] = ("TypeArgumentList",) + tuple(p[-len(p) + 1 :])
+
+def p_AlphaCommaTypeArgument(p):
+    """AlphaCommaTypeArgument : COMMA TypeArgument AlphaCommaTypeArgument
+                              |"""
+    p[0] = ("AlphaCommaTypeArgument",) + tuple(p[-len(p) + 1 :])
+
+def p_TypeArgument(p):
+    """TypeArgument : ReferenceType
+                    | Wildcard"""
+    p[0] = ("TypeArgument",) + tuple(p[-len(p) + 1 :])
+
 
 
 

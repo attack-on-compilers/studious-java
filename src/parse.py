@@ -200,8 +200,7 @@ def p_AlphaAdditionalBound(p):
 
 
 def p_ClassType(p):
-    """ClassType : IDENTIFIER BetaTypeArguments
-    | IDENTIFIER AlphaDotIdentifier BetaTypeArguments
+    """ClassType : IDENTIFIER AlphaDotIdentifier BetaTypeArguments
     | ClassType DOT IDENTIFIER BetaTypeArguments"""
     if p[2] == ".":
         p[0] = p[1] + "." + p[3] + p[4]
@@ -403,7 +402,11 @@ def p_FieldModifier(p):
     | PRIVATE
     | STATIC
     | FINAL
+    | ABSTRACT
     | TRANSIENT
+    | SYNCHRONIZED
+    | NATIVE
+    | STRICTFP
     | VOLATILE"""
     p[0] = p[1]
 
@@ -470,30 +473,9 @@ def p_AlphaCommaVariableInitializer(p):
 
 
 def p_MethodDeclaration(p):
-    """MethodDeclaration : AlphaMethodModifier MethodHeader MethodBody"""
+    """MethodDeclaration : AlphaFieldModifier MethodHeader MethodBody"""
     p[0] = p[1] + p[2]
 
-
-def p_AlphaMethodModifier(p):
-    """AlphaMethodModifier : MethodModifier AlphaMethodModifier
-    | empty"""
-    if p[1]:
-        p[0] = p[1] + " " + p[2]
-    else:
-        p[0] = ""
-
-
-def p_MethodModifier(p):
-    """MethodModifier : PUBLIC
-    | PROTECTED
-    | PRIVATE
-    | STATIC
-    | ABSTRACT
-    | FINAL
-    | SYNCHRONIZED
-    | NATIVE
-    | STRICTFP"""
-    p[0] = p[1]
 
 
 def p_MethodHeader(p):
@@ -628,14 +610,10 @@ def p_InterfaceMethodDeclaration(p):
 
 
 def p_ConstantDeclaration(p):
-    """ConstantDeclaration : AlphaConstantModifier UnannType VariableDeclaratorList SEMICOLON"""
+    """ConstantDeclaration : AlphaConstantModifier Type VariableDeclaratorList SEMICOLON"""
     p[0] = p[1] + p[2] + p[3] + ";"
 
 
-def p_UnannType(p):
-    """UnannType : PrimitiveType
-    | ReferenceType"""
-    p[0] = p[1]
 
 
 def p_AlphaConstantModifier(p):
@@ -648,12 +626,11 @@ def p_AlphaConstantModifier(p):
 
 
 def p_ConstantModifier(p):
-    """ConstantModifier :| PUBLIC
+    """ConstantModifier : PUBLIC
     | STATIC
     | FINAL
     | ABSTRACT
     | DEFAULT
-    | STRICT
     | STRICTFP"""
     p[0] = p[1]
 
