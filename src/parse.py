@@ -1169,14 +1169,14 @@ def p_AssignmentExpression(p):
 
 def p_Assignment(p):
     """Assignment : LeftHandSide AssignmentOperator Expression"""
-    p[0] = p[1] + p[2] + p[3]
+    p[0] = ("Assignment",) + tuple(p[-len(p) + 1 :])
 
 
 def p_LeftHandSide(p):
     """LeftHandSide : ExpressionName
     | FieldAccess
     | ArrayAccess"""
-    p[0] = p[1]
+    p[0] = ("LeftHandSide",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AssignmentOperator(p):
@@ -1192,72 +1192,51 @@ def p_AssignmentOperator(p):
     | AMPERSAND_ASSIGN
     | CARET_ASSIGN
     | BAR_ASSIGN"""
-    p[0] = p[1]
+    p[0] = ("AssignmentOperator",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ConditionalExpression(p):
     """ConditionalExpression : ConditionalOrExpression
     | ConditionalOrExpression QUESTION Expression COLON ConditionalExpression
     | ConditionalOrExpression QUESTION Expression COLON LambdaExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + "?" + p[3] + ":" + p[5]
+    p[0] = ("ConditionalExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ConditionalOrExpression(p):
     """ConditionalOrExpression : ConditionalAndExpression
     | ConditionalOrExpression BAR_BAR ConditionalAndExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + "||" + p[3]
+    p[0] = ("ConditionalOrExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ConditionalAndExpression(p):
     """ConditionalAndExpression : InclusiveOrExpression
     | ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + "&&" + p[3]
+    p[0] = ("ConditionalAndExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_InclusiveOrExpression(p):
     """InclusiveOrExpression : ExclusiveOrExpression
     | InclusiveOrExpression BAR ExclusiveOrExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + "|" + p[3]
+    p[0] = ("InclusiveOrExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ExclusiveOrExpression(p):
     """ExclusiveOrExpression : AndExpression
     | ExclusiveOrExpression CARET AndExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + "^" + p[3]
+    p[0] = ("ExclusiveOrExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AndExpression(p):
     """AndExpression : EqualityExpression
     | AndExpression AMPERSAND EqualityExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + "&" + p[3]
+    p[0] = ("AndExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_EqualityExpression(p):
     """EqualityExpression : RelationalExpression
     | EqualityExpression EQUAL_EQUAL RelationalExpression
     | EqualityExpression EXCLAMATION_EQUAL RelationalExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + p[2] + p[3]
+    p[0] = ("EqualityExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_RelationalExpression(p):
@@ -1267,15 +1246,12 @@ def p_RelationalExpression(p):
     | RelationalExpression LESS_EQUAL ShiftExpression
     | RelationalExpression GREATER_EQUAL ShiftExpression
     | InstanceofExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + p[2] + p[3]
+    p[0] = ("RelationalExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_InstanceofExpression(p):
     """InstanceofExpression : RelationalExpression INSTANCEOF ReferenceType"""
-    p[0] = p[1] + "instanceof" + p[3]
+    p[0] = ("InstanceofExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ShiftExpression(p):
@@ -1283,20 +1259,14 @@ def p_ShiftExpression(p):
     | ShiftExpression LEFT_SHIFT AdditiveExpression
     | ShiftExpression RIGHT_SHIFT AdditiveExpression
     | ShiftExpression UNSIGNED_RIGHT_SHIFT AdditiveExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + p[2] + p[3]
+    p[0] = ("ShiftExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AdditiveExpression(p):
     """AdditiveExpression : MultiplicativeExpression
     | AdditiveExpression PLUS MultiplicativeExpression
     | AdditiveExpression MINUS MultiplicativeExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + p[2] + p[3]
+    p[0] = ("AdditiveExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_MultiplicativeExpression(p):
@@ -1304,10 +1274,7 @@ def p_MultiplicativeExpression(p):
     | MultiplicativeExpression STAR UnaryExpression
     | MultiplicativeExpression SLASH UnaryExpression
     | MultiplicativeExpression PERCENT UnaryExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + p[2] + p[3]
+    p[0] = ("MultiplicativeExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_UnaryExpression(p):
@@ -1316,20 +1283,17 @@ def p_UnaryExpression(p):
     | PLUS UnaryExpression
     | MINUS UnaryExpression
     | UnaryExpressionNotPlusMinus"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + p[2]
+    p[0] = ("UnaryExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_PreIncrementExpression(p):
     """PreIncrementExpression : PLUS_PLUS UnaryExpression"""
-    p[0] = p[1] + p[2]
+    p[0] = ("PreIncrementExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_DecrementExpression(p):
     """PreDecrementExpression : MINUS_MINUS UnaryExpression"""
-    p[0] = p[1] + p[2]
+    p[0] = ("PreDecrementExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_UnaryExpressionNotPlusMinus(p):
@@ -1338,10 +1302,7 @@ def p_UnaryExpressionNotPlusMinus(p):
     | EXCLAMATION UnaryExpression
     | CastExpression
     | SwitchExpression"""
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = p[1] + p[2] + p[3]
+    p[0] = ("UnaryExpressionNotPlusMinus",) + tuple(p[-len(p) + 1 :])
 
 
 def p_PostfixExpression(p):
@@ -1349,37 +1310,34 @@ def p_PostfixExpression(p):
     | ExpressionName
     | PostIncrementExpression
     | PostDecrementExpression"""
-    p[0] = p[1]
+    p[0] = ("PostfixExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_PostIncrementExpression(p):
     """PostIncrementExpression : PostfixExpression PLUS_PLUS"""
-    p[0] = p[1] + p[2]
+    p[0] = ("PostIncrementExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_PostDecrementExpression(p):
     """PostDecrementExpression : PostfixExpression MINUS_MINUS"""
-    p[0] = p[1] + p[2]
+    p[0] = ("PostDecrementExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_CastExpression(p):
     """CastExpression : LEFT_PAREN PrimitiveType RIGHT_PAREN UnaryExpression
     | LEFT_PAREN ReferenceType AlphaAdditionalBound RIGHT_PAREN UnaryExpressionNotPlusMinus
     | LEFT_PAREN ReferenceType AlphaAdditionalBound RIGHT_PAREN LambdaExpression"""
-    if len(p) == 5:
-        p[0] = p[1] + p[2] + p[3] + p[4]
-    else:
-        p[0] = p[1] + p[2] + p[3] + p[4] + p[5]
+    p[0] = ("CastExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_SwitchExpression(p):
     """SwitchExpression : SWITCH LEFT_PAREN Expression RIGHT_PAREN SwitchBlock"""
-    p[0] = p[1] + p[2] + p[3] + p[4] + p[5]
+    p[0] = ("SwitchExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ConstantExpression(p):
     """ConstantExpression : Expression"""
-    p[0] = p[1]
+    p[0] = ("ConstantExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_error(p):
@@ -1423,19 +1381,19 @@ def p_InterfaceMethodDeclaration(p):
 
 def p_ConstantDeclaration(p):
     """ConstantDeclaration : AlphaConstantModifier Type VariableDeclaratorList SEMICOLON"""
-    p[0] = p[1] + p[2] + p[3] + ";"
+    p[0] = ("ConstantDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaArgumentList(p):
     """BetaArgumentList : ArgumentList
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaArgumentList",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaClassBody(p):
     """BetaClassBody : ClassBody
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaClassBody",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaConstantModifier(p):
@@ -1456,14 +1414,14 @@ def p_ConstantModifier(p):
 
 def p_ExpressionName(p):
     """ExpressionName : IDENTIFIER AlphaDotIdentifier"""
-    p[0] = p[1]
+    p[0] = ("ExpressionName",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BlockStatement(p):
     """BlockStatement : LocalClassOrInterfaceDeclaration
     | LocalVariableDeclarationStatement
     | Statement"""
-    p[0] = p[1]
+    p[0] = ("BlockStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_Literal(p):
@@ -1477,7 +1435,7 @@ def p_Literal(p):
     | STRING_LITERAL
     | TEXT_BLOCK
     | NULL_LITERAL"""
-    p[0] = p[1]
+    p[0] = ("Literal",) + tuple(p[-len(p) + 1 :])
 
 
 yacc.yacc(debug=True, debugfile="parser.out")
