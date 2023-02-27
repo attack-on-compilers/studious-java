@@ -4,17 +4,17 @@ import argparse
 from dot import generate_graph_from_ast, reduce_ast
 
 
-# precedence = (
-#     ('right', 'ASSIGNMENT'),
-#     ('left', 'OR'),
-#     ('left', 'AND'),
-#     ('left', 'NOTEQUAL', 'EQUAL'),
-#     ('left', 'GREATER', 'LESS', 'GREATEREQUAL', 'LESSEQUAL'),
-#     ('left', 'ADDITION', 'SUBSTRACTION', 'CONCAT'),
-#     ('left', 'MULTIPLICATION', 'DIVISION', 'MODULO'),
-#     ('right','NEW', 'NOT','UMINUS'),
-#     ('left', 'DOT')
-# )
+precedence = (
+    ("right", "ASSIGN"),
+    ("left", "LESS", "GREATER"),
+    # ('left', 'AND'),
+    # ('left', 'NOTEQUAL', 'EQUAL'),
+    # ('left', 'GREATER', 'LESS', 'GREATEREQUAL', 'LESSEQUAL'),
+    # ('left', 'ADDITION', 'SUBSTRACTION', 'CONCAT'),
+    # ('left', 'MULTIPLICATION', 'DIVISION', 'MODULO'),
+    # ('right','NEW', 'NOT','UMINUS'),
+    ("left", "DOT"),
+)
 
 ############
 # program := package_decl imports_decl class_interface_decls
@@ -137,15 +137,10 @@ def p_TypeParameter(p):
 
 
 def p_BetaTypeBound(p):
-    """BetaTypeBound : EXTENDS TypeBound1
+    """BetaTypeBound : EXTENDS IDENTIFIER
+    | EXTENDS ClassType AlphaAdditionalBound
     | empty"""
     p[0] = ("BetaTypeBound",) + tuple(p[-len(p) + 1 :])
-
-
-def p_TypeBound1(p):
-    """TypeBound1 : IDENTIFIER
-    | ClassType AlphaAdditionalBound"""
-    p[0] = ("TypeBound1",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaAdditionalBound(p):
@@ -196,20 +191,15 @@ def p_Type(p):
 
 def p_ReferenceType(p):
     """ReferenceType : ClassType
-    | TypeVariable
+    | IDENTIFIER
     | ArrayType"""
     p[0] = ("ReferenceType",) + tuple(p[-len(p) + 1 :])
-
-
-def p_TypeVariable(p):
-    """TypeVariable : IDENTIFIER"""
-    p[0] = ("TypeVariable",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ArrayType(p):
     """ArrayType : PrimitiveType Dims
     | ClassType Dims
-    | TypeVariable Dims"""
+    | IDENTIFIER Dims"""
     p[0] = ("ArrayType",) + tuple(p[-len(p) + 1 :])
 
 
@@ -301,14 +291,17 @@ def p_ClassBodyDeclaration(p):
     | ConstructorDeclaration"""
     p[0] = ("ClassBodyDeclaration",) + tuple(p[-len(p) + 1 :])
 
+
 def p_ConstructorDeclaration(p):
     """ConstructorDeclaration : AlphaFieldModifier ConstructorDeclarator BetaThrows ConstructorBody"""
     p[0] = ("ConstructorDeclaration",) + tuple(p[-len(p) + 1 :])
+
 
 def p_AlphaConstructorModifier(p):
     """AlphaConstructorModifier : ConstructorModifier AlphaConstructorModifier
     | empty"""
     p[0] = ("AlphaConstructorModifier",) + tuple(p[-len(p) + 1 :])
+
 
 def p_ConstructorModifier(p):
     """ConstructorModifier : PUBLIC
@@ -316,32 +309,39 @@ def p_ConstructorModifier(p):
     | PRIVATE"""
     p[0] = ("ConstructorModifier",) + tuple(p[-len(p) + 1 :])
 
+
 def p_ConstructorDeclarator(p):
     """ConstructorDeclarator : BetaTypeParameters IDENTIFIER LEFT_PAREN BetaRecieverParameterComma BetaFormalParameterList RIGHT_PAREN"""
     p[0] = ("ConstructorDeclarator",) + tuple(p[-len(p) + 1 :])
+
 
 def p_BetaRecieverParameterComma(p):
     """BetaRecieverParameterComma : RecieverParameter COMMA
     | empty"""
     p[0] = ("BetaRecieverParameterComma",) + tuple(p[-len(p) + 1 :])
 
+
 def p_ReceieverParameter(p):
     """RecieverParameter : Type BetaIdentifierDot THIS"""
     p[0] = ("RecieverParameter",) + tuple(p[-len(p) + 1 :])
+
 
 def p_BetaIdentifierDot(p):
     """BetaIdentifierDot : IDENTIFIER DOT
     | empty"""
     p[0] = ("BetaIdentifierDot",) + tuple(p[-len(p) + 1 :])
 
+
 def p_ConstructorBody(p):
     """ConstructorBody : LEFT_BRACE BetaExplicitConstructorInvocation BetaBlockStatements RIGHT_BRACE"""
     p[0] = ("ConstructorBody",) + tuple(p[-len(p) + 1 :])
+
 
 def p_BetaExplicitConstructorInvocation(p):
     """BetaExplicitConstructorInvocation : ExplicitConstructorInvocation BetaBlockStatements
     | empty"""
     p[0] = ("BetaExplicitConstructorInvocation",) + tuple(p[-len(p) + 1 :])
+
 
 def p_ExplicitConstructorInvocation(p):
     """ExplicitConstructorInvocation : BetaTypeArguments THIS LEFT_PAREN BetaArgumentList RIGHT_PAREN SEMICOLON
@@ -350,29 +350,32 @@ def p_ExplicitConstructorInvocation(p):
     | Primary DOT BetaTypeArguments SUPER LEFT_PAREN BetaArgumentList RIGHT_PAREN SEMICOLON"""
     p[0] = ("ExplicitConstructorInvocation",) + tuple(p[-len(p) + 1 :])
 
+
 def p_BetaArgumentList(p):
     """BetaArgumentList : ArgumentList
     | empty"""
     p[0] = ("BetaArgumentList",) + tuple(p[-len(p) + 1 :])
 
+
 def p_ArgumentList(p):
     """ArgumentList : TRANSITIVE"""
     p[0] = ("ArgumentList",) + tuple(p[-len(p) + 1 :])
+
 
 def p_Primary(p):
     """Primary : TRANSITIVE"""
     p[0] = ("Primary",) + tuple(p[-len(p) + 1 :])
 
 
-
-
-def  p_InstanceInitializer(p):
+def p_InstanceInitializer(p):
     """InstanceInitializer : Block"""
     p[0] = ("InstanceInitializer",) + tuple(p[-len(p) + 1 :])
+
 
 def p_StaticInitializer(p):
     """StaticInitializer : STATIC Block"""
     p[0] = ("StaticInitializer",) + tuple(p[-len(p) + 1 :])
+
 
 def p_ClassMemberDeclaration(p):
     """ClassMemberDeclaration : FieldDeclaration
@@ -384,7 +387,7 @@ def p_ClassMemberDeclaration(p):
 
 
 def p_FieldDeclaration(p):
-    """FieldDeclaration : AlphaFieldModifier Type VariableDeclaratorList SEMICOLON"""
+    """FieldDeclaration : AlphaFieldModifier Result VariableDeclaratorList SEMICOLON"""
     p[0] = ("FieldDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
