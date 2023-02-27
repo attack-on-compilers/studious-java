@@ -510,17 +510,16 @@ def p_Result(p):
 
 
 def p_MethodDeclarator(p):
-    """MethodDeclarator : IDENTIFIER LEFT_PAREN BetaFormalParameterList RIGHT_PAREN
-    | IDENTIFIER LEFT_PAREN RIGHT_PAREN"""
-    if p[3] == "(":
-        p[0] = p[1] + "(" + p[3] + ")"
-    else:
-        p[0] = p[1] + "(" + p[3] + ")"
+    """MethodDeclarator : IDENTIFIER LEFT_PAREN BetaFormalParameterList RIGHT_PAREN"""
+    p[0] = p[1] + "(" + p[3] + ")"
 
 def p_BetaFormalParameterList(p):
     """BetaFormalParameterList : FormalParameterList
     | empty"""
-    p[0] = p[1]
+    if p[1]:
+        p[0] = p[1]
+    else:
+        p[0] = ""
 
 def p_FormalParameterList(p):
     """FormalParameterList : FormalParameter AlphaCommaFormalParameter"""
