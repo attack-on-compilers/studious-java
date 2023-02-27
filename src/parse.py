@@ -1235,14 +1235,14 @@ def p_AssignmentExpression(p):
 
 def p_Assignment(p):
     """Assignment : LeftHandSide AssignmentOperator Expression"""
-    P[0] = ("Assignment",) + tuple(p[-len(p) + 1 :
+    p[0] = ("Assignment",) + tuple(p[-len(p) + 1 :])
 
 
 def p_LeftHandSide(p):
     """LeftHandSide : ExpressionName
     | FieldAccess
     | ArrayAccess"""
-    P[0] = ("LeftHandSide",) + tuple(p[-len(p) + 1 :
+    p[0] = ("LeftHandSide",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AssignmentOperator(p):
@@ -1258,51 +1258,51 @@ def p_AssignmentOperator(p):
     | AMPERSAND_ASSIGN
     | CARET_ASSIGN
     | BAR_ASSIGN"""
-    P[0] = ("AssignmentOperator",) + tuple(p[-len(p) + 1 :
+    p[0] = ("AssignmentOperator",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ConditionalExpression(p):
     """ConditionalExpression : ConditionalOrExpression
     | ConditionalOrExpression QUESTION Expression COLON ConditionalExpression
     | ConditionalOrExpression QUESTION Expression COLON LambdaExpression"""
-    P[0] = ("ConditionalExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("ConditionalExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ConditionalOrExpression(p):
     """ConditionalOrExpression : ConditionalAndExpression
     | ConditionalOrExpression BAR_BAR ConditionalAndExpression"""
-    P[0] = ("ConditionalOrExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("ConditionalOrExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ConditionalAndExpression(p):
     """ConditionalAndExpression : InclusiveOrExpression
     | ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression"""
-    P[0] = ("ConditionalAndExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("ConditionalAndExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_InclusiveOrExpression(p):
     """InclusiveOrExpression : ExclusiveOrExpression
     | InclusiveOrExpression BAR ExclusiveOrExpression"""
-    P[0] = ("InclusiveOrExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("InclusiveOrExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ExclusiveOrExpression(p):
     """ExclusiveOrExpression : AndExpression
     | ExclusiveOrExpression CARET AndExpression"""
-    P[0] = ("ExclusiveOrExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("ExclusiveOrExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AndExpression(p):
     """AndExpression : EqualityExpression
     | AndExpression AMPERSAND EqualityExpression"""
-    P[0] = ("AndExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("AndExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_EqualityExpression(p):
     """EqualityExpression : RelationalExpression
     | EqualityExpression EQUAL_EQUAL RelationalExpression
     | EqualityExpression EXCLAMATION_EQUAL RelationalExpression"""
-    P[0] = ("EqualityExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("EqualityExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_RelationalExpression(p):
@@ -1312,12 +1312,12 @@ def p_RelationalExpression(p):
     | RelationalExpression LESS_EQUAL ShiftExpression
     | RelationalExpression GREATER_EQUAL ShiftExpression
     | InstanceofExpression"""
-    P[0] = ("RelationalExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("RelationalExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_InstanceofExpression(p):
     """InstanceofExpression : RelationalExpression INSTANCEOF ReferenceType"""
-    P[0] = ("InstanceofExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("InstanceofExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_ShiftExpression(p):
@@ -1325,14 +1325,14 @@ def p_ShiftExpression(p):
     | ShiftExpression LEFT_SHIFT AdditiveExpression
     | ShiftExpression RIGHT_SHIFT AdditiveExpression
     | ShiftExpression UNSIGNED_RIGHT_SHIFT AdditiveExpression"""
-    P[0] = ("ShiftExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("ShiftExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AdditiveExpression(p):
     """AdditiveExpression : MultiplicativeExpression
     | AdditiveExpression PLUS MultiplicativeExpression
     | AdditiveExpression MINUS MultiplicativeExpression"""
-    P[0] = ("AdditiveExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("AdditiveExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_MultiplicativeExpression(p):
@@ -1340,7 +1340,7 @@ def p_MultiplicativeExpression(p):
     | MultiplicativeExpression STAR UnaryExpression
     | MultiplicativeExpression SLASH UnaryExpression
     | MultiplicativeExpression PERCENT UnaryExpression"""
-    p[0] = ("MultiplicativeExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("MultiplicativeExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_UnaryExpression(p):
@@ -1349,17 +1349,17 @@ def p_UnaryExpression(p):
     | PLUS UnaryExpression
     | MINUS UnaryExpression
     | UnaryExpressionNotPlusMinus"""
-    p[0] = ("UnaryExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("UnaryExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_PreIncrementExpression(p):
     """PreIncrementExpression : PLUS_PLUS UnaryExpression"""
-    p[0] = ("PreIncrementExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("PreIncrementExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_DecrementExpression(p):
     """PreDecrementExpression : MINUS_MINUS UnaryExpression"""
-    p[0] = ("PreDecrementExpression",) + tuple(p[-len(p) + 1 :
+    p[0] = ("PreDecrementExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_UnaryExpressionNotPlusMinus(p):
@@ -1368,7 +1368,7 @@ def p_UnaryExpressionNotPlusMinus(p):
     | EXCLAMATION UnaryExpression
     | CastExpression
     | SwitchExpression"""
-    p[0] = ("UnaryExpressionNotPlusMinus",) + tuple(p[-len(p) + 1 :
+    p[0] = ("UnaryExpressionNotPlusMinus",) + tuple(p[-len(p) + 1 :])
 
 
 def p_PostfixExpression(p):
@@ -1376,7 +1376,7 @@ def p_PostfixExpression(p):
     | ExpressionName
     | PostIncrementExpression
     | PostDecrementExpression"""
-    p[0] = ("PostfixExpression",) + tuple(p[-len(p) + 1 :]
+    p[0] = ("PostfixExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_PostIncrementExpression(p):
