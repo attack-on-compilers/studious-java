@@ -244,6 +244,11 @@ def p_TypeArgument(p):
     p[0] = p[1]
 
 
+def p_Type(p):
+    """Type : ReferenceType
+    | PrimitiveType"""
+    p[0] = p[1]
+
 def p_ReferenceType(p):
     """ReferenceType : ClassType
     | TypeVariable
@@ -428,7 +433,7 @@ def p_VariableDeclaratorId(p):
         p[0] = p[1]
 
 def p_VariableInitializer(p):
-    """VariableInitializer : Expression
+    """VariableInitializer : TRANSITIVE
     | ArrayInitializer"""
     p[0] = p[1]
 
@@ -480,18 +485,57 @@ def p_MethodHeader(p):
     """MethodHeader : Result MethodDeclarator BetaThrows
     | TypeParameters Result MethodDeclarator BetaThrows"""
 
+def p_TypeParameters(p):
+    """TypeParameters : LESS TypeParameterList GREATER"""
+    p[0] = "<" + p[2] + ">"
+
 def p_Result(p):
     """Result : Type
     | VOID"""
     p[0] = p[1]
 
 def p_MethodDeclarator(p):
-    """MethodDeclarator : IDENTIFIER LEFT_PARENTHESIS FormalParameterList RIGHT_PARENTHESIS
-    | IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS"""
+    """MethodDeclarator : IDENTIFIER LEFT_PAREN FormalParameterList RIGHT_PAREN
+    | IDENTIFIER LEFT_PAREN RIGHT_PAREN"""
     if p[3] == "(":
         p[0] = p[1] + "(" + p[3] + ")"
     else:
         p[0] = p[1] + "(" + p[3] + ")"
+
+def p_FormalParameterList(p):
+    """FormalParameterList : FormalParameter AlphaCommaFormalParameter"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaCommaFormalParameter(p):
+    """AlphaCommaFormalParameter : COMMA FormalParameter AlphaCommaFormalParameter
+    | empty"""
+    if p[1] == ",":
+        p[0] = ", " + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_FormalParameter(p):
+    """FormalParameter : AlphaVariableModifier Type VariableDeclaratorId VariableArityParameter"""
+    p[0] = p[1] + " " + p[2] + " " + p[3] + p[4]
+
+def p_AlphaVariableModifier(p):
+    """AlphaVariableModifier : VariableModifier AlphaVariableModifier
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + " " + p[2]
+    else:
+        p[0] = ""
+
+def p_VariableModifier(p):
+    """VariableModifier : FINAL"""
+    p[0] = p[1]
+
+def p_VariableArityParameter(p):
+    """VariableArityParameter : AlphaVariableModifier Type ELLIPSIS IDENTIFIER"""
+    if p[1] == "...":
+        p[0] = "..."
+    else:
+        p[0] = ""
 
 def p_BetaThrows(p):
     """BetaThrows : THROWS ClassTypeList

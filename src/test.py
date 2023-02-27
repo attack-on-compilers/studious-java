@@ -87,6 +87,35 @@ def p_Dims(p):
 def p_TypeParameter(p):
     """ TypeParameter : AlphaTypeParameterModifier IDENTIFIER BetaTypeBound"""
 
+def p_AlphaTypeParameterModifier(p):
+    """AlphaTypeParameterModifier : TypeParameterModifier AlphaTypeParameterModifier
+                                  |"""
+    p[0] = ("AlphaTypeParameterModifier",) + tuple(p[-len(p) + 1 :])
+
+def p_TypeParameterModifier(p):
+    """TypeParameterModifier : Annotation"""
+    p[0] = ("TypeParameterModifier",) + tuple(p[-len(p) + 1 :])
+
+def p_BetaTypeBound(p):
+    """BetaTypeBound : TypeBound
+                     |"""
+    p[0] = ("BetaTypeBound",) + tuple(p[-len(p) + 1 :])
+
+def p_TypeBound(p):
+    """TypeBound : EXTENDS TypeVariable
+                 | EXTENDS ClassOrInterfaceType AlphaAdditionalBound"""
+    p[0] = ("TypeBound",) + tuple(p[-len(p) + 1 :])
+
+def p_AlphaAdditionalBound(p):
+    """AlphaAdditionalBound : AdditionalBound AlphaAdditionalBound
+                            |"""
+    p[0] = ("AlphaAdditionalBound",) + tuple(p[-len(p) + 1 :])
+
+def p_AdditionalBound(p):
+    """AdditionalBound : AMP ClassOrInterfaceType"""
+    p[0] = ("AdditionalBound",) + tuple(p[-len(p) + 1 :])
+
+
 
 
 def p_error(p):
