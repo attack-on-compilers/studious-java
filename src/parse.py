@@ -481,18 +481,25 @@ def p_AlphaCommaVariableInitializer(p):
 
 def p_MethodDeclaration(p):
     """MethodDeclaration : AlphaFieldModifier MethodHeader MethodBody"""
-    p[0] = p[1] + p[2]
+    p[0] = p[1] + p[2] + p[3]
 
 
 
 def p_MethodHeader(p):
-    """MethodHeader : Result MethodDeclarator BetaThrows
-    | TypeParameters Result MethodDeclarator BetaThrows"""
+    """MethodHeader : BetaTypeParameters Result MethodDeclarator BetaThrows"""
+    p[0] = str(p[1]) + " " + str(p[2]) + " " + p[3] + p[4]
+
+def p_BetaTypeParameters(p):
+    """BetaTypeParameters : TypeParameters
+    | empty"""
+    p[0] = p[1]
 
 
 def p_TypeParameters(p):
     """TypeParameters : LESS TypeParameterList GREATER"""
     p[0] = "<" + p[2] + ">"
+    if p[1] == "<":
+        p[0] = p[1] + p[2] + p[3]
 
 
 def p_Result(p):
@@ -502,13 +509,17 @@ def p_Result(p):
 
 
 def p_MethodDeclarator(p):
-    """MethodDeclarator : IDENTIFIER LEFT_PAREN FormalParameterList RIGHT_PAREN
+    """MethodDeclarator : IDENTIFIER LEFT_PAREN BetaFormalParameterList RIGHT_PAREN
     | IDENTIFIER LEFT_PAREN RIGHT_PAREN"""
     if p[3] == "(":
         p[0] = p[1] + "(" + p[3] + ")"
     else:
         p[0] = p[1] + "(" + p[3] + ")"
 
+def p_BetaFormalParameterList(p):
+    """BetaFormalParameterList : FormalParameterList
+    | empty"""
+    p[0] = p[1]
 
 def p_FormalParameterList(p):
     """FormalParameterList : FormalParameter AlphaCommaFormalParameter"""
@@ -573,7 +584,7 @@ def p_Block(p):
 
 def p_BetaBlockStatements(p):
     """BetaBlockStatements : empty"""
-    p[0] = p[1]
+    p[0] = str(p[1])
 
 
 # def p_error(p):
