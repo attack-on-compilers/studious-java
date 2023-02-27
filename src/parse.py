@@ -51,7 +51,7 @@ def p_AlphaImportDeclaration(p):
     """AlphaImportDeclaration : IMPORT BetaImportStatic IDENTIFIER AlphaDotIdentifier BetaImportStar SEMICOLON AlphaImportDeclaration
     | empty"""
     if p[1] == "import":
-        p[0] = "import " + str(p[2]) + p[3] + str(p[4]) + str(p[5]) + ";\r" + str(p[7])
+        p[0] = "import " + p[2] + p[3] + p[4] + p[5] + ";\r" + p[7]
     else:
         p[0] = ""
 
@@ -106,14 +106,14 @@ def p_ClassDeclaration(p):
 
 
 def p_NormalClassDeclaration(p):
-    """NormalClassDeclaration : AlphaClassModifier CLASS IDENTIFIER BetaTypeParameters"""  # BetaClassExtends BetaClassImplements BetaClassPermits ClassBody"""
+    """NormalClassDeclaration : AlphaClassModifier CLASS IDENTIFIER BetaTypeParameters BetaClassExtends BetaClassImplements BetaClassPermits"""  #    ClassBody"""
     p[0] = p[1] + "class " + p[3] + p[4]  # + p[5] + p[6] + p[7] + p[8]
 
 
 def p_AlphaClassModifier(p):
     """AlphaClassModifier : ClassModifier AlphaClassModifier
     | empty"""
-    if p[2]:
+    if p[1]:
         p[0] = p[1] + p[2]
     else:
         p[0] = ""
@@ -171,15 +171,15 @@ def p_BetaTypeBound(p):
 
 def p_TypeBound_1(p):
     """TypeBound_1 : IDENTIFIER
-    | ClassOrInterfaceType AlphaAdditionalBound"""
-    if p[2]:
+    | ClassType AlphaAdditionalBound"""
+    if p[1] == "IDENTIFIER":
         p[0] = p[1] + p[2]
     else:
         p[0] = p[1]
 
 
 def p_AlphaAdditionalBound(p):
-    """AlphaAdditionalBound : AMPERSAND InterfaceType AlphaAdditionalBound
+    """AlphaAdditionalBound : AMPERSAND ClassType AlphaAdditionalBound
     | empty"""
     if p[1] == "&":
         p[0] = " & " + p[2] + p[3]
@@ -187,21 +187,21 @@ def p_AlphaAdditionalBound(p):
         p[0] = ""
 
 
-def p_ClassOrInterfaceType(p):
-    """ClassOrInterfaceType : ClassType
-    | InterfaceType"""
-    p[0] = p[1]
+# def p_ClassOrInterfaceType(p):
+#     """ClassOrInterfaceType : ClassType
+#     | InterfaceType"""
+#     p[0] = p[1]
 
 
-def p_InterfaceType(p):
-    """InterfaceType : ClassType"""
-    p[0] = p[1]
+# def p_InterfaceType(p):
+#     """InterfaceType : ClassType"""
+#     p[0] = p[1]
 
 
 def p_ClassType(p):
     """ClassType : IDENTIFIER BetaTypeArguments
     | IDENTIFIER AlphaDotIdentifier BetaTypeArguments
-    | ClassOrInterfaceType DOT IDENTIFIER BetaTypeArguments"""
+    | ClassType DOT IDENTIFIER BetaTypeArguments"""
     if p[2] == ".":
         p[0] = p[1] + "." + p[3] + p[4]
     else:
@@ -243,7 +243,7 @@ def p_TypeArgument(p):
 
 
 def p_ReferenceType(p):
-    """ReferenceType : ClassOrInterfaceType
+    """ReferenceType : ClassType
     | TypeVariable
     | ArrayType"""
     p[0] = p[1]
@@ -256,7 +256,7 @@ def p_TypeVariable(p):
 
 def p_ArrayType(p):
     """ArrayType : PrimitiveType Dims
-    | ClassOrInterfaceType Dims
+    | ClassType Dims
     | TypeVariable Dims"""
     p[0] = p[1] + p[2]
 
@@ -298,6 +298,58 @@ def p_BetaWildcardBounds(p):
     else:
         p[0] = ""
 
+
+def p_BetaClassExtends(p):
+    """BetaClassExtends : EXTENDS ClassType
+    | empty"""
+    if p[1] == "extends":
+        p[0] = " extends " + p[2]
+    else:
+        p[0] = ""
+
+def p_BetaClassImplements(p):
+    """BetaClassImplements : IMPLEMENTS ClassTypeList
+    | empty"""
+    if p[1] == "implements":
+        p[0] = " implements " + p[2]
+    else:
+        p[0] = ""
+
+def p_ClassTypeList(p):
+    """ClassTypeList : ClassType AlphaCommaClassType"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaCommaClassType(p):
+    """AlphaCommaClassType : COMMA ClassType AlphaCommaClassType
+    | empty"""
+    if p[1] == ",":
+        p[0] = ", " + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_BetaClassPermits(p):
+    """BetaClassPermits : PERMITS TypeName AlphaCommaTypeName
+    | empty"""
+    if p[1] == "permits":
+        p[0] = " permits " + p[2]
+    else:
+        p[0] = ""
+
+def p_AlphaCommaTypeName(p):
+    """AlphaCommaTypeName : COMMA TypeName AlphaCommaTypeName
+    | empty"""
+    if p[1] == ",":
+        p[0] = ", " + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_TypeName(p):
+    """TypeName : IDENTIFIER
+    | IDENTIFIER AlphaDotIdentifier"""
+    if p[1]=="IDENTIFIER":
+        p[0] = p[1] + "." + p[2]
+    else:
+        p[0] = p[1]
 
 def p_empty(p):
     "empty :"

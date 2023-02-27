@@ -131,3 +131,6 @@ dmypy.json
 src/parsetab.py 
 src/parser.out 
 src/parsetab.pyc
+
+# VSCode
+.vscode/
