@@ -54,20 +54,38 @@ def p_FloatingPointType(p):
     p[0] = ("FloatingPointType",) + tuple(p[-len(p) + 1 :])
 
 def p_ReferenceType(p):
-    """ReferenceType : ClassOrInterfaceType
+    """ReferenceType : ClassType
                      | TypeVariable
                      | ArrayType"""
     p[0] = ("ReferenceType",) + tuple(p[-len(p) + 1 :])
 
-def p_ClassOrInterfaceType(p):
-    """ClassOrInterfaceType : ClassType
-                            | InterfaceType"""
-    p[0] = ("ClassOrInterfaceType",) + tuple(p[-len(p) + 1 :])
-
 def p_ClassType(p):
-    """ClassType : ClassType DOT Identifier
-                 | AlphaAnnotation Identifier"""
+    """ClassType : AlphaAnnotation Identifier BetaTypeArguments
+                 | ClassType DOT AlphaAnnotation Identifier BetaTypeArguments"""
     p[0] = ("ClassType",) + tuple(p[-len(p) + 1 :])
+
+def p_BetaTypeArguments(p):
+    """BetaTypeArguments : TypeArguments
+                         |"""
+    p[0] = ("BetaTypeArguments",) + tuple(p[-len(p) + 1 :])
+
+def typeVariable(p):
+    """TypeVariable : AlphaAnnotation Identifier"""
+    p[0] = ("TypeVariable",) + tuple(p[-len(p) + 1 :])
+
+def p_ArrayType(p):
+    """ArrayType : PrimitiveType Dims
+                 | ClassOrInterfaceType Dims
+                 | TypeVariable Dims"""
+    p[0] = ("ArrayType",) + tuple(p[-len(p) + 1 :])
+
+def p_Dims(p):
+    """Dims : AlphaAnnotation LBRACK RBRACK
+            | AlphaAnnotation LBRACK RBRACK Dims"""
+    p[0] = ("Dims",) + tuple(p[-len(p) + 1 :])
+
+def p_TypeParameter(p):
+    """ TypeParameter : AlphaTypeParameterModifier IDENTIFIER BetaTypeBound"""
 
 
 

@@ -493,8 +493,26 @@ def p_MethodDeclarator(p):
     else:
         p[0] = p[1] + "(" + p[3] + ")"
 
+def p_BetaThrows(p):
+    """BetaThrows : THROWS ClassTypeList
+    | empty"""
+    if p[1] == "throws":
+        p[0] = " throws " + p[2]
+    else:
+        p[0] = ""
 
+def p_MethodBody(p):
+    """MethodBody : Block
+    | SEMICOLON"""
+    p[0] = p[1]
 
+def p_Block(p):
+    """Block : LEFT_BRACE BetaBlockStatements RIGHT_BRACE"""
+    p[0] = "{" + p[2] + "}"
+
+def p_BetaBlockStatements(p):
+    """BetaBlockStatements : empty"""
+    p[0] = p[1]
 
 
 
