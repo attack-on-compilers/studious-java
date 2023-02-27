@@ -597,6 +597,368 @@ def p_LocalVariableDeclarationStatement(p):
     """LocalVariableDeclarationStatement : LocalVariableDeclaration SEMICOLON"""
     p[0] = p[1] + ";"
 
+def p_LocalVariableDeclaration(p):
+    """LocalVariableDeclaration : AlphaVariableModifier LocalVariableType VariableDeclaratorList"""
+    p[0] = p[1] + " " + p[2] + " " + p[3]
+
+
+def p_localVariableType(p):
+    """LocalVariableType : Type
+    | VAR"""
+    p[0] = p[1]
+
+def p_Statement(p):
+    """Statement : StatementWithoutTrailingSubstatement
+    | LabeledStatement
+    | IfThenStatement
+    | IfThenElseStatement
+    | WhileStatement
+    | ForStatement"""
+    p[0] = p[1]
+
+def p_StatementNoShortIf(p):
+    """StatementNoShortIf : StatementWithoutTrailingSubstatement
+    | LabeledStatementNoShortIf
+    | IfThenElseStatementNoShortIf
+    | WhileStatementNoShortIf
+    | ForStatementNoShortIf"""
+    p[0] = p[1]    
+
+def p_StatementWithoutTrailingSubstatement(p):
+    """StatementWithoutTrailingSubstatement : Block
+    | EmptyStatement
+    | ExpressionStatement
+    | AssertStatement
+    | SwitchStatement
+    | DoStatement
+    | BreakStatement
+    | ContinueStatement
+    | ReturnStatement
+    | SynchronizedStatement
+    | ThrowStatement
+    | TryStatement
+    | YieldStatement"""
+    p[0] = p[1]
+
+def p_EmptyStatement(p):
+    """EmptyStatement : SEMICOLON"""
+    p[0] = ";"
+
+def p_LabeledStatement(p):
+    """LabeledStatement : Identifier COLON Statement"""
+    p[0] = p[1] + ":" + p[3]    
+
+def p_LabeledStatementNoShortIf(p):
+    """LabeledStatementNoShortIf : Identifier COLON StatementNoShortIf"""
+    p[0] = p[1] + ":" + p[3]    
+
+def p_ExpressionStatement(p):
+    """ExpressionStatement : StatementExpression SEMICOLON"""
+    p[0] = p[1] + ";"
+
+def p_StatementExpression(p):
+    """StatementExpression : Assignment
+    | PreIncrementExpression
+    | PreDecrementExpression
+    | PostIncrementExpression
+    | PostDecrementExpression
+    | MethodInvocation
+    | ClassInstanceCreationExpression"""
+    p[0] = p[1]    
+
+def p_IfThenStatement(p):
+    """IfThenStatement : IF LEFT_PAREN Expression RIGHT_PAREN Statement"""
+    p[0] = "if (" + p[3] + ")" + p[5]
+
+def p_IfThenElseStatement(p):
+    """IfThenElseStatement : IF LEFT_PAREN Expression RIGHT_PAREN Statement ELSE Statement"""
+    p[0] = "if (" + p[3] + ")" + p[5] + "else" + p[7]
+
+def p_IfThenElseStatementNoShortIf(p):
+    """IfThenElseStatementNoShortIf : IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE StatementNoShortIf"""
+    p[0] = "if (" + p[3] + ")" + p[5] + "else" + p[7]
+
+def p_AssertStatement(p):
+    """AssertStatement : ASSERT Expression SEMICOLON
+    | ASSERT Expression COLON Expression SEMICOLON"""
+    if p[3] == ":":
+        p[0] = "assert " + p[2] + " : " + p[4] + ";"
+    else:
+        p[0] = "assert " + p[2] + ";"
+
+def p_SwitchStatement(p):
+    """SwitchStatement : SWITCH LEFT_PAREN Expression RIGHT_PAREN SwitchBlock"""
+    p[0] = "switch (" + p[3] + ")" + p[5]
+
+def p_SwitchBlock(p):
+    """SwitchBlock : LEFT_BRACE SwitchBlockStatementGroup RIGHT_BRACE
+    | LEFT_BRACE SwitchLabel RIGHT_BRACE"""
+    p[0] = "{" + p[2] + "}"
+
+def p_AlphaSwitchRule(p):
+    """AlphaSwitchRule : SwitchRule AlphaSwitchRule
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+def p_AlphaSwitchBlockStatementGroup(p):
+    """AlphaSwitchBlockStatementGroup : SwitchBlockStatementGroup AlphaSwitchBlockStatementGroup
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+def p_AlphaSwitchLabelColon(p):
+    """AlphaSwitchLabelColon : SwitchLabelColon AlphaSwitchLabelColon
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+def p_SwitchRule(p):
+    """SwitchRule : SwitchLabel ARROW Expression SEMICOLON
+    | SwitchLabel ARROW Block
+    | SwitchLabel ARROW ThrowStatement"""
+    if p[3] == "{":
+        p[0] = p[1] + " -> " + p[3]
+    elif p[3] == "throw":
+        p[0] = p[1] + " -> " + p[3] + p[4] + ";"        
+    else:
+        p[0] = p[1] + " -> " + p[3] + ";"
+
+def p_SwitchBlockStatementGroup(p):
+    """SwitchBlockStatementGroup : SwitchLabel SwitchBlockStatement"""
+    p[0] = p[1] + p[2]  
+
+
+def p_SwitchLabel(p):
+    """SwitchLabel : CASE ConstantExpression COLON
+    | DEFAULT COLON"""
+    if p[1] == "case":
+        p[0] = "case " + p[2] + ":"
+    else:
+        p[0] = "default:"
+
+def p_AlphaCommaCaseConstant(p):
+    """AlphaCommaCaseConstant : COMMA CaseConstant AlphaCommaCaseConstant
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_CaseConstant(p):
+    """CaseConstant : ConstantExpression"""
+    p[0] = p[1]
+
+def p_WhileStatement(p):
+    """WhileStatement : WHILE LEFT_PAREN Expression RIGHT_PAREN Statement"""
+    p[0] = "while (" + p[3] + ")" + p[5]
+
+def p_WhileStatementNoShortIf(p):
+    """WhileStatementNoShortIf : WHILE LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf"""
+    p[0] = "while (" + p[3] + ")" + p[5]
+
+def p_DoStatement(p):
+    """DoStatement : DO Statement WHILE LEFT_PAREN Expression RIGHT_PAREN SEMICOLON"""
+    p[0] = "do" + p[2] + "while (" + p[5] + ");"        
+
+def p_ForStatement(p):
+    """ForStatement : BasicForStatement
+    | EnhancedForStatement"""
+    p[0] = p[1]
+
+def p_ForStatementNoShortIf(p):
+    """ForStatementNoShortIf : BasicForStatementNoShortIf
+    | EnhancedForStatementNoShortIf"""
+    p[0] = p[1]
+
+def p_BasicForStatement(p):
+    """BasicForStatement : FOR LEFT_PAREN ForInit SEMICOLON Expression SEMICOLON ForUpdate RIGHT_PAREN Statement"""
+    p[0] = "for (" + p[3] + ";" + p[5] + ";" + p[7] + ")" + p[9]
+
+def p_BetaForInit(p):
+    """BetaForInit : ForInit
+    | empty"""
+    p[0] = p[1]
+
+def p_BetaExpression(p):
+    """BetaExpression : Expression
+    | empty"""
+    p[0] = p[1]
+
+def p_BetaForUpdate(p):
+    """BetaForUpdate : ForUpdate
+    | empty"""
+    p[0] = p[1]
+
+def p_BasicForStatementNoShortIf(p):
+    """BasicForStatementNoShortIf : FOR LEFT_PAREN ForInit SEMICOLON Expression SEMICOLON ForUpdate RIGHT_PAREN StatementNoShortIf"""
+    p[0] = "for (" + p[3] + ";" + p[5] + ";" + p[7] + ")" + p[9]
+
+def p_ForInit(p):
+    """ForInit : StatementExpressionList
+    | VariableDeclarators"""
+    p[0] = p[1]
+
+def p_ForUpdate(p):
+    """ForUpdate : StatementExpressionList"""
+    p[0] = p[1]
+
+def p_StatementExpressionList(p):
+    """StatementExpressionList : StatementExpression AlphaCommaStatementExpression"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaCommaStatementExpression(p):
+    """AlphaCommaStatementExpression : COMMA StatementExpression AlphaCommaStatementExpression
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_EnhancedForStatement(p):
+    """EnhancedForStatement : FOR LEFT_PAREN VariableModifier Type IDENTIFIER COLON Expression RIGHT_PAREN Statement"""
+    p[0] = "for (" + p[3] + p[4] + p[5] + ":" + p[7] + ")" + p[9]
+
+def p_EnhancedForStatementNoShortIf(p):
+    """EnhancedForStatementNoShortIf : FOR LEFT_PAREN VariableModifier Type IDENTIFIER COLON Expression RIGHT_PAREN StatementNoShortIf"""
+    p[0] = "for (" + p[3] + p[4] + p[5] + ":" + p[7] + ")" + p[9]
+
+def p_BreakStatement(p):
+    """BreakStatement : BREAK BetaIdentifier SEMICOLON"""
+    p[0] = "break" + p[2] + ";"
+
+def p_BetaIdentifier(p):
+        """BetaIdentifier : IDENTIFIER
+        | empty"""
+        p[0] = p[1]
+
+def p_YieldStatement(p):
+    """YieldStatement : YIELD Expression SEMICOLON
+    | YIELD BetaExpression SEMICOLON"""
+    p[0] = "yield " + p[2] + ";"
+
+def p_ContinueStatement(p):
+    """ContinueStatement : CONTINUE BetaIdentifier SEMICOLON"""
+    p[0] = "continue" + p[2] + ";"
+
+def p_ReturnStatement(p):
+    """ReturnStatement : RETURN BetaExpression SEMICOLON"""
+    p[0] = "return " + p[2] + ";"
+
+def p_ThrowStatement(p):
+    """ThrowStatement : THROW Expression SEMICOLON"""
+    p[0] = "throw " + p[2] + ";"
+
+def p_SynchronizedStatement(p):
+    """SynchronizedStatement : SYNCHRONIZED LEFT_PAREN Expression RIGHT_PAREN Block"""
+    p[0] = "synchronized (" + p[3] + ")" + p[5]
+
+def p_TryStatement(p):
+    """TryStatement : TRY Block Catches"""
+    p[0] = "try" + p[2] + p[3]
+
+def p_BetaCatches(p):
+    """BetaCatches : Catches
+    | empty"""
+    p[0] = p[1]
+
+
+def p_Catches(p):
+    """Catches : CatchClause AlphaCatchClause"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaCatchClause(p):
+    """AlphaCatchClause : CatchClause AlphaCatchClause
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+def p_CatchClause(p):
+    """CatchClause : CATCH LEFT_PAREN FormalParameter RIGHT_PAREN Block"""
+    p[0] = "catch (" + p[3] + ")" + p[5]
+
+def p_CatchFormalParameter(p):
+    """CatchFormalParameter : CatchType IDENTIFIER"""
+    p[0] = p[1] + p[2]
+
+def p_CatchType(p):
+    """CatchType : Type"""
+    p[0] = p[1] 
+
+def p_AlphaPipeCatchType(p):
+    """AlphaPipeCatchType : PIPE CatchType AlphaPipeCatchType
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_Finally(p):
+    """Finally : FINALLY Block"""
+    p[0] = "finally" + p[2]
+
+def p_TryWithResourcesStatement(p):
+    """TryWithResourcesStatement : TRY ResourceSpecification Block Catches BetaFinally"""
+    p[0] = "try" + p[2] + p[3] + p[4] + p[5]
+
+def p_BetaFinally(p):
+    """BetaFinally : Finally
+    | empty"""
+    p[0] = p[1]
+
+def p_ResourceSpecification(p):
+    """ResourceSpecification : LEFT_PAREN Resources SEMICOLON RIGHT_PAREN"""
+    p[0] = "(" + p[2] + ";)"
+
+def p_BetaSemiColon(p):
+    """BetaSemiColon : SEMICOLON
+    | empty"""
+    p[0] = p[1]
+
+def p_ResourceList(p):
+    """ResourceList : Resource AlphaSemiColonResource"""
+    p[0] = p[1] + p[2]
+
+def p_AlphaSemiColonResource(p):
+    """AlphaSemiColonResource : SEMICOLON Resource AlphaSemiColonResource
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2] + p[3]
+    else:
+        p[0] = ""
+
+def p_Resource(p):
+    """Resource : LocalVariableDeclaration
+    | VariableAccess"""
+    p[0] = p[1]
+
+def p_Pattern(p):
+    """Pattern : TypePattern"""
+    p[0] = p[1]
+
+def p_TypePattern(p):
+    """TypePattern : LocalVariableDeclaration"""
+    p[0] = p[1]   
+
+
+
+
+
+        
+
+
+        
+
+       
+
 def p_error(p):
     print("Syntax error in input!")
 
