@@ -645,11 +645,11 @@ def p_EmptyStatement(p):
     p[0] = ";"
 
 def p_LabeledStatement(p):
-    """LabeledStatement : Identifier COLON Statement"""
+    """LabeledStatement : IDENTIFIER COLON Statement"""
     p[0] = p[1] + ":" + p[3]    
 
 def p_LabeledStatementNoShortIf(p):
-    """LabeledStatementNoShortIf : Identifier COLON StatementNoShortIf"""
+    """LabeledStatementNoShortIf : IDENTIFIER COLON StatementNoShortIf"""
     p[0] = p[1] + ":" + p[3]    
 
 def p_ExpressionStatement(p):
@@ -712,7 +712,7 @@ def p_AlphaSwitchBlockStatementGroup(p):
         p[0] = ""
 
 def p_AlphaSwitchLabelColon(p):
-    """AlphaSwitchLabelColon : SwitchLabelColon AlphaSwitchLabelColon
+    """AlphaSwitchLabelColon : SwitchLabel COLON AlphaSwitchLabelColon
     | empty"""
     if p[1]:
         p[0] = p[1] + p[2]
@@ -731,7 +731,7 @@ def p_SwitchRule(p):
         p[0] = p[1] + " -> " + p[3] + ";"
 
 def p_SwitchBlockStatementGroup(p):
-    """SwitchBlockStatementGroup : SwitchLabel SwitchBlockStatement"""
+    """SwitchBlockStatementGroup : SwitchLabel COLON AlphaSwitchLabelColon BlockStatements"""
     p[0] = p[1] + p[2]  
 
 
@@ -802,7 +802,7 @@ def p_BasicForStatementNoShortIf(p):
 
 def p_ForInit(p):
     """ForInit : StatementExpressionList
-    | VariableDeclarators"""
+    | LocalVariableDeclaration"""
     p[0] = p[1]
 
 def p_ForUpdate(p):
@@ -915,7 +915,7 @@ def p_BetaFinally(p):
     p[0] = p[1]
 
 def p_ResourceSpecification(p):
-    """ResourceSpecification : LEFT_PAREN Resources SEMICOLON RIGHT_PAREN"""
+    """ResourceSpecification : LEFT_PAREN ResourceList BetaSemiColon RIGHT_PAREN"""
     p[0] = "(" + p[2] + ";)"
 
 def p_BetaSemiColon(p):
@@ -967,7 +967,7 @@ def p_PrimaryNoNewArray(p):
     """PrimaryNoNewArray : Literal
     | ClassLiteral
     | THIS
-    | TypeName PERIOD THIS
+    | IDENTIFIER AlphaDotIdentifier DOT THIS
     | LEFT_PAREN Expression RIGHT_PAREN
     | ClassInstanceCreationExpression
     | FieldAccess
@@ -984,10 +984,9 @@ def p_PrimaryNoNewArray(p):
         p[0] = p[1]
 
 def p_ClassLiteral(p):
-    """ClassLiteral : TypeName AlphaSquareBrackets PERIOD CLASS
-    | NumericType AlphaSquareBrackets PERIOD CLASS
-    | BOOLEAN AlphaSquareBrackets CLASS
-    | VOID PERIOD CLASS"""
+    """ClassLiteral : IDENTIFIER AlphaDotIdentifier AlphaSquareBrackets DOT CLASS
+    | Type AlphaSquareBrackets DOT CLASS
+    | VOID DOT CLASS"""
     if p[1] == "void":
         p[0] = "void.class"
     elif p[1] == "boolean":
@@ -1005,8 +1004,8 @@ def p_AlphaSquareBrackets(p):
 
 def p_ClassInstanceCreationExpression(p):
     """ClassInstanceCreationExpression : UnqualifiedClassInstanceCreationExpression
-    | ExpressionName PERIOD UnqualifiedClassInstanceCreationExpression
-    | Primary PERIOD UnqualifiedClassInstanceCreationExpression"""
+    | ExpressionName DOT UnqualifiedClassInstanceCreationExpression
+    | Primary DOT UnqualifiedClassInstanceCreationExpression"""
     if len(p) == 2:
         p[0] = p[1]
     elif len(p) == 4:
@@ -1021,16 +1020,9 @@ def p_UnqualifiedClassInstanceCreationExpression(p):
         p[0] = "new " + p[2] + p[3] + "()" + p[6]
 
 def p_ClassOrInterfaceTypeToInstantiate(p):
-    """ClassOrInterfaceTypeToInstantiate : AlphaAnnotation Identifier AlphaDotAlphaAnnotationIdentifier BetaTypeArgumentsOrDiamond"""
-    p[0] = p[1] + p[2] + p[3] + p[4]     
+    """ClassOrInterfaceTypeToInstantiate : IDENTIFIER AlphaDotIdentifier BetaTypeArgumentsOrDiamond"""
+    p[0] = p[1] + p[2] + p[3] 
 
-def p_AlphaDotAlphaAnnotationIdentifier(p):
-    """AlphaDotAlphaAnnotationIdentifier : 
-    | PERIOD AlphaAnnotation Identifier AlphaDotAlphaAnnotationIdentifier"""
-    if len(p) == 2:
-        p[0] = ""
-    else:
-        p[0] = "." + p[2] + p[3] + p[4]
 
 def p_BetaTypeArgumentsOrDiamond(p):
     """BetaTypeArgumentsOrDiamond : TypeArgumentsOrDiamond
@@ -1046,29 +1038,29 @@ def p_TypeArgumentsOrDiamond(p):
         p[0] = "<>"
 
 def p_FieldAccess(p):
-    """FieldAccess : Primary PERIOD Identifier
-    | SUPER PERIOD Identifier
-    | TypeName PERIOD SUPER PERIOD Identifier"""
+    """FieldAccess : Primary DOT IDENTIFIER
+    | SUPER DOT IDENTIFIER
+    | IDENTIFIER AlphaDotIdentifier DOT SUPER DOT IDENTIFIER"""
     if len(p) == 4:
         p[0] = p[1] + "." + p[3]
     else:
         p[0] = p[1] + "." + p[3] + "." + p[5]
 
 def p_ArrayAccess(p):
-    """ArrayAccess : ExpressionName LEFT_BRACKET Expression RIGHT_BARCKET
-    | PrimaryNoNewArray LEFT_BRACKET Expression RIGHT_BARCKET"""
+    """ArrayAccess : ExpressionName LEFT_BRACKET Expression RIGHT_BRACKET
+    | PrimaryNoNewArray LEFT_BRACKET Expression RIGHT_BRACKET"""
     if len(p) == 5:
         p[0] = p[1] + "[" + p[3] + "]"
     else:
         p[0] = p[1] + "[" + p[3] + "]"          
 
 def p_MethodInvocation(p):
-    """MethodInvocation : MethodName LEFT_PAREN BetaArgumentList RIGHT_PAREN
-    | TypeName PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
-    | ExpressionName PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
-    | Primary PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
-    | SUPER PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
-    | TypeName PERIOD SUPER PERIOD BetaTypeArguments Identifier LEFT_PAREN BetaArgumentList RIGHT_PAREN"""
+    """MethodInvocation : IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | IDENTIFIER AlphaDotIdentifier DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | ExpressionName DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | Primary DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | SUPER DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | IDENTIFIER AlphaDotIdentifier DOT SUPER DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN"""
     if len(p) == 5:
         p[0] = p[1] + "(" + p[3] + ")"
     else:
@@ -1087,11 +1079,11 @@ def p_AlphaCommaExpression(p):
         p[0] = "," + p[2] + p[3]
 
 def p_MethodReference(p):
-    """MethodReference : ExpressionName COLON_COLON BetaTypeArguments Identifier
-    | Primary COLON_COLON BetaTypeArguments Identifier
-    | ReferenceType COLON_COLON BetaTypeArguments Identifier
-    | SUPER COLON_COLON BetaTypeArguments Identifier
-    | TypeName PERIOD SUPER COLON_COLON BetaTypeArguments Identifier
+    """MethodReference : ExpressionName COLON_COLON BetaTypeArguments IDENTIFIER
+    | Primary COLON_COLON BetaTypeArguments IDENTIFIER
+    | ReferenceType COLON_COLON BetaTypeArguments IDENTIFIER
+    | SUPER COLON_COLON BetaTypeArguments IDENTIFIER
+    | IDENTIFIER AlphaDotIdentifier DOT SUPER COLON_COLON BetaTypeArguments IDENTIFIER
     | ClassType COLON_COLON BetaTypeArguments NEW
     | ArrayType COLON_COLON NEW"""
     if len(p) == 5:
@@ -1103,13 +1095,18 @@ def p_MethodReference(p):
 
 def p_ArrayCreationExpression(p):
     """ArrayCreationExpression : NEW PrimitiveType DimExprs BetaDims
-    | NEW ClassOrInterfaceType DimExprs BetaDims
+    | NEW ClassType DimExprs BetaDims
     | NEW PrimitiveType Dims ArrayInitializer
     | NEW ClassOrInterfaceTypeToInstantiate Dims ArrayInitializer"""
     if len(p) == 4:
         p[0] = "new " + p[2] + p[3] + p[4]
     else:
         p[0] = "new " + p[2] + p[3] + p[4]
+
+def p_BetaDims(p):
+    """BetaDims : Dims
+    | empty"""
+    p[0] = p[1]
 
 def p_DimExprs(p):
     """DimExprs : DimExpr AlphaDimExpr"""
@@ -1124,7 +1121,7 @@ def p_AlphaDimExpr(p):
         p[0] = p[1] + p[2]                    
 
 def p_DimExpr(p):
-    """DimExpr : OPEN_BRACKET Expression CLOSE_BRACKET"""
+    """DimExpr : RIGHT_BRACKET Expression LEFT_BRACKET"""
     p[0] = "[" + p[2] + "]"
 
 def p_Expression(p):
@@ -1137,8 +1134,8 @@ def p_LambdaExpression(p):
     p[0] = p[1] + "->" + p[3]
 
 def p_LambdaParameters(p):
-    """LambdaParameters : OPEN_PAREN BetaLambdaParameterList CLOSE_PAREN
-    | Identifier"""
+    """LambdaParameters : LEFT_PAREN BetaLambdaParameterList RIGHT_PAREN
+    | IDENTIFIER"""
     if len(p) == 2:
         p[0] = p[1]
     else:
@@ -1151,7 +1148,7 @@ def p_BetaLambdaParameterList(p):
 
 def p_LambdaParameterList(p):
     """LambdaParameterList : LambdaParameter AlphaCommaLambdaParameter
-    | Identifier AlphaCommaIdentifier"""
+    | IDENTIFIER AlphaCommaIdentifier"""
     if len(p) == 3:
         p[0] = p[1] + p[2]
     else:
@@ -1167,7 +1164,7 @@ def p_AlphaCommaLambdaParameter(p):
 
 def p_AlphaCommaIdentifier(p):
     """AlphaCommaIdentifier : 
-    | COMMA Identifier AlphaCommaIdentifier"""
+    | COMMA IDENTIFIER AlphaCommaIdentifier"""
     if len(p) == 2:
         p[0] = ""
     else:
@@ -1204,18 +1201,18 @@ def p_LeftHandSide(p):
     p[0] = p[1]
 
 def p_AssignmentOperator(p):
-    """AssignmentOperator : EQUALS
-    | STAREQUALS
-    | SLASHEQUALS
-    | PERCENTEQUALS
-    | PLUSEQUALS
-    | MINUSEQUALS
-    | LESSLESSEQUALS
-    | GREATERGREATEREQUALS
-    | GREATERGREATERGREATEREQUALS
-    | ANDEQUALS
-    | CARETEQUALS
-    | PIPEEQUALS"""
+    """AssignmentOperator : ASSIGN
+    | STAR_ASSIGN
+    | SLASH_ASSIGN
+    | PERCENT_ASSIGN
+    | PLUS_ASSIGN
+    | MINUS_ASSIGN
+    | LEFT_SHIFT_ASSIGN
+    | RIGHT_SHIFT_ASSIGN
+    | UNSIGNED_RIGHT_SHIFT_ASSIGN
+    | AMPERSAND_ASSIGN
+    | CARET_ASSIGN
+    | BAR_ASSIGN"""
     p[0] = p[1]    
 
 def p_ConditionalExpression(p):
@@ -1236,7 +1233,7 @@ def p_ConditionalOrExpression(p):
 
 def p_ConditionalAndExpression(p):
     """ConditionalAndExpression : InclusiveOrExpression
-    | ConditionalAndExpression ANDAND InclusiveOrExpression"""
+    | ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression"""
     if len(p) == 2:
         p[0] = p[1]
     else:
@@ -1260,7 +1257,7 @@ def p_ExclusiveOrExpression(p):
 
 def p_AndExpression(p):
     """AndExpression : EqualityExpression
-    | AndExpression AMP EqualityExpression"""
+    | AndExpression AMPERSAND EqualityExpression"""
     if len(p) == 2:
         p[0] = p[1]
     else:
@@ -1268,8 +1265,8 @@ def p_AndExpression(p):
 
 def p_EqualityExpression(p):
     """EqualityExpression : RelationalExpression
-    | EqualityExpression EQUALSEQUALS RelationalExpression
-    | EqualityExpression NOTEQUALS RelationalExpression"""
+    | EqualityExpression EQUAL_EQUAL RelationalExpression
+    | EqualityExpression EXCLAMATION_EQUAL RelationalExpression"""
     if len(p) == 2:
         p[0] = p[1]
     else:
@@ -1277,10 +1274,10 @@ def p_EqualityExpression(p):
 
 def p_RelationalExpression(p):
     """RelationalExpression : ShiftExpression
-    | RelationalExpression OPENANGLE ShiftExpression
-    | RelationalExpression CLOSEANGLE ShiftExpression
-    | RelationalExpression LESSEQUALS ShiftExpression
-    | RelationalExpression GREATEREQUALS ShiftExpression
+    | RelationalExpression LESS ShiftExpression
+    | RelationalExpression GREATER ShiftExpression
+    | RelationalExpression LESS_EQUAL ShiftExpression
+    | RelationalExpression GREATER_EQUAL ShiftExpression
     | InstanceofExpression"""
     if len(p) == 2:
         p[0] = p[1]
@@ -1429,6 +1426,17 @@ def p_ConstantDeclaration(p):
     p[0] = p[1] + p[2] + p[3] + ";"
 
 
+def p_BetaArgumentList(p):
+    """BetaArgumentList : ArgumentList
+    | empty"""
+    p[0] = p[1]
+
+def p_BetaClassBody(p):
+    """BetaClassBody : ClassBody
+    | empty"""
+    p[0] = p[1]
+
+
 
 
 def p_AlphaConstantModifier(p):
@@ -1449,6 +1457,32 @@ def p_ConstantModifier(p):
     | STRICTFP"""
     p[0] = p[1]
 
+
+def p_ExpressionName(p):
+    """ExpressionName : IDENTIFIER AlphaDotIdentifier"""
+    p[0] = p[1]
+
+def p_BlockStatement(p):
+    """BlockStatement : LocalClassOrInterfaceDeclaration
+    | LocalVariableDeclarationStatement
+    | Statement"""
+    p[0] = p[1]
+
+
+
+
+def p_Literal(p):
+    """Literal : INTEGER_LITERAL_OCTAL
+    | INTEGER_LITERAL_HEXADEC
+    | INTEGER_LITERAL_DEC
+    | INTEGER_LITERAL_BINAR
+    | FLOATING_POINT_LITERAL
+    | BOOLEAN_LITERAL
+    | CHARACTER_LITERAL
+    | STRING_LITERAL
+    | TEXT_BLOCK
+    | NULL_LITERAL"""
+    p[0] = p[1]
 
 yacc.yacc(debug=True, debugfile="parser.out")
 
