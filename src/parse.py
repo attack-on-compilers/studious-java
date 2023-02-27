@@ -576,8 +576,9 @@ def p_BetaBlockStatements(p):
     p[0] = p[1]
 
 
-def p_error(p):
-    print("Syntax error in input!")
+# def p_error(p):
+#     print("Syntax error in input!")
+
 
 
 def p_InterfaceDeclaration(p):
