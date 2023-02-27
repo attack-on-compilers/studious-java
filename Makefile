@@ -1,4 +1,4 @@
-all: clean
+all:
 	python ./src/parse.py ./test/test1.java
 
 clean:
