@@ -209,7 +209,7 @@ def p_ClassType(p):
 
 
 def p_BetaTypeArguments(p):
-    """BetaTypeArguments : TypeArguments BetaTypeArguments
+    """BetaTypeArguments : TypeArguments
     | empty"""
     if p[1]:
         p[0] = p[1] + p[2]
