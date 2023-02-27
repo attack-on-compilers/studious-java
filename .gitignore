@@ -134,3 +134,5 @@ src/parsetab.pyc
 
 # VSCode
 .vscode/
+src/*.dot
+src/*.ps
