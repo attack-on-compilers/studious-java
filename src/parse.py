@@ -89,11 +89,10 @@ def p_AlphaTopLevelClassOrInterfaceDeclaration(p):
 
 
 def p_TopLevelClassOrInterfaceDeclaration(p):
-    """TopLevelClassOrInterfaceDeclaration : ClassDeclaration"""
+    """TopLevelClassOrInterfaceDeclaration : ClassDeclaration
+    | InterfaceDeclaration
+    | SEMICOLON"""
     p[0] = p[1]
-    #  """TopLevelClassOrInterfaceDeclaration : ClassDeclaration
-    #     | InterfaceDeclaration
-    #     | SEMICOLON"""
 
 
 def p_ClassDeclaration(p):
@@ -307,6 +306,7 @@ def p_BetaClassExtends(p):
     else:
         p[0] = ""
 
+
 def p_BetaClassImplements(p):
     """BetaClassImplements : IMPLEMENTS ClassTypeList
     | empty"""
@@ -315,9 +315,11 @@ def p_BetaClassImplements(p):
     else:
         p[0] = ""
 
+
 def p_ClassTypeList(p):
     """ClassTypeList : ClassType AlphaCommaClassType"""
     p[0] = p[1] + p[2]
+
 
 def p_AlphaCommaClassType(p):
     """AlphaCommaClassType : COMMA ClassType AlphaCommaClassType
@@ -327,33 +329,97 @@ def p_AlphaCommaClassType(p):
     else:
         p[0] = ""
 
+
 def p_BetaClassPermits(p):
-    """BetaClassPermits : PERMITS TypeName AlphaCommaTypeName
+    """BetaClassPermits : PERMITS IDENTIFIER AlphaDotIdentifier AlphaCommaTypeName
     | empty"""
     if p[1] == "permits":
         p[0] = " permits " + p[2]
     else:
         p[0] = ""
 
+
 def p_AlphaCommaTypeName(p):
-    """AlphaCommaTypeName : COMMA TypeName AlphaCommaTypeName
+    """AlphaCommaTypeName : COMMA IDENTIFIER AlphaDotIdentifier AlphaCommaTypeName
     | empty"""
     if p[1] == ",":
         p[0] = ", " + p[2] + p[3]
     else:
         p[0] = ""
 
-def p_TypeName(p):
-    """TypeName : IDENTIFIER
-    | IDENTIFIER AlphaDotIdentifier"""
-    if p[1]=="IDENTIFIER":
-        p[0] = p[1] + "." + p[2]
-    else:
-        p[0] = p[1]
 
 def p_empty(p):
     "empty :"
     p[0] = None
+
+
+def p_error(p):
+    print("Syntax error in input!")
+
+
+def p_InterfaceDeclaration(p):
+    """InterfaceDeclaration : NormalInterfaceDeclaration"""
+    p[0] = p[1]
+
+
+def p_NormalInterfaceDeclaration(p):
+    """NormalInterfaceDeclaration : AlphaClassModifier INTERFACE IDENTIFIER BetaTypeParameters BetaClassExtends BetaClassPermits InterfaceBody"""
+    p[0] = "interface " + p[2] + p[3] + p[4] + p[5] + p[6] + p[7]
+
+
+def p_InterfaceBody(p):
+    """InterfaceBody : LEFT_BRACE AlphaInterfaceMemberDeclaration RIGHT_BRACE"""
+    p[0] = "{" + p[2] + "}"
+
+
+def p_AlphaInterfaceMemberDeclaration(p):
+    """AlphaInterfaceMemberDeclaration : InterfaceMemberDeclaration AlphaInterfaceMemberDeclaration
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+
+def p_InterfaceMemberDeclaration(p):
+    """InterfaceMemberDeclaration : ConstantDeclaration
+    | InterfaceMethodDeclaration
+    | SEMICOLON"""
+    p[0] = p[1]
+
+def p_InterfaceMethodDeclaration(p):
+    """InterfaceMethodDeclaration : AlphaConstantModifier MethodHeader MethodBody"""
+    p[0] = p[1] + p[2] + p[3] + "(" + p[5] + ")" + p[7] + p[8] + ";"
+
+def p_ConstantDeclaration(p):
+    """ConstantDeclaration : AlphaConstantModifier UnannType VariableDeclaratorList SEMICOLON"""
+    p[0] = p[1] + p[2] + p[3] + ";"
+
+
+def p_UnannType(p):
+    """UnannType : PrimitiveType
+    | ReferenceType"""
+    p[0] = p[1]
+
+
+def p_AlphaConstantModifier(p):
+    """AlphaConstantModifier : ConstantModifier AlphaConstantModifier
+    | empty"""
+    if p[1]:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = ""
+
+
+def p_ConstantModifier(p):
+    """ConstantModifier :| PUBLIC
+    | STATIC
+    | FINAL
+    | ABSTRACT
+    | DEFAULT
+    | STRICT
+    | STRICTFP"""
+    p[0] = p[1]
 
 
 yacc.yacc(debug=True, debugfile="parser.out")
