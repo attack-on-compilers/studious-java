@@ -1,61 +1,79 @@
 from graphviz import Digraph
 
+def reduce_ast(ast):
+    ast_now = []
+    if not isinstance(ast, (tuple, list)):
+        """base condition"""
+        ast_now = ast
+        return ast_now
+
+    else:
+        node_len = len(ast) 
+        ast_now.insert(len(ast_now), ast[0])
+        """iterate over each child node"""
+        for node in ast[1:]:
+            reduced_child = reduce_ast(node)
+            if not reduced_child[0] == ast[0]:
+                ast_now.insert(len(ast_now), reduced_child)
+            else:
+                ast_now.extend(reduced_child[1:])
+        if node_len == 2:
+            return ast_now[1]
+        return ast_now
+
+def generate_graph_from_ast_2(tree, ast, child_id, parent_id, count):
+    
+    """traverse until all nodes visited """
+    if isinstance(ast, (tuple, list)):
+        count = count + 1 
+        node_len = len(ast) 
+        for i in range(1, node_len):
+            j = 0
+            """update of nodes"""
+            child_id = child_id + 1
+            child_id_duplicate = child_id - 1
+            """recursive check"""
+            if not isinstance(ast[i], (tuple, list)):
+                """no further recurse"""
+                tree.node(str(child_id_duplicate), str(ast[i]), color = "blue", shape = "ellipse")
+                tree.edge(str(parent_id), str(child_id_duplicate), color = "black")
+            else:
+                """recurse"""
+                child_id = generate_graph_from_ast_2(tree, ast[i], child_id, child_id-1, count)
+                tree.node(str(child_id_duplicate), str(ast[i][j]), color = "blue", shape = "ellipse")
+                tree.edge(str(parent_id), str(child_id_duplicate), color = "black")
+        return child_id
+
+    else:
+        tree.node(str(child_id), str(ast), color = "blue", shape = "ellipse")
+        tree.edge(str(parent_id), str(child_id), color = "black")
+        """ updated node id when base case """
+        update_id = child_id + 1
+        return update_id
+        
 
 def generate_graph_from_ast(ast, filename="AST"):
-    num = 0
-    graph = Digraph(format="dot")
+    
+    """".dot format """
+    tree = Digraph(format="dot")
 
-    # Create the root node
-    ## Should be a string but just for safety
-    graph.node(str(num), str(ast[0]))
+    """index 0 from root"""
+    root = 0
+    add_to_root = root + 1
+    count = 1
 
-    _generate_graph_from_ast(graph, ast, num, num + 1)
+    """add root node """
+    tree.node(str(root), str(ast[0]), color = "blue", shape = "ellipse")
 
-    graph.render(filename=filename,cleanup=True)
+    generate_graph_from_ast_2(tree, ast, add_to_root, root, count)
 
-    return graph
+    ##print(visited)
 
+    """render for drawing graphical represenattions """
+    tree.render(filename=filename)
 
-def _generate_graph_from_ast(graph, ast, parentTknId, childTknId):
-    if not isinstance(ast, (tuple, list)):
-        # Recursion Base Case
-        graph.node(str(childTknId), str(ast))
-        graph.edge(str(parentTknId), str(childTknId))
-        return childTknId + 1
-    else:
-        nChildren = len(ast) - 1
-        for i in range(1, nChildren + 1):
-            childTknId_copy = childTknId
-            childTknId += 1
-            if isinstance(ast[i], (tuple, list)):
-                childTknId = _generate_graph_from_ast(
-                    graph, ast[i], childTknId_copy, childTknId
-                )
-                graph.node(str(childTknId_copy), str(ast[i][0]))
-                graph.edge(str(parentTknId), str(childTknId_copy))
-            else:
-                graph.node(str(childTknId_copy), str(ast[i]))
-                graph.edge(str(parentTknId), str(childTknId_copy))
-        return childTknId
+    """Return: The tree object."""
+    return tree
 
 
-def reduce_ast(ast):
-    current_ast = []
-    if isinstance(ast, (tuple, list)):
-        nChildren = len(ast) - 1
-        current_ast.append(ast[0])
-        for child in ast[1:]:
-            reduced_child = reduce_ast(child)
-            if reduced_child[0] == ast[0]:
-                current_ast.extend(reduced_child[1:])
-            else:
-                current_ast.append(reduced_child)
-        if nChildren == 1:
-            # if isinstance(current_ast[1], (tuple, list)):
-            #     return current_ast[1]
-            # else:
-            #     return current_ast
-            return current_ast[1]
-    else:
-        current_ast = ast
-    return current_ast
+
