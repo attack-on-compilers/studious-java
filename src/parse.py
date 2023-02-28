@@ -43,7 +43,7 @@ def p_BetaPackageDeclaration(p):
 
 
 def p_AlphaDotIdentifier(p):
-    """AlphaDotIdentifier : AlphaDotIdentifier DOT IDENTIFIER
+    """AlphaDotIdentifier : DOT IDENTIFIER AlphaDotIdentifier
     | empty"""
     p[0] = ("AlphaDotIdentifier",) + tuple(p[-len(p) + 1 :])
 
@@ -995,9 +995,9 @@ def p_ArrayAccess(p):
 
 def p_MethodInvocation(p):
     """MethodInvocation : IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
-    | IDENTIFIER AlphaDotIdentifier DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
-    | ExpressionName DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
-    | Primary DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | IDENTIFIER AlphaDotIdentifier LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | ExpressionName LEFT_PAREN BetaArgumentList RIGHT_PAREN
+    | Primary LEFT_PAREN BetaArgumentList RIGHT_PAREN
     | SUPER DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
     | IDENTIFIER AlphaDotIdentifier DOT SUPER DOT BetaTypeArguments IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN"""
     p[0] = ("MethodInvocation",) + tuple(p[-len(p) + 1 :])
@@ -1410,7 +1410,7 @@ if __name__ == "__main__":
         with open(str(args.input), "r+") as file:
             data = file.read()
             tree = yacc.parse(data)
-            with open("ast1.txt", "a") as f:
+            with open("ast.txt", "a") as f:
                 pprint(tree, stream=f)
             if args.output[-4:] == ".dot":
                 args.output = args.output[:-4]
