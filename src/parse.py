@@ -670,7 +670,7 @@ def p_SwitchBlockStatementGroup(p):
 
 def p_SwitchLabel(p):
     """SwitchLabel : CASE CaseConstant AlphaCommaCaseConstant
-    | DEFAULT COLON"""
+    | DEFAULT"""
     p[0] = ("SwitchLabel",) + tuple(p[-len(p) + 1 :])
 
 
@@ -1288,8 +1288,8 @@ def p_SwitchExpression(p):
     p[0] = ("SwitchExpression",) + tuple(p[-len(p) + 1 :])
 
 
-# def p_error(p):
-#     print("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
+def p_error(p):
+    print("Syntax error in input at line {} at token {} of type {}".format(p.lineno, p.value, p.type))
 
 
 def p_InterfaceDeclaration(p):
