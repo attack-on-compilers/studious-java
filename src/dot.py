@@ -72,9 +72,9 @@ def generate_graph_from_ast(ast, filename="AST"):
 
     generate_graph_from_ast_2(tree, ast, add_to_root, root, count)
 
-    ##print(visited)
+    ##print(count)
 
-    """render for drawing graphical represenattions """
+    """render for drawing graphical representations """
     tree.render(filename=filename)
 
     """Return: The tree object."""
