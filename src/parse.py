@@ -2,11 +2,14 @@ import ply.yacc as yacc
 from lex import *
 import argparse
 from dot import generate_graph_from_ast, reduce_ast
-
+from pprint import pprint
 
 precedence = (
     ("right", "ASSIGN"),
     ("left", "LESS", "GREATER"),
+    ("left", "LEFT_BRACKET", "RIGHT_BRACKET"),
+    ("left", "LEFT_PAREN", "RIGHT_PAREN"),
+    ("left", "COLON_COLON"),
     # ('left', 'AND'),
     # ('left', 'NOTEQUAL', 'EQUAL'),
     # ('left', 'GREATER', 'LESS', 'GREATEREQUAL', 'LESSEQUAL'),
@@ -310,7 +313,7 @@ def p_ConstructorModifier(p):
 
 
 def p_ConstructorDeclarator(p):
-    """ConstructorDeclarator : BetaTypeParameters IDENTIFIER LEFT_PAREN BetaRecieverParameterComma BetaFormalParameterList RIGHT_PAREN"""
+    """ConstructorDeclarator : IDENTIFIER LEFT_PAREN BetaRecieverParameterComma BetaFormalParameterList RIGHT_PAREN"""
     p[0] = ("ConstructorDeclarator",) + tuple(p[-len(p) + 1 :])
 
 
@@ -924,15 +927,13 @@ def p_Primary(p):
 
 def p_PrimaryNoNewArray(p):
     """PrimaryNoNewArray : Literal
-    | ClassLiteral
     | THIS
     | IDENTIFIER AlphaDotIdentifier DOT THIS
     | LEFT_PAREN Expression RIGHT_PAREN
     | ClassInstanceCreationExpression
     | FieldAccess
     | ArrayAccess
-    | MethodInvocation
-    | MethodReference"""
+    | MethodInvocation"""
     p[0] = ("PrimaryNoNewArray",) + tuple(p[-len(p) + 1 :])
 
 
@@ -1055,8 +1056,7 @@ def p_DimExpr(p):
 
 
 def p_Expression(p):
-    """Expression : LambdaExpression
-    | AssignmentExpression"""
+    """Expression : AssignmentExpression"""
     p[0] = ("Expression",) + tuple(p[-len(p) + 1 :])
 
 
@@ -1090,7 +1090,7 @@ def p_AlphaCommaLambdaParameter(p):
 
 
 def p_AlphaCommaIdentifier(p):
-    """AlphaCommaIdentifier :
+    """AlphaCommaIdentifier : empty
     | COMMA IDENTIFIER AlphaCommaIdentifier"""
     p[0] = ("AlphaCommaIdentifier",) + tuple(p[-len(p) + 1 :])
 
@@ -1288,8 +1288,8 @@ def p_SwitchExpression(p):
     p[0] = ("SwitchExpression",) + tuple(p[-len(p) + 1 :])
 
 
-def p_error(p):
-    print("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
+# def p_error(p):
+#     print("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
 
 
 def p_InterfaceDeclaration(p):
@@ -1410,6 +1410,8 @@ if __name__ == "__main__":
         with open(str(args.input), "r+") as file:
             data = file.read()
             tree = yacc.parse(data)
+            with open("ast1.txt", "a") as f:
+                pprint(tree, stream=f)
             if args.output[-4:] == ".dot":
                 args.output = args.output[:-4]
             if args.trim:
