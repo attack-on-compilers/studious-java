@@ -41,3 +41,17 @@ public private interface yoIamInterface <a, a extends b & c > extends b permits 
     {}
     int a,b[][][][][][],c;
 }
+
+public class Main {
+  public static void main(String[] args) {
+    a ="uhdvj";
+    println(a);
+    while(true)
+    {
+        ;
+    }
+    for (i = 0; i >= 10; i++) {
+        ;
+    }
+  }
+}
