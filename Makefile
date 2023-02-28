@@ -5,7 +5,8 @@ ARG?=
 all: clean
 	python ./src/parse.py $(FILE) $(ARG) -o $(OUTFILE)
 
-dev:
+dev: clean
+	clear
 	python ./src/parse.py ./test/test1.java -o src/ast.dot
 
 dev-g: dev
@@ -20,5 +21,5 @@ vgraph:
 
 clean:
 	rm -rf src/__pycache__
-	rm -f src/parsetab.py src/parser.out src/parsetab.pyc src/*.dot src/*.ps
+	rm -f src/parsetab.py src/parser.out src/parsetab.pyc src/*.dot src/*.ps src/ast
 	

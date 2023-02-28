@@ -12,11 +12,11 @@ public class yo <a, a extends b & c > extends b implements d,e,f permits a,b,c
 public class yo <a, a extends b & c > extends b implements d,e,f permits a,b,c
 {
     ;
-    public private static int a[][][][] = transitive ;
-    public private static int [][][][]a = transitive ;
+    public private static int a[][][][] = 5 ;
+    public private static int [][][][]a = 6 ;
     ;
-    void a  = transitive ;
-    int a = transitive ;
+    void a  = 0x7 ;
+    int a = "transitive" ;
     int a () {
         
     }
@@ -24,8 +24,8 @@ public class yo <a, a extends b & c > extends b implements d,e,f permits a,b,c
     ;
     public private <a,b,c> int[] a () throws a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z
     {}
+    public private void a ()
     {
-        
     }
     static {
 
@@ -40,4 +40,19 @@ public private interface yoIamInterface <a, a extends b & c > extends b permits 
     public static <a,b,c> int[] a () throws a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z
     {}
     int a,b[][][][][][],c;
+}
+
+public class Main {
+  public static void main(String[] args) {
+    a ="uhdvj";
+    x = alpha(a,b,c);
+    println(a);
+    while(true)
+    {
+        ;
+    }
+    for (i = 0; i >= 10; i++) {
+        ;
+    }
+  }
 }
