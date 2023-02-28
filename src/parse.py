@@ -535,7 +535,8 @@ def p_LocalVariableDeclaration(p):
 
 def p_LocalVariableType(p):
     """LocalVariableType : Type
-    | VAR"""
+    | VAR
+    | ReferenceType"""
     p[0] = ("LocalVariableType",) + tuple(p[-len(p) + 1 :])
 
 

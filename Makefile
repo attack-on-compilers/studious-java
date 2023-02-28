@@ -2,8 +2,20 @@ FILE?=ast.dot
 OUTFILE=?ast.ps
 ARG?=
 
-all: clean
+all:
 	python ./src/parse.py $(FILE) $(ARG) -o $(OUTFILE)
+
+test: clean
+	python ./src/parse.py ./test/test_1.java -o src/ast.dot
+	python ./src/parse.py ./test/test_2.java -o src/ast.dot
+	python ./src/parse.py ./test/test_3.java -o src/ast.dot
+	python ./src/parse.py ./test/test_4.java -o src/ast.dot
+	python ./src/parse.py ./test/test_5.java -o src/ast.dot
+	python ./src/parse.py ./test/test_6.java -o src/ast.dot
+	python ./src/parse.py ./test/test_7.java -o src/ast.dot
+	python ./src/parse.py ./test/test_8.java -o src/ast.dot
+
+
 
 dev: clean
 	clear
