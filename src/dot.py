@@ -75,5 +75,3 @@ def generate_graph_from_ast(ast, filename="AST"):
     """Return: The tree object."""
     return tree
 
-
-
