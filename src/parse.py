@@ -110,6 +110,10 @@ def p_ClassModifier(p):
     | FINAL
     | SEALED
     | NON_SEALED
+    | TRANSIENT
+    | SYNCHRONIZED
+    | NATIVE
+    | VOLATILE
     | STRICTFP"""
     p[0] = ("ClassModifier",) + tuple(p[-len(p) + 1 :])
 
@@ -293,7 +297,7 @@ def p_ClassBodyDeclaration(p):
 
 
 def p_ConstructorDeclaration(p):
-    """ConstructorDeclaration : AlphaFieldModifier ConstructorDeclarator BetaThrows ConstructorBody"""
+    """ConstructorDeclaration : AlphaClassModifier ConstructorDeclarator BetaThrows ConstructorBody"""
     p[0] = ("ConstructorDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
@@ -369,29 +373,8 @@ def p_ClassMemberDeclaration(p):
 
 
 def p_FieldDeclaration(p):
-    """FieldDeclaration : AlphaFieldModifier Result VariableDeclaratorList SEMICOLON"""
+    """FieldDeclaration : AlphaClassModifier Result VariableDeclaratorList SEMICOLON"""
     p[0] = ("FieldDeclaration",) + tuple(p[-len(p) + 1 :])
-
-
-def p_AlphaFieldModifier(p):
-    """AlphaFieldModifier : FieldModifier AlphaFieldModifier
-    | empty"""
-    p[0] = ("AlphaFieldModifier",) + tuple(p[-len(p) + 1 :])
-
-
-def p_FieldModifier(p):
-    """FieldModifier : PUBLIC
-    | PROTECTED
-    | PRIVATE
-    | STATIC
-    | FINAL
-    | ABSTRACT
-    | TRANSIENT
-    | SYNCHRONIZED
-    | NATIVE
-    | STRICTFP
-    | VOLATILE"""
-    p[0] = ("FieldModifier",) + tuple(p[-len(p) + 1 :])
 
 
 def p_VariableDeclaratorList(p):
@@ -441,7 +424,7 @@ def p_AlphaCommaVariableInitializer(p):
 
 
 def p_MethodDeclaration(p):
-    """MethodDeclaration : AlphaFieldModifier MethodHeader MethodBody"""
+    """MethodDeclaration : AlphaClassModifier MethodHeader MethodBody"""
     p[0] = ("MethodDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
@@ -863,7 +846,7 @@ def p_AlphaCatchClause(p):
 
 
 def p_CatchClause(p):
-    """CatchClause : CATCH LEFT_PAREN FormalParameter RIGHT_PAREN Block"""
+    """CatchClause : CATCH LEFT_PAREN CatchFormalParameter RIGHT_PAREN Block"""
     p[0] = ("CatchClause",) + tuple(p[-len(p) + 1 :])
 
 
@@ -1235,7 +1218,8 @@ def p_RelationalExpression(p):
 
 
 def p_InstanceofExpression(p):
-    """InstanceofExpression : RelationalExpression INSTANCEOF ReferenceType"""
+    """InstanceofExpression : RelationalExpression INSTANCEOF ReferenceType
+    | RelationalExpression INSTANCEOF Pattern"""
     p[0] = ("InstanceofExpression",) + tuple(p[-len(p) + 1 :])
 
 
@@ -1318,11 +1302,6 @@ def p_CastExpression(p):
 def p_SwitchExpression(p):
     """SwitchExpression : SWITCH LEFT_PAREN Expression RIGHT_PAREN SwitchBlock"""
     p[0] = ("SwitchExpression",) + tuple(p[-len(p) + 1 :])
-
-
-def p_ConstantExpression(p):
-    """ConstantExpression : Expression"""
-    p[0] = ("ConstantExpression",) + tuple(p[-len(p) + 1 :])
 
 
 def p_error(p):
