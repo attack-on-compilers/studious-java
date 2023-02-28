@@ -468,24 +468,13 @@ def p_AlphaCommaFormalParameter(p):
 
 
 def p_FormalParameter(p):
-    """FormalParameter : AlphaVariableModifier Type VariableDeclaratorId
+    """FormalParameter : AlphaClassModifier Type VariableDeclaratorId
     | VariableArityParameter"""
     p[0] = ("FormalParameter",) + tuple(p[-len(p) + 1 :])
 
 
-def p_AlphaVariableModifier(p):
-    """AlphaVariableModifier : VariableModifier AlphaVariableModifier
-    | empty"""
-    p[0] = ("AlphaVariableModifier",) + tuple(p[-len(p) + 1 :])
-
-
-def p_VariableModifier(p):
-    """VariableModifier : FINAL"""
-    p[0] = ("VariableModifier",) + tuple(p[-len(p) + 1 :])
-
-
 def p_VariableArityParameter(p):
-    """VariableArityParameter : AlphaVariableModifier Type ELLIPSIS IDENTIFIER"""
+    """VariableArityParameter : AlphaClassModifier Type ELLIPSIS IDENTIFIER"""
     p[0] = ("VariableArityParameter",) + tuple(p[-len(p) + 1 :])
 
 
@@ -542,7 +531,7 @@ def p_LocalVariableDeclarationStatement(p):
 
 
 def p_LocalVariableDeclaration(p):
-    """LocalVariableDeclaration : AlphaVariableModifier LocalVariableType VariableDeclaratorList"""
+    """LocalVariableDeclaration : AlphaClassModifier LocalVariableType VariableDeclaratorList"""
     p[0] = ("LocalVariableDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
@@ -851,7 +840,7 @@ def p_CatchClause(p):
 
 
 def p_CatchFormalParameter(p):
-    """CatchFormalParameter : AlphaVariableModifier CatchType VariableDeclaratorId"""
+    """CatchFormalParameter : AlphaClassModifier CatchType VariableDeclaratorId"""
     p[0] = ("CatchFormalParameter",) + tuple(p[-len(p) + 1 :])
 
 
@@ -1112,7 +1101,7 @@ def p_AlphaCommaIdentifier(p):
 
 
 def p_LambdaParameter(p):
-    """LambdaParameter : AlphaVariableModifier LambdaParameterType VariableDeclaratorId
+    """LambdaParameter : AlphaClassModifier LambdaParameterType VariableDeclaratorId
     | VariableArityParameter"""
     p[0] = ("LambdaParameter",) + tuple(p[-len(p) + 1 :])
 

@@ -5,7 +5,8 @@ ARG?=
 all: clean
 	python ./src/parse.py $(FILE) $(ARG) -o $(OUTFILE)
 
-dev:
+dev: clean
+	clear
 	python ./src/parse.py ./test/test1.java -o src/ast.dot
 
 dev-g: dev
