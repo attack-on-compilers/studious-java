@@ -45,6 +45,7 @@ public private interface yoIamInterface <a, a extends b & c > extends b permits 
 public class Main {
   public static void main(String[] args) {
     a ="uhdvj";
+    x = alpha(a,b,c);
     println(a);
     while(true)
     {
