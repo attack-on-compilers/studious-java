@@ -272,11 +272,6 @@ def p_AlphaCommaTypeName(p):
     p[0] = ("AlphaCommaTypeName",) + tuple(p[-len(p) + 1 :])
 
 
-def p_empty(p):
-    "empty :"
-    p[0] = None
-
-
 def p_ClassBody(p):
     """ClassBody : LEFT_BRACE AlphaClassBodyDeclaration RIGHT_BRACE"""
     p[0] = ("ClassBody",) + tuple(p[-len(p) + 1 :])
@@ -1389,6 +1384,11 @@ def p_Literal(p):
     | TEXT_BLOCK
     | NULL_LITERAL"""
     p[0] = ("Literal",) + tuple(p[-len(p) + 1 :])
+
+
+def p_empty(p):
+    "empty :"
+    p[0] = None
 
 
 yacc.yacc(debug=True, debugfile="parser.out")
