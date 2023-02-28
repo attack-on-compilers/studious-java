@@ -351,23 +351,6 @@ def p_ExplicitConstructorInvocation(p):
     p[0] = ("ExplicitConstructorInvocation",) + tuple(p[-len(p) + 1 :])
 
 
-def p_BetaArgumentList(p):
-    """BetaArgumentList : ArgumentList
-    | empty"""
-    p[0] = ("BetaArgumentList",) + tuple(p[-len(p) + 1 :])
-
-
-def p_ArgumentList(p):
-    """ArgumentList : Expression AlphaCommaExpression"""
-    p[0] = ("ArgumentList",) + tuple(p[-len(p) + 1 :])
-
-
-def p_Primary(p):
-    """Primary : PrimaryNoNewArray
-    | ArrayCreationExpression"""
-    p[0] = ("Primary",) + tuple(p[-len(p) + 1 :])
-
-
 def p_InstanceInitializer(p):
     """InstanceInitializer : Block"""
     p[0] = ("InstanceInitializer",) + tuple(p[-len(p) + 1 :])
