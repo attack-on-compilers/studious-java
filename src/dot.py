@@ -1,6 +1,7 @@
 from graphviz import Digraph
 
 def reduce_ast(ast):
+    k = 0
     ast_now = []
     if not isinstance(ast, (tuple, list)):
         """base condition"""
@@ -9,9 +10,10 @@ def reduce_ast(ast):
 
     else:
         node_len = len(ast) 
-        ast_now.insert(len(ast_now), ast[0])
+        """add the first element"""
+        ast_now.insert(len(ast_now), ast[k])
+
         """iterate over each child node"""
-        k = 1 
         for node in ast[1:]:
             reduce_child_node = reduce_ast(node)
             if not reduce_child_node[0] == ast[0]:
@@ -21,7 +23,7 @@ def reduce_ast(ast):
                 ast_now.extend(reduce_child_node[1:])    
         if node_len == 2:
             """directly return second element""" 
-            return ast_now[k]
+            return ast_now[k+1]
         return ast_now
 
 def generate_graph_from_ast_2(tree, ast, child_id, parent_id, count):
@@ -77,5 +79,3 @@ def generate_graph_from_ast(ast, filename="AST"):
 
     """Return: The tree object."""
     return tree
-
-
