@@ -580,7 +580,7 @@ def p_LocalVariableDeclaration(p):
     p[0] = ("LocalVariableDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
-def p_localVariableType(p):
+def p_LocalVariableType(p):
     """LocalVariableType : Type
     | VAR"""
     p[0] = ("LocalVariableType",) + tuple(p[-len(p) + 1 :])
@@ -680,8 +680,8 @@ def p_SwitchStatement(p):
 
 
 def p_SwitchBlock(p):
-    """SwitchBlock : LEFT_BRACE SwitchBlockStatementGroup RIGHT_BRACE
-    | LEFT_BRACE SwitchLabel RIGHT_BRACE"""
+    """SwitchBlock : LEFT_BRACE SwitchRule AlphaSwitchRule RIGHT_BRACE
+    | LEFT_BRACE AlphaSwitchBlockStatementGroup AlphaSwitchLabelColon RIGHT_BRACE"""
     p[0] = ("SwitchBlock",) + tuple(p[-len(p) + 1 :])
 
 
@@ -716,7 +716,7 @@ def p_SwitchBlockStatementGroup(p):
 
 
 def p_SwitchLabel(p):
-    """SwitchLabel : CASE ConstantExpression COLON
+    """SwitchLabel : CASE CaseConstant AlphaCommaCaseConstant
     | DEFAULT COLON"""
     p[0] = ("SwitchLabel",) + tuple(p[-len(p) + 1 :])
 
@@ -728,7 +728,7 @@ def p_AlphaCommaCaseConstant(p):
 
 
 def p_CaseConstant(p):
-    """CaseConstant : ConstantExpression"""
+    """CaseConstant : ConditionalExpression"""
     p[0] = ("CaseConstant",) + tuple(p[-len(p) + 1 :])
 
 
@@ -760,7 +760,7 @@ def p_ForStatementNoShortIf(p):
 
 
 def p_BasicForStatement(p):
-    """BasicForStatement : FOR LEFT_PAREN ForInit SEMICOLON Expression SEMICOLON ForUpdate RIGHT_PAREN Statement"""
+    """BasicForStatement : FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN Statement"""
     p[0] = ("BasicForStatement",) + tuple(p[-len(p) + 1 :])
 
 
@@ -783,7 +783,7 @@ def p_BetaForUpdate(p):
 
 
 def p_BasicForStatementNoShortIf(p):
-    """BasicForStatementNoShortIf : FOR LEFT_PAREN ForInit SEMICOLON Expression SEMICOLON ForUpdate RIGHT_PAREN StatementNoShortIf"""
+    """BasicForStatementNoShortIf : FOR LEFT_PAREN BetaForInit SEMICOLON Expression SEMICOLON ForUpdate RIGHT_PAREN StatementNoShortIf"""
     p[0] = ("BasicForStatementNoShortIf",) + tuple(p[-len(p) + 1 :])
 
 
@@ -810,12 +810,12 @@ def p_AlphaCommaStatementExpression(p):
 
 
 def p_EnhancedForStatement(p):
-    """EnhancedForStatement : FOR LEFT_PAREN VariableModifier Type IDENTIFIER COLON Expression RIGHT_PAREN Statement"""
+    """EnhancedForStatement : FOR LEFT_PAREN LocalVariableDeclaration COLON Expression RIGHT_PAREN Statement"""
     p[0] = ("EnhancedForStatement",) + tuple(p[-len(p) + 1 :])
 
 
 def p_EnhancedForStatementNoShortIf(p):
-    """EnhancedForStatementNoShortIf : FOR LEFT_PAREN VariableModifier Type IDENTIFIER COLON Expression RIGHT_PAREN StatementNoShortIf"""
+    """EnhancedForStatementNoShortIf : FOR LEFT_PAREN LocalVariableDeclaration COLON Expression RIGHT_PAREN StatementNoShortIf"""
     p[0] = ("EnhancedForStatementNoShortIf",) + tuple(p[-len(p) + 1 :])
 
 
@@ -831,8 +831,7 @@ def p_BetaIdentifier(p):
 
 
 def p_YieldStatement(p):
-    """YieldStatement : YIELD Expression SEMICOLON
-    | YIELD BetaExpression SEMICOLON"""
+    """YieldStatement : YIELD Expression SEMICOLON"""
     p[0] = ("YieldStatement",) + tuple(p[-len(p) + 1 :])
 
 
@@ -857,7 +856,9 @@ def p_SynchronizedStatement(p):
 
 
 def p_TryStatement(p):
-    """TryStatement : TRY Block Catches"""
+    """TryStatement : TRY Block Catches
+    | TRY Block BetaCatches Finally
+    | TryWithResourcesStatement"""
     p[0] = ("TryStatement",) + tuple(p[-len(p) + 1 :])
 
 
@@ -884,12 +885,12 @@ def p_CatchClause(p):
 
 
 def p_CatchFormalParameter(p):
-    """CatchFormalParameter : CatchType IDENTIFIER"""
+    """CatchFormalParameter : AlphaVariableModifier CatchType VariableDeclaratorId"""
     p[0] = ("CatchFormalParameter",) + tuple(p[-len(p) + 1 :])
 
 
 def p_CatchType(p):
-    """CatchType : Type"""
+    """CatchType : Type AlphaPipeCatchType"""
     p[0] = ("CatchType",) + tuple(p[-len(p) + 1 :])
 
 
