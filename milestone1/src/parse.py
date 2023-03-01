@@ -3,7 +3,7 @@
 import ply.yacc as yacc
 from lexer_edit import *
 import argparse
-from dot_edit import tree_gen, tree_reduce
+from dot import tree_gen, tree_reduce
 
 start = "Start"
 
@@ -735,7 +735,7 @@ def p_ArrayCreationExpression(p):
 def p_BetaAlphaDimExpr(p):
     """BetaAlphaDimExpr : AlphaDimExpr
     | empty"""
-    p[0] = p[1]
+    p[0] = ("BetaAlphaDimExpr",) + tuple(p[-len(p) + 1 :])
 
 
 def p_AlphaDimExpr(p):
@@ -977,7 +977,7 @@ def p_Literal(p):
 
 def p_empty(p):
     "empty :"
-    p[0] = None
+    p[0] = ("empty",)
 
 
 def p_error(p):
