@@ -20,6 +20,7 @@ vgraph:
 	xdg-open src/ast.ps
 
 clean:
+	cd milestone1
 	rm -rf src/__pycache__
-	rm -f src/parsetab.py src/parser.out src/parsetab.py src/*.dot src/*.ps src/ast
+	rm -f src/parsetab.py src/parser.out src/parsetab.py src/*.dot src/*.ps ast*
 	

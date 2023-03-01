@@ -1018,4 +1018,4 @@ if __name__ == "__main__":
                 tree_gen(tree, args.output)
             else:
                 tree_gen(tree_reduce(tree), args.output)
-
+        print("Dot file generated: {}.dot".format(args.output))
