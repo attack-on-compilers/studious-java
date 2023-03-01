@@ -993,14 +993,11 @@ def getArgs():
     parser.add_argument("-o", "--output", type=str, default="ast", help="Output file")
     parser.add_argument("-a", "--all", action="store_true", help="Show Entire Parse Tree")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose Output")
-    parser.add_argument("-m", "--make", action="store_true", help="Generate helper files only")
     return parser
 
 
 if __name__ == "__main__":
     args = getArgs().parse_args()
-    if args.make:
-        exit()
     if args.verbose:
         print("Input file: {}".format(args.input))
         print("Output file: {}".format(args.output))
