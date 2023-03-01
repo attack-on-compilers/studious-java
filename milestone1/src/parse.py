@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import ply.yacc as yacc
-from lexer import *
+from lexer_edit import *
 import argparse
-from dot import tree_gen, tree_reduce
+from dot_edit import tree_gen, tree_reduce
 
 start = "Start"
 
@@ -966,7 +966,7 @@ def p_Literal(p):
     | INTEGER_LITERAL_HEXADEC
     | INTEGER_LITERAL_DEC
     | INTEGER_LITERAL_BINAR
-    | FLOATING_POINT_LITERAL
+    | FLOATING_LITERAL_REDUCED_POINT
     | BOOLEAN_LITERAL
     | CHARACTER_LITERAL
     | STRING_LITERAL
