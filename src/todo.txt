@@ -1,7 +1,0 @@
-BetaBlockStatements -> empty
-VariableInitializer -> transitive
-ArgumentList -> transitive
-Primary -> transitive
-
-Test Constructors
-FloatingPointLexer

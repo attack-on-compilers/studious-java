@@ -1,0 +1,41 @@
+package abc.def;
+
+import java.io.h;
+import System.out;
+import System.out.*;
+
+public class Person {
+    private String name;
+    private int age;
+    private String address;
+
+    public Person(String name, int age, String address) {
+        name = name;
+        age = age;
+        address = address;
+    }
+
+    public void setName(String name) {
+        name = name;
+    }
+
+    public void setAge(int age) {
+        age = age;
+    }
+
+    public void setAddress(String address) {
+        address = address;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+}
