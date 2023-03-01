@@ -1,42 +1,6 @@
 from graphviz import Digraph
 
 
-def tree_reduce(ast):
-    ast_now = []
-    if not isinstance(ast, (tuple, list)):
-        """base condition"""
-        ast_now = ast
-        return ast_now
-
-    else:
-        node_len = len(ast)
-        """add the first element"""
-        ast_now.insert(len(ast_now), ast[0])
-
-        """iterate over each child node"""
-        for node in ast[1:]:
-            reduce_child_node = tree_reduce(node)
-            if reduce_child_node is None:
-                """skip over any None child nodes"""
-                continue
-            elif not isinstance(reduce_child_node, (tuple, list)):
-                """add a leaf node"""
-                ast_now.insert(len(ast_now), reduce_child_node)
-            elif not reduce_child_node[0] == ast[0]:
-                """add the reduced child node to the present ast"""
-                ast_now.extend(reduce_child_node)
-            else:
-                """merge the child node with the present ast"""
-                ast_now.extend(reduce_child_node[1:])
-        if node_len == 2:
-            """directly return second element"""
-            if len(ast_now) > 1:
-                return ast_now[1]
-            else:
-                return None
-        return ast_now
-
-
 def tree_gen_helper(tree, ast, child_id, parent_id, count):
     """traverse until all nodes visited"""
     if isinstance(ast, (tuple, list)):
@@ -86,3 +50,23 @@ def tree_gen(ast, filename="AST"):
 
     """Return: The tree object."""
     return tree
+
+def tree_reduce(ast):
+    current_ast = []
+    if isinstance(ast, (tuple, list)):
+        nChildren = len(ast) - 1
+        current_ast.append(ast[0])
+        for child in ast[1:]:
+            reduced_child = tree_reduce(child)
+            if reduced_child is not None and reduced_child[0] == ast[0]:
+                current_ast.extend(reduced_child[1:])
+            elif reduced_child is not None:
+                current_ast.append(reduced_child)
+        if nChildren == 1:
+            if len(current_ast) > 1 and isinstance(current_ast[1], (tuple, list)):
+                return current_ast[1]
+            else:
+                return current_ast
+    else:
+        current_ast = ast
+    return current_ast
