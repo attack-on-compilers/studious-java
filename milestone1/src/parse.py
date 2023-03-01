@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import ply.yacc as yacc
-from lexer_edit import *
+from lexer import *
 import argparse
 from dot import tree_gen, tree_reduce
 

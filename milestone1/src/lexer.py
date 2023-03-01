@@ -79,6 +79,7 @@ reserved = (
 
 tokens = reserved + (
     # Literal                     {IntegerLiteral}|{FloatingPointLiteral}|{BooleanLiteral}|{CharacterLiteral}|{StringLiteral}|{TextBlock}|{NullLiteral}
+    "FLOATING_LITERAL_REDUCED_POINT",
     "INTEGER_LITERAL_OCTAL",
     "INTEGER_LITERAL_HEXADEC",
     "INTEGER_LITERAL_DEC",
@@ -209,7 +210,10 @@ TYPE_NAMES = []
 
 
 # Implementations of the lexer rules
-
+def t_FLOATING_LITERAL_REDUCED_POINT(t):
+    r'[-+]?[0-9]+(\.([0-9]+)?([eE][-+]?[0-9]+)?|[eE][-+]?[0-9]+)[dfDF]?'
+    t.value = str(t.value)
+    return t
 
 def t_INTEGER_LITERAL_OCTAL(t):
     r"0[0-7](?:_*[0-7])*[lL]?"
