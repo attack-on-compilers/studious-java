@@ -1,7 +1,7 @@
 # studious-java
 JAVA compiler implementation in python 
 
-Instructions .pdf file ('report') to execute can be found in: "/milestone1/doc".
+Instructions .pdf file ('report') to execute can be found in: "/doc".
 
 Team Members:
 
