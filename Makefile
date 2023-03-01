@@ -21,5 +21,5 @@ vgraph:
 
 clean:
 	rm -rf src/__pycache__
-	rm -f src/parsetab.py src/parser.out src/parsetab.pyc src/*.dot src/*.ps src/ast
+	rm -f src/parsetab.py src/parser.out src/parsetab.py src/*.dot src/*.ps src/ast
 	

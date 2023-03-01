@@ -977,7 +977,7 @@ def p_Literal(p):
 
 def p_empty(p):
     "empty :"
-    p[0] = ("empty",)
+    p[0] = ("",)
 
 
 def p_error(p):
