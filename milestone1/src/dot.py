@@ -58,7 +58,7 @@ def tree_gen_helper(tree, ast, child_id, parent_id, count):
         return update_id
 
 
-def tree_gen(ast, filename="AST"):
+def tree_gen(ast, filename="ast"):
     """ ".dot format"""
     tree = Digraph(format="dot")
 

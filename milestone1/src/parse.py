@@ -989,23 +989,36 @@ yacc.yacc(debug=False, debugfile="parser.out")
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument("input", type=str, default=None, help="Input file")
-    parser.add_argument("-o", "--output", type=str, default="AST", help="Output file")
-    parser.add_argument("-r", "--reduce", action="store_true", help="Reduce AST")
+    parser.add_argument("-i", "--input", type=str, default=None, help="Input file")
+    parser.add_argument("-o", "--output", type=str, default="ast", help="Output file")
+    parser.add_argument("-a", "--all", action="store_true", help="Show Entire Parse Tree")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Verbose Output")
+    parser.add_argument("-m", "--make", action="store_true", help="Generate helper files only")
     return parser
 
 
 if __name__ == "__main__":
     args = getArgs().parse_args()
+    if args.make:
+        exit()
+    if args.verbose:
+        print("Input file: {}".format(args.input))
+        print("Output file: {}".format(args.output))
+        if args.all:
+            print("Generating Complete Parse Tree")
+        else:
+            print("Generating AST")
     if args.input == None:
         print("No input file specified")
+        print("Use -h or --help for help")
     else:
         with open(str(args.input), "r+") as file:
             data = file.read()
             tree = yacc.parse(data)
             if args.output[-4:] == ".dot":
                 args.output = args.output[:-4]
-            if args.reduce:
-                tree_gen(tree_reduce(tree), args.output)
-            else:
+            if args.all:
                 tree_gen(tree, args.output)
+            else:
+                tree_gen(tree_reduce(tree), args.output)
+

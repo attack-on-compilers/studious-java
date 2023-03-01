@@ -137,3 +137,4 @@ src/ast
 .vscode/
 src/*.dot
 src/*.ps
+ast*
