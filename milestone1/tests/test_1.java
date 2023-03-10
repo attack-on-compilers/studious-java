@@ -11,7 +11,7 @@ public class Person {
 
     public Person(String name, int age, String address) {
         name = name;
-        age = age;
+        age = (int) 55.55;
         address = address;
     }
 

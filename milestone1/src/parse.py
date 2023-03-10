@@ -820,10 +820,15 @@ def p_UnaryExpressionNotPlusMinus(p):
 
 
 def p_CastExpression(p):
-    """CastExpression : LEFT_PAREN PrimitiveType AlphaDim RIGHT_PAREN UnaryExpression
+    """CastExpression : LEFT_PAREN PrimitiveType BetaAlphaDim RIGHT_PAREN UnaryExpression
     | LEFT_PAREN Expression RIGHT_PAREN UnaryExpressionNotPlusMinus
     | LEFT_PAREN Name AlphaDim RIGHT_PAREN UnaryExpressionNotPlusMinus"""
     p[0] = ("CastExpression",) + tuple(p[-len(p) + 1 :])
+
+def p_BetaAlphaDim(p):
+    """BetaAlphaDim : AlphaDim
+    | empty"""
+    p[0] = ("BetaAlphaDim",) + tuple(p[-len(p) + 1 :])
 
 
 def p_MultiplicativeExpression(p):
