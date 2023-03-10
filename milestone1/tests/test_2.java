@@ -57,7 +57,7 @@ class Node {
 
     public Node(int value) {
         value = value;
-        next = null;
+        next = 36.33f;
     }
 
     public int getValue() {

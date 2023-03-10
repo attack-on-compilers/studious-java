@@ -7,7 +7,7 @@ all:
 	
 dev: clean
 	clear
-	python ./src/parse.py ./test/test1.java -o src/ast.dot
+	python ./src/parse.py -i ./tests/test_1.java -o src/ast.dot -v
 
 dev-g: dev
 	dot -Tps src/ast.dot -o src/ast.ps
@@ -21,5 +21,5 @@ vgraph:
 
 clean:
 	rm -rf src/__pycache__
-	rm -f src/parsetab.py src/parser.out src/parsetab.pyc src/*.dot src/*.ps src/ast
+	rm -f src/parsetab.py src/parser.out src/parsetab.py src/*.dot src/*.ps ast* src/ast
 	

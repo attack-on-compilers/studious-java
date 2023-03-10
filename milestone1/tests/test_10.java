@@ -7,9 +7,9 @@ public class test10 {
         System.out.println("Hello World!");
     }
 
-    public int assignmnet() {
-        int x = 105 + 205;
-        x += 16;
+    public double assignmnet() {
+        double x = 10.5 + 20.5;
+        x += 1.6;
         return x;
     }
 }
