@@ -10,8 +10,8 @@ dev: clean
 	python ./src/parse.py -i ./tests/test_1.java -o src/ast.dot -v
 
 dev-g: dev
-	dot -Tps src/ast.dot -o src/ast.ps
-	xdg-open src/ast.ps
+	dot -Tsvg src/ast.dot -o src/ast.svg
+	xdg-open src/ast.svg
 
 graph:
 	dot -Tps $(FILE) -o src/ast.ps
@@ -21,5 +21,5 @@ vgraph:
 
 clean:
 	rm -rf src/__pycache__
-	rm -f src/parsetab.py src/parser.out src/parsetab.py src/*.dot src/*.ps ast* src/ast
+	rm -f src/parsetab.py src/parser.out src/parsetab.py src/*.dot src/*.ps ast* src/ast src/*.svg src/*.png
 	
