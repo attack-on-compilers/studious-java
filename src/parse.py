@@ -14,7 +14,7 @@ def p_Start(p):
 
 
 def p_CompilationUnit(p):
-    """CompilationUnit : BetaPackageDeclaration BetaAlphaImportDeclaration AlphaBetaTypeDeclaration"""
+    """CompilationUnit : BetaPackageDeclaration BetaAlphaImportDeclaration BetaAlphaTypeDeclaration"""
     p[0] = ("CompilationUnit",) + tuple(p[-len(p) + 1 :])
 
 
@@ -53,7 +53,7 @@ def p_SingleTypeImportDeclaration(p):
 
 
 def p_TypeImportOnDemandDeclaration(p):
-    """TypeImportOnDemandDeclaration : IMPORT Name DOTSTAR SEMICOLON"""
+    """TypeImportOnDemandDeclaration : IMPORT Name DOT STAR SEMICOLON"""
     p[0] = ("TypeImportOnDemandDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
@@ -79,10 +79,10 @@ def p_BetaAlphaImportDeclaration(p):
     p[0] = ("BetaAlphaImportDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
-def p_AlphaBetaTypeDeclaration(p):
-    """AlphaBetaTypeDeclaration : AlphaTypeDeclaration
+def p_BetaAlphaTypeDeclaration(p):
+    """BetaAlphaTypeDeclaration : AlphaTypeDeclaration
     | empty"""
-    p[0] = ("AlphaBetaTypeDeclaration",) + tuple(p[-len(p) + 1 :])
+    p[0] = ("BetaAlphaTypeDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
 def p_TypeDeclaration(p):

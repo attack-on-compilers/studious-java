@@ -72,7 +72,6 @@ reserved = (
     "RECORD",
     "TRANSITIVE",
     "YIELD",
-    "DOTSTAR",
     "NON_SEALED",
 )
 
@@ -198,7 +197,6 @@ t_PERCENT_ASSIGN = r"%="
 t_LEFT_SHIFT_ASSIGN = r"<<="
 t_RIGHT_SHIFT_ASSIGN = r">>="
 t_UNSIGNED_RIGHT_SHIFT_ASSIGN = r">>>="
-t_DOTSTAR = r"\.\*"
 
 t_ignore = " \t"
 
