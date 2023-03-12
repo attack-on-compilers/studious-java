@@ -58,7 +58,7 @@ class MethodSymbol(Symbol):
         super().__init__(name, "method")
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
         self.return_type = return_type
-        self.scope = VariableScope.PRIVATE
+        self.scope = scope
 
 
 class BlockSymbol(Symbol):
