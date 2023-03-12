@@ -1,38 +1,6 @@
 from enum import Enum
 
 
-class Symbol:
-    def __init__(self, name, symbol_type):
-        self.name = name
-        self.symbol_type = symbol_type
-
-
-class ClassSymbol(Symbol):
-    def __init__(self, name, parent):
-        super().__init__(name, "class")
-        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
-
-
-class MethodSymbol(Symbol):
-    def __init__(self, name, return_type, parent, scope=VariableScope.PRIVATE):
-        super().__init__(name, "method")
-        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
-        self.return_type = return_type
-        self.scope = VariableScope.PRIVATE
-
-
-class BlockSymbol(Symbol):
-    def __init__(self, name, parent):
-        super().__init__(name, "block")
-        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
-
-
-class InterfaceSymbol(Symbol):
-    def __init__(self, name, parent):
-        super().__init__(name, "interface")
-        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
-
-
 class VariableScope(Enum):
     PRIVATE = 1
     PUBLIC = 2
@@ -71,6 +39,38 @@ def get_variable_symbols(name, data_type, parent):
         if symbol.scope == VariableScope.PUBLIC:
             variables.append(VariableSymbol(symbol.name, symbol.data_type, scope=VariableScope.PUBLIC, dims=symbol.dims))
     return variables
+
+
+class Symbol:
+    def __init__(self, name, symbol_type):
+        self.name = name
+        self.symbol_type = symbol_type
+
+
+class ClassSymbol(Symbol):
+    def __init__(self, name, parent):
+        super().__init__(name, "class")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+
+
+class MethodSymbol(Symbol):
+    def __init__(self, name, return_type, parent, scope=VariableScope.PRIVATE):
+        super().__init__(name, "method")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+        self.return_type = return_type
+        self.scope = VariableScope.PRIVATE
+
+
+class BlockSymbol(Symbol):
+    def __init__(self, name, parent):
+        super().__init__(name, "block")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+
+
+class InterfaceSymbol(Symbol):
+    def __init__(self, name, parent):
+        super().__init__(name, "interface")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
 
 class VariableSymbol(Symbol):
