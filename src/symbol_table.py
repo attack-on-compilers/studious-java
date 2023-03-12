@@ -12,13 +12,49 @@ class ClassSymbol(Symbol):
         super().__init__(name, "class")
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
+
 class MethodSymbol(Symbol):
-    def __init__(self, name, symbol_type):
-        super().__init__(name, symbol_type)
+    def __init__(self, name, return_type, parent):
+        super().__init__(name, "method")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+        self.return_type = return_type
+
+
+class BlockSymbol(Symbol):
+    def __init__(self, name, parent):
+        super().__init__(name, "block")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+
+
+class InterfaceSymbol(Symbol):
+    def __init__(self, name, parent):
+        super().__init__(name, "interface")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+
+
+class VariableScope(Enum):
+    PRIVATE = 1
+    PUBLIC = 2
+    PARAMETER = 3
+
+
+class VariableType(Enum):
+    BYTE = "byte"
+    SHORT = "short"
+    INT = "int"
+    LONG = "long"
+    CHAR = "char"
+    FLOAT = "float"
+    DOUBLE = "double"
+    BOOLEAN = "boolean"
+
 
 class VariableSymbol(Symbol):
-    def __init__(self, name, symbol_type):
-        super().__init__(name, symbol_type)
+    def __init__(self, name, data_type, scope=VariableScope.PRIVATE, dims=1):
+        super().__init__(name, "variable")
+        self.data_type = data_type
+        self.scope = scope
+        self.dims = dims
 
 
 class SymbolTable:
