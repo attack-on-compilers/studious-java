@@ -14,10 +14,11 @@ class ClassSymbol(Symbol):
 
 
 class MethodSymbol(Symbol):
-    def __init__(self, name, return_type, parent):
+    def __init__(self, name, return_type, parent, scope=VariableScope.PRIVATE):
         super().__init__(name, "method")
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
         self.return_type = return_type
+        self.scope = VariableScope.PRIVATE
 
 
 class BlockSymbol(Symbol):
@@ -47,6 +48,29 @@ class VariableType(Enum):
     FLOAT = "float"
     DOUBLE = "double"
     BOOLEAN = "boolean"
+
+
+VariableDataTypes = [
+    VariableType.BYTE,
+    VariableType.SHORT,
+    VariableType.INT,
+    VariableType.LONG,
+    VariableType.CHAR,
+    VariableType.FLOAT,
+    VariableType.DOUBLE,
+    VariableType.BOOLEAN,
+]
+
+
+def get_variable_symbols(name, data_type, parent):
+    if data_type in VariableDataTypes:
+        raise Exception("Invalid data type")
+    data_symbol_table = parent.get_symbol(name, data_type).symbol_table
+    variables = []
+    for symbol in data_symbol_table.symbols.values():
+        if symbol.scope == VariableScope.PUBLIC:
+            variables.append(VariableSymbol(symbol.name, symbol.data_type, scope=VariableScope.PUBLIC, dims=symbol.dims))
+    return variables
 
 
 class VariableSymbol(Symbol):
