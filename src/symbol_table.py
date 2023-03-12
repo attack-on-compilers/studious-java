@@ -80,6 +80,16 @@ class VariableSymbol(Symbol):
         self.scope = scope
         self.dims = dims
 
+# Added temporarily
+class PackageSymbol(Symbol):
+    def __init__(self, name):
+        super().__init__(name, "package")
+
+# Added temporarily
+class ImportSymbol(Symbol):
+    def __init__(self, name):
+        super().__init__(name, "import")
+
 
 class SymbolTable:
     def __init__(self, parent=None, name=None):

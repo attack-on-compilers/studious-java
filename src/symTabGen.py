@@ -1,22 +1,22 @@
 from symbol_table import *
 
 def generate_symbol_table(tree):
-    global global_symbol_table
-    global_symbol_table = RootSymbolTable()
+    global symbol_table
+    symbol_table = RootSymbolTable()
     traverse_tree(tree)
     return
 
 def traverse_tree(tree):
-    global global_symbol_table
+    global symbol_table
     # We perform a depth first traversal of the tree
     match tree[0]:
         case "":
             return
 
         case "PackageDeclaration":
-            package_name = traverse_tree(tree[2])
-            print("Package",package_name)
-            # current_symbol_table.add_symbol(PackageSymbol(traverse_tree(tree[2])))
+            packageName = traverse_tree(tree[2])
+            print("Package",packageName)
+            symbol_table.add_symbol(PackageSymbol(packageName))
 
         case "SingleTypeImportDeclaration":
             print("Single",traverse_tree(tree[2]))
