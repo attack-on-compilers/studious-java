@@ -92,11 +92,6 @@ class SymbolTable:
             raise Exception("Symbol already defined")
         self.symbols[symbol.name] = symbol
 
-    def get_scope(self, name):
-        if name not in self.symbols:
-            self.symbols[name] = SymbolTable(parent=self, name=name)
-        return self.symbols[name]
-
     def get_symbol(self, name, symbol_type=None):
         symbol = self.symbols.get(name)
         if symbol is not None and (symbol_type is None or symbol.symbol_type == symbol_type):
@@ -119,7 +114,7 @@ class RootSymbolTable:
         return self.current.get_symbol(name, symbol_type)
 
     def enter_scope(self, name):
-        self.current = self.current.get_scope(name)
+        self.current = self.current.get_symbol(name)
 
     def exit_scope(self):
         self.current = self.current.parent
