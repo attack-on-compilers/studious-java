@@ -53,7 +53,7 @@ def p_SingleTypeImportDeclaration(p):
 
 
 def p_TypeImportOnDemandDeclaration(p):
-    """TypeImportOnDemandDeclaration : IMPORT Name DOTSTAR SEMICOLON"""
+    """TypeImportOnDemandDeclaration : IMPORT Name DOT STAR SEMICOLON"""
     p[0] = ("TypeImportOnDemandDeclaration",) + tuple(p[-len(p) + 1 :])
 
 
