@@ -8,25 +8,25 @@ class VariableScope(Enum):
 
 
 class VariableType(Enum):
-    BYTE = "byte"
-    SHORT = "short"
-    INT = "int"
-    LONG = "long"
-    CHAR = "char"
-    FLOAT = "float"
-    DOUBLE = "double"
-    BOOLEAN = "boolean"
+    BYTE = "BYTE"
+    SHORT = "SHORT"
+    INT = "INT"
+    LONG = "LONG"
+    CHAR = "CHAR"
+    FLOAT = "FLOAT"
+    DOUBLE = "DOUBLE"
+    BOOLEAN = "BOOLEAN"
 
 
 VariableDataTypes = [
-    VariableType.BYTE,
-    VariableType.SHORT,
-    VariableType.INT,
-    VariableType.LONG,
-    VariableType.CHAR,
-    VariableType.FLOAT,
-    VariableType.DOUBLE,
-    VariableType.BOOLEAN,
+    VariableType.BYTE.value,
+    VariableType.SHORT.value,
+    VariableType.INT.value,
+    VariableType.LONG.value,
+    VariableType.CHAR.value,
+    VariableType.FLOAT.value,
+    VariableType.DOUBLE.value,
+    VariableType.BOOLEAN.value,
 ]
 
 
