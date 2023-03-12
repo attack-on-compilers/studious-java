@@ -60,7 +60,7 @@ def p_TypeImportOnDemandDeclaration(p):
 
 def p_Name(p):
     """Name : IdentifierId
-    | IdentifierIdAlphaDotIdentifierId"""
+    | NameDotIdentifierId"""
     p[0] = ("Name",) + tuple(p[-len(p) + 1 :])
 
 
@@ -70,8 +70,8 @@ def p_IdentifierId(p):
 
 
 def p_IdentifierIdAlphaDotIdentifierId(p):
-    """IdentifierIdAlphaDotIdentifierId : Name DOT IDENTIFIER"""
-    p[0] = ("IdentifierIdAlphaDotIdentifierId",) + tuple(p[-len(p) + 1 :])
+    """NameDotIdentifierId : Name DOT IDENTIFIER"""
+    p[0] = ("NameDotIdentifierId",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaAlphaImportDeclaration(p):
@@ -1003,6 +1003,8 @@ def getArgs():
 
 
 if __name__ == "__main__":
+    # lex.lex(debug=True)
+    # yacc.yacc(debug=True)
     args = getArgs().parse_args()
     if args.verbose:
         print("Input file: {}".format(args.input))

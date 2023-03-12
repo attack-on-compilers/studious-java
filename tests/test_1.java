@@ -1,5 +1,6 @@
 package abc.def;
 
+import java ;
 import java.io.h;
 import System.out;
 import System.out.*;
