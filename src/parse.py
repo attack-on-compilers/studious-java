@@ -5,6 +5,7 @@ from lexer import *
 import argparse
 from dot import tree_gen, tree_reduce
 from symTabGen import generate_symbol_table
+from symbol_table import *
 
 start = "Start"
 
@@ -1029,7 +1030,7 @@ if __name__ == "__main__":
         if args.verbose:
             print("Dot file generated: {}.dot".format(args.output))
             print("Generating Symbol Table")
-        generate_symbol_table(tree)
+        global_symbol_table = generate_symbol_table(tree)
         if args.verbose:
             print("Symbol Table generated")
 
