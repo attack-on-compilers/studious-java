@@ -101,6 +101,18 @@ class VariableSymbol(Symbol):
     def __str__(self):
         return DELIMERTER.join([self.name, self.symbol_type, self.data_type, self.scope, str(self.dims)])
 
+##check once constructor symbol class
+class ConstructorSymbol(Symbol):
+    def __init__(self, name, parent, scope=VariableScope.PUBLIC, params=None):
+        super().__init__(name, "constructor")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+        self.scope = scope
+        self.params = params or []
+
+    def __str__(self):
+        params_str = DELIMERTER.join([str(p) for p in self.params])
+        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name, str(self.scope), params_str])
+
 
 # Added temporarily
 class PackageSymbol(Symbol):

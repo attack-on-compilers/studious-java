@@ -45,7 +45,15 @@ def traverse_tree(tree):
             pass
 
         case "ConstructorDeclaration":
-            pass
+            constructorName = get_Name(tree[1][2])
+            constructorModifiers = get_Modifiers(tree[1][1])
+            constructorParams = get_Parameters(tree[1][3])
+            constructorExceptions = get_Exceptions(tree[2])
+            symbol_table.add_symbol(ConstructorSymbol(constructorName, constructorModifiers, constructorParams, constructorExceptions))
+            symbol_table.enter_scope(constructorName)
+            traverse_tree(tree[1][4])
+            symbol_table.exit_scope()
+
 
         case "InterfaceDeclaration":
             pass
@@ -128,3 +136,22 @@ def get_Interfaces(tree):
                 return get_Interfaces(tree[1]) + ", " + get_Interfaces(tree[3])
         case "InterfaceType":
             return get_Name(tree[1])
+        
+# def get_Parameters(tree):
+#     match tree[0]:
+#         case "FormalParameterList":
+#             return [get_Parameter(param) for param in tree[1]]
+#         case "":
+#             return []
+
+# def get_Parameter(tree):
+#     parameterName = get_Name(tree[1])
+#     parameterType = get_Type(tree[2])
+#     return VariableSymbol(parameterName, parameterType)
+
+def get_Exceptions(tree):
+    match tree[0]:
+        case "":
+            return []
+        case "Throw":
+            return [get_Name(exception) for exception in tree[1][1:]]
