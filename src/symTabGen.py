@@ -50,26 +50,31 @@ def traverse_tree(tree):
                 symbol_table.add_symbol(VariableSymbol(i, fieldType, fieldModifiers, dims))
 
         case "MethodDeclaration":
-            print("Tree[1]", tree[1][3][1])
             methodModifiers = get_Modifiers(tree[1][1])
             if tree[1][2] == "void":
-                methodType = "void"
+                methodReturnType = "void"
             else:
-                methodType = get_Type(tree[1][2])
-            methodName = tree[1][3][1]
-            # Need to fix method name
-            print(methodName, methodType, methodModifiers)
+                methodReturnType = get_Type(tree[1][2])
+            methodName = get_Name(tree[1][3])
             methodParams = []
-            # if len(tree[1][3]) == 5:
-            #     methodParams = get_Parameters(tree[1][3][3])
-            methodThrows = [] 
-            # Need to Implement methodThrows
-            methodSignature = methodName + "(" + ",".join(methodParams) + ")"
-            symbol_table.add_symbol(MethodSymbol(methodSignature, methodType, symbol_table.current, methodModifiers, methodThrows))
+            if len(tree[1][3]) == 5:
+                methodParams = get_Parameters(tree[1][3][3])
+            methodThrows = get_Exceptions(tree[1][4])
+            methodSignature = methodName + "(" 
+            if len(methodParams) != 0:
+                for i in methodParams:
+                    methodSignature += i[0] + ","
+            methodSignature += ")"
+            symbol_table.add_symbol(MethodSymbol(methodSignature, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
             symbol_table.enter_scope(methodSignature)
             for i in methodParams:
-                # symbol_table.add_symbol(VariableSymbol(i[1], i[0], VariableScope.PARAMETER))
-                # Need to implement method parameters
+                fieldModifiers = []
+                fieldType = i[0]
+                dims = 0
+                if fieldType[-1] == "]":
+                    dims = fieldType.count("[")
+                    fieldType = fieldType[:fieldType.find("[")]
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
                 pass
             traverse_tree(tree[2])
             symbol_table.exit_scope()
@@ -150,6 +155,11 @@ def get_Name(tree):
                     return tree[1]
                 case 4:
                     return tree[1] + "[]"
+        case "MethodDeclarator":
+            if len(tree) == 5:
+                return tree[1]
+            else:
+                return get_Name(tree[1])
         
 def get_Type(tree):
     match tree[0]:
@@ -209,25 +219,22 @@ def get_Interfaces(tree):
                 return get_Interfaces(tree[1]) + ", " + get_Interfaces(tree[3])
         case "InterfaceType":
             return get_Name(tree[1])
-        
-# def get_Parameters(tree):
-#     match tree[0]:
-#         case "FormalParameterList":
-#             return [get_Parameter(param) for param in tree[1]]
-#         case "":
-#             return []
 
-# def get_Parameter(tree):
-#     parameterName = get_Name(tree[1])
-#     parameterType = get_Type(tree[2])
-#     return VariableSymbol(parameterName, parameterType)
 
 def get_Exceptions(tree):
     match tree[0]:
-        case "":
-            return []
-        case "Throw":
-            return [get_Name(exception) for exception in tree[1][1:]]
+        case "BetaAlphaThrow":
+            if tree[1] == "":
+                return []
+            else:
+                return get_Exceptions(tree[1])
+        case "AlphaThrow":
+            return get_Exceptions(tree[2])
+        case "ClassTypeList":
+            if len(tree) == 2:
+                return [get_Name(tree[1])]
+            else:
+                return get_Exceptions(tree[1]) + [get_Name(tree[3])]
         
 def get_Variables(tree):
     match tree[0]:
@@ -243,3 +250,22 @@ def get_Variables(tree):
                 # traverse_tree(tree)
                 # Need to add traverse logic for VariableDeclaratorId : VariableDeclaratorId ASSIGN Expression
                 return [get_Name(tree[1])]
+
+def get_Parameters(tree):
+    match tree[0]:
+        case "BetaFormalParameterList":
+            if tree[1] == "":
+                return []
+            else:
+                return get_Parameters(tree[1])
+        case "FormalParameterList":
+            if len(tree) == 2:
+                return get_Parameters(tree[1])
+            else:
+                return get_Parameters(tree[1]) + get_Parameters(tree[3])
+        case "FormalParameter":
+            parameterType = get_Type(tree[1])
+            parameterName = get_Name(tree[2])
+            return [[parameterType, parameterName]]
+        case _:
+            return []

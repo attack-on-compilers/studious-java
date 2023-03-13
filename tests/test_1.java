@@ -20,7 +20,7 @@ public static private class Person extends Human implements HumanInterface, Huma
         address = address;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws Exception1, Exception2 {
         name = name;
     }
 
