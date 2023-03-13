@@ -77,7 +77,35 @@ def traverse_tree(tree):
 
 
         case "StaticInitializer":
-            pass
+            
+            static_init_name = "<clinit>"
+            symbol_table.add_symbol(MethodSymbol(static_init_name, "void", symbol_table.current, [], []))
+            symbol_table.enter_scope(static_init_name)
+            for child in tree[1]:
+                if child[0] == "FieldDeclaration":
+                    # symbols for static fields
+                    fieldModifiers = get_Modifiers(child[1])
+                    fieldType = get_Type(child[2])
+                    dims = 0
+                    if fieldType[-1] == "]":
+                        dims = fieldType.count("[")
+                        fieldType = fieldType[:fieldType.find("[")]
+                    fieldVariables = get_Variables(child[3])
+                    for i in fieldVariables:
+                        symbol_table.add_symbol(VariableSymbol(i, fieldType, fieldModifiers + ["static"], dims))
+                elif child[0] == "ExpressionStatement":
+                    # symbols for static variable assignments
+                    left_expr = child[1][1]
+                    if left_expr[0] == "Name":
+                        name = get_Name(left_expr)
+                        symbol = symbol_table.lookup(name)
+                        if symbol and isinstance(symbol, VariableSymbol) and "static" in symbol.modifiers:
+                            symbol_table.add_symbol(VariableSymbol(name, symbol.type, symbol.modifiers + ["assigned"], symbol.dims))
+                else:
+                    traverse_tree(child)
+            
+            symbol_table.exit_scope()
+
 
         # case "ConstructorDeclaration":
         #     constructorName = get_Name(tree[1][2])
@@ -91,14 +119,27 @@ def traverse_tree(tree):
 
 
         case "InterfaceDeclaration":
-            pass
+            interfaceName = tree[2]
+            interfaceModifiers = get_Modifiers(tree[1])
+            interfaceParent = get_Parent(tree[3])
+            interfaceInterfaces = get_Interfaces(tree[4])
+            symbol_table.add_symbol(InterfaceSymbol(interfaceName, symbol_table.current, interfaceModifiers, interfaceParent, interfaceInterfaces))
+            symbol_table.enter_scope(interfaceName)
+        
+            symbol_table.exit_scope()
+            
+
+
         
         case "VariableDeclarator":
-            variableName = get_Name(tree[1])
-            variableType = get_Type(tree[2])
-            variableModifiers = get_Modifiers(tree[0])
-            print("Variable", variableName, variableType, variableModifiers)
-            symbol_table.add_symbol(VariableSymbol(variableName, variableType, variableModifiers))
+
+            pass
+            
+            # variableName = get_Name(tree[1])
+            # variableType = get_Type(tree[2])
+            # variableModifiers = get_Modifiers(tree[0])
+            # print("Variable", variableName, variableType, variableModifiers)
+            # symbol_table.add_symbol(VariableSymbol(variableName, variableType, variableModifiers))
 
                     
         
