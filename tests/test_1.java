@@ -44,3 +44,13 @@ public static private class Person extends Human implements HumanInterface, Huma
         return address;
     }
 }
+
+public class Main {
+    int x;
+    public static void main(String[] args) {
+        Person p = new Person("John", 26, "London");
+        System.out.println(p.getName());
+        System.out.println(p.getAge());
+        System.out.println(p.getAddress());
+    }
+}

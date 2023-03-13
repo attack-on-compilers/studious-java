@@ -58,19 +58,28 @@ class ClassSymbol(Symbol):
         self.parent_class = parent_class
         self.interfaces = interfaces
 
+    def AllOperations(self):
+        # operations = []
+        # for symbol in self.symbol_table.symbols.values():
+        #     if symbol.symbol_type == "method":
+        #         operations.append(symbol)
+        # return operations
+        # TODO Harshit
+
     def __str__(self):
         return DELIMERTER.join([str(self.name), str(self.symbol_type), str(self.symbol_table.name), str(self.scope), str(self.parent_class), str(self.interfaces)])
 
 
 class MethodSymbol(Symbol):
-    def __init__(self, name, return_type, parent, scope=VariableScope.PRIVATE):
+    def __init__(self, name, return_type, parent, scope=VariableScope.PRIVATE, throws=None):
         super().__init__(name, "method")
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
         self.return_type = return_type
         self.scope = scope
+        self.throws = throws
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name, self.return_type, self.scope])
+        return DELIMERTER.join([str(self.name), str(self.symbol_type), str(self.symbol_table.name), str(self.return_type), str(self.scope), str(self.throws)])
 
 
 class BlockSymbol(Symbol):
@@ -179,11 +188,14 @@ class RootSymbolTable:
         return self.current.get_symbol(name, symbol_type)
 
     def enter_scope(self, name):
+        print("Entering scope: " + name)
         self.current = self.current.get_symbol(name).symbol_table
         # What if there are two scopes with same name???????????
 
     def exit_scope(self):
+        print("Exiting scope: " + self.current.name)
         self.current = self.current.parent
+        print("Parent scope: " + self.current.name)
 
     def tprint(self):
         self.root.tprint()

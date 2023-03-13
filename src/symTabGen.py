@@ -33,7 +33,7 @@ def traverse_tree(tree):
             classModifiers = get_Modifiers(tree[1])
             classParent = get_Parent(tree[4])
             classInterfaces = get_Interfaces(tree[5])
-            symbol_table.add_symbol(ClassSymbol(className, symbol_table, classModifiers, classParent, classInterfaces))
+            symbol_table.add_symbol(ClassSymbol(className, symbol_table.current, classModifiers, classParent, classInterfaces))
             symbol_table.enter_scope(className)
             traverse_tree(tree[6])
             symbol_table.exit_scope()
@@ -50,7 +50,31 @@ def traverse_tree(tree):
                 symbol_table.add_symbol(VariableSymbol(i, fieldType, fieldModifiers, dims))
 
         case "MethodDeclaration":
-            pass
+            print("Tree[1]", tree[1][3][1])
+            methodModifiers = get_Modifiers(tree[1][1])
+            if tree[1][2] == "void":
+                methodType = "void"
+            else:
+                methodType = get_Type(tree[1][2])
+            methodName = tree[1][3][1]
+            # Need to fix method name
+            print(methodName, methodType, methodModifiers)
+            methodParams = []
+            # if len(tree[1][3]) == 5:
+            #     methodParams = get_Parameters(tree[1][3][3])
+            methodThrows = [] 
+            # Need to Implement methodThrows
+            methodSignature = methodName + "(" + ",".join(methodParams) + ")"
+            symbol_table.add_symbol(MethodSymbol(methodSignature, methodType, symbol_table.current, methodModifiers, methodThrows))
+            symbol_table.enter_scope(methodSignature)
+            for i in methodParams:
+                # symbol_table.add_symbol(VariableSymbol(i[1], i[0], VariableScope.PARAMETER))
+                # Need to implement method parameters
+                pass
+            traverse_tree(tree[2])
+            symbol_table.exit_scope()
+
+
 
         case "StaticInitializer":
             pass
