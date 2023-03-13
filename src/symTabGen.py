@@ -56,7 +56,13 @@ def traverse_tree(tree):
             pass
         
         case "VariableDeclarator":
-            pass
+            variableName = get_Name(tree[1])
+            variableType = get_Type(tree[2])
+            variableModifiers = get_Modifiers(tree[0])
+            print("Variable", variableName, variableType, variableModifiers)
+            symbol_table.add_symbol(VariableSymbol(variableName, variableType, variableModifiers))
+
+                    
         
         case _:
             for i in range(1, len(tree)):
@@ -71,6 +77,23 @@ def get_Name(tree):
             return tree[1]
         case "NameDotIdentifierId":
             return get_Name(tree[1]) + "." + tree[3]
+        
+def get_Type(tree):
+    match tree[0]:
+        case "Type":
+            return get_Type(tree[1])
+        case "PrimitiveType":
+            return tree[1]
+        case "ReferenceType":
+            match tree[1][0]:
+                case "ClassOrInterfaceType":
+                    return get_Name(tree[1])
+                case "ArrayType":
+                    if len(tree) == 3: # array without a variable name
+                        return get_Type(tree[1][1]) + "[]"
+                    elif len(tree) == 4: # array with a variable name
+                        return get_Name(tree[1][1]) + "[]"
+
         
 def get_Modifiers(tree):
     pass
