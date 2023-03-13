@@ -13,6 +13,7 @@ def traverse_tree(tree):
     global symbol_table
     # We perform a depth first traversal of the tree
     match tree[0]:
+
         case "":
             return
         
@@ -61,9 +62,8 @@ def traverse_tree(tree):
                 methodParams = get_Parameters(tree[1][3][3])
             methodThrows = get_Exceptions(tree[1][4])
             methodSignature = methodName + "(" 
-            if len(methodParams) != 0:
-                for i in methodParams:
-                    methodSignature += i[0] + ","
+            for i in methodParams:
+                methodSignature += i[0] + ","
             methodSignature += ")"
             symbol_table.add_symbol(MethodSymbol(methodSignature, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
             symbol_table.enter_scope(methodSignature)
@@ -92,9 +92,8 @@ def traverse_tree(tree):
             constructorParams = get_Parameters(tree[2][3])
             constructorThrows = get_Exceptions(tree[3])
             constructorSignature = constructorName + "("
-            if len(constructorParams) != 0:
-                for i in constructorParams:
-                    constructorSignature += i[0] + ","
+            for i in constructorParams:
+                constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.add_symbol(MethodSymbol(constructorSignature, None, symbol_table.current, constructorModifiers, constructorThrows))
             symbol_table.enter_scope(constructorSignature)
