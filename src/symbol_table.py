@@ -1,6 +1,9 @@
 from enum import Enum
 
 
+DELIMERTER = ","
+
+
 class VariableScope(Enum):
     PRIVATE = 1
     PUBLIC = 2
@@ -48,9 +51,14 @@ class Symbol:
 
 
 class ClassSymbol(Symbol):
-    def __init__(self, name, parent):
+    def __init__(self, name, parent_symbol_table, scope=VariableScope.PRIVATE, parent_class=None):
         super().__init__(name, "class")
-        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+        self.symbol_table = SymbolTable(parent=parent_symbol_table, name=name + " symbol table")
+        self.scope = scope
+        self.parent_class = parent_class
+
+    def __str__(self):
+        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name, self.scope, self.parent_class])
 
 
 class MethodSymbol(Symbol):
@@ -60,17 +68,26 @@ class MethodSymbol(Symbol):
         self.return_type = return_type
         self.scope = scope
 
+    def __str__(self):
+        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name, self.return_type, self.scope])
+
 
 class BlockSymbol(Symbol):
     def __init__(self, name, parent):
         super().__init__(name, "block")
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
+    def __str__(self):
+        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name])
+
 
 class InterfaceSymbol(Symbol):
     def __init__(self, name, parent):
         super().__init__(name, "interface")
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+
+    def __str__(self):
+        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name])
 
 
 class VariableSymbol(Symbol):
@@ -80,15 +97,29 @@ class VariableSymbol(Symbol):
         self.scope = scope
         self.dims = dims
 
+    def __str__(self):
+        return DELIMERTER.join([self.name, self.symbol_type, self.data_type, self.scope, str(self.dims)])
+
+
 # Added temporarily
 class PackageSymbol(Symbol):
     def __init__(self, name):
         super().__init__(name, "package")
 
+    def __str__(self):
+        return DELIMERTER.join([self.name, self.symbol_type])
+
+
 # Added temporarily
 class ImportSymbol(Symbol):
-    def __init__(self, name):
+    def __init__(
+        self,
+        name,
+    ):
         super().__init__(name, "import")
+
+    def __str__(self):
+        return DELIMERTER.join([self.name, self.symbol_type])
 
 
 class SymbolTable:
