@@ -142,6 +142,17 @@ class SymbolTable:
         else:
             raise Exception("Symbol not found")
 
+    def tprint(self):
+        symbols_with_symbol_tables = ["class", "method", "block", "interface"]
+        symbol_tables = []
+        print(self.name)
+        for symbol in self.symbols.values():
+            print(symbol)
+            if symbol.symbol_type in symbols_with_symbol_tables:
+                symbol_tables.append(symbol.symbol_table)
+        for symbol_table in symbol_tables:
+            symbol_table.tprint()
+
 
 class RootSymbolTable:
     def __init__(self):
@@ -159,3 +170,6 @@ class RootSymbolTable:
 
     def exit_scope(self):
         self.current = self.current.parent
+
+    def tprint(self):
+        self.root.tprint()
