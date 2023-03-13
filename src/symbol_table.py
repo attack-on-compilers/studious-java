@@ -65,6 +65,7 @@ class ClassSymbol(Symbol):
         #         operations.append(symbol)
         # return operations
         # TODO Harshit
+        pass
 
     def __str__(self):
         return DELIMERTER.join([str(self.name), str(self.symbol_type), str(self.symbol_table.name), str(self.scope), str(self.parent_class), str(self.interfaces)])
