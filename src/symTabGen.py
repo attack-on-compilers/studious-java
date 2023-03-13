@@ -38,21 +38,29 @@ def traverse_tree(tree):
             traverse_tree(tree[6])
             symbol_table.exit_scope()
 
-        case "ClassMemberDeclaration":
+        case "FieldDeclaration":
+            fieldModifiers = get_Modifiers(tree[1])
+            fieldType = get_Type(tree[2])
+            print("Field", fieldType, fieldModifiers)
+            # for i in range(4, len(tree), 2):
+            #     fieldName = get_Name(tree[i])
+            #     symbol_table.add_symbol(FieldSymbol(fieldName, fieldType, fieldModifiers))
+
+        case "MethodDeclaration":
             pass
 
         case "StaticInitializer":
             pass
 
-        case "ConstructorDeclaration":
-            constructorName = get_Name(tree[1][2])
-            constructorModifiers = get_Modifiers(tree[1][1])
-            constructorParams = get_Parameters(tree[1][3])
-            constructorExceptions = get_Exceptions(tree[2])
-            symbol_table.add_symbol(ConstructorSymbol(constructorName, constructorModifiers, constructorParams, constructorExceptions))
-            symbol_table.enter_scope(constructorName)
-            traverse_tree(tree[1][4])
-            symbol_table.exit_scope()
+        # case "ConstructorDeclaration":
+        #     constructorName = get_Name(tree[1][2])
+        #     constructorModifiers = get_Modifiers(tree[1][1])
+        #     constructorParams = get_Parameters(tree[1][3])
+        #     constructorExceptions = get_Exceptions(tree[2])
+        #     symbol_table.add_symbol(ConstructorSymbol(constructorName, constructorModifiers, constructorParams, constructorExceptions))
+        #     symbol_table.enter_scope(constructorName)
+        #     traverse_tree(tree[1][4])
+        #     symbol_table.exit_scope()
 
 
         case "InterfaceDeclaration":
@@ -92,16 +100,25 @@ def get_Type(tree):
         case "Type":
             return get_Type(tree[1])
         case "PrimitiveType":
+            match tree[1]:
+                case "boolean":
+                    return "boolean"
+            return get_Type(tree[1])
+        case "NumericType":
+            return get_Type(tree[1])
+        case "IntegralType":
+            return tree[1]
+        case "FloatingPointType":
             return tree[1]
         case "ReferenceType":
+            return get_Type(tree[1])
+        case "ClassOrInterfaceType":
+            return get_Name(tree[1])
+        case "ArrayType":
             match tree[1][0]:
-                case "ClassOrInterfaceType":
-                    return get_Name(tree[1])
-                case "ArrayType":
-                    if len(tree) == 3: # array without a variable name
-                        return get_Type(tree[1][1]) + "[]"
-                    elif len(tree) == 4: # array with a variable name
-                        return get_Name(tree[1][1]) + "[]"
+                case "Name":
+                    return get_Name(tree[1]) + "[]"
+            return get_Type(tree[1]) + "[]"
 
         
 def get_Modifiers(tree):
