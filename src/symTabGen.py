@@ -14,6 +14,10 @@ def traverse_tree(tree):
     # We perform a depth first traversal of the tree
     match tree[0]:
 
+        case "BetaAlphaTypeDeclaration":
+            initial_Traverse(tree)
+            traverse_tree(tree[1])
+
         case "":
             return
         
@@ -31,12 +35,105 @@ def traverse_tree(tree):
         
         case "ClassDeclaration":
             className = tree[3]
+            symbol_table.enter_scope(className)
+            traverse_tree(tree[6])
+            symbol_table.exit_scope()
+
+        case "MethodDeclaration":
+            methodName = get_Name(tree[1][3])
+            methodParams = []
+            if len(tree[1][3]) == 5:
+                methodParams = get_Parameters(tree[1][3][3])
+            methodSignature = methodName + "(" 
+            for i in methodParams:
+                methodSignature += i[0] + ","
+            methodSignature += ")"
+            symbol_table.enter_scope(methodSignature)
+            for i in methodParams:
+                fieldModifiers = []
+                fieldType = i[0]
+                dims = 0
+                if fieldType[-1] == "]":
+                    dims = fieldType.count("[")
+                    fieldType = fieldType[:fieldType.find("[")]
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
+            traverse_tree(tree[2])
+            symbol_table.exit_scope()
+
+        case "StaticInitializer":
+            static_init_name = "<clinit>"
+            symbol_table.enter_scope(static_init_name)
+            traverse_tree(tree[2])
+            symbol_table.exit_scope()
+
+        case "ConstructorDeclaration":
+            constructorName = get_Name(tree[2][1])
+            constructorParams = get_Parameters(tree[2][3])
+            constructorSignature = constructorName + "("
+            for i in constructorParams:
+                constructorSignature += i[0] + ","
+            constructorSignature += ")"
+            symbol_table.enter_scope(constructorSignature)
+            for i in constructorParams:
+                fieldModifiers = []
+                fieldType = i[0]
+                dims = 0
+                if fieldType[-1] == "]":
+                    dims = fieldType.count("[")
+                    fieldType = fieldType[:fieldType.find("[")]
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
+            traverse_tree(tree[4])
+            symbol_table.exit_scope()
+
+
+        case "InterfaceDeclaration":
+            interfaceName = tree[3]
+            symbol_table.enter_scope(interfaceName)
+            traverse_tree(tree[5])
+            symbol_table.exit_scope()
+            
+        case "Block":    
+            pass
+
+        case "VariableDeclarator":
+            pass
+            # variableName = get_Name(tree[1])
+            # variableType = get_Type(tree[2])
+            # variableModifiers = get_Modifiers(tree[0])
+            # print("Variable", variableName, variableType, variableModifiers)
+            # symbol_table.add_symbol(VariableSymbol(variableName, variableType, variableModifiers))
+
+                    
+        
+        case _:
+            if type(tree) == tuple:
+                for i in range(1, len(tree)):
+                    traverse_tree(tree[i])
+
+def initial_Traverse(tree):
+    global symbol_table
+    match tree[0]:
+
+        case "":
+            return
+        
+        case "ClassDeclaration":
+            className = tree[3]
             classModifiers = get_Modifiers(tree[1])
             classParent = get_Parent(tree[4])
             classInterfaces = get_Interfaces(tree[5])
             symbol_table.add_symbol(ClassSymbol(className, symbol_table.current, classModifiers, classParent, classInterfaces))
             symbol_table.enter_scope(className)
-            traverse_tree(tree[6])
+            initial_Traverse(tree[6])
+            symbol_table.exit_scope()
+
+        case "InterfaceDeclaration":
+            interfaceName = tree[3]
+            interfaceModifiers = get_Modifiers(tree[1])
+            interfaceInterfaces = get_Interfaces(tree[4])
+            symbol_table.add_symbol(InterfaceSymbol(interfaceName, symbol_table.current, interfaceModifiers, interfaceInterfaces))
+            symbol_table.enter_scope(interfaceName)
+            initial_Traverse(tree[5])
             symbol_table.exit_scope()
 
         case "FieldDeclaration":
@@ -66,25 +163,10 @@ def traverse_tree(tree):
                 methodSignature += i[0] + ","
             methodSignature += ")"
             symbol_table.add_symbol(MethodSymbol(methodSignature, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
-            symbol_table.enter_scope(methodSignature)
-            for i in methodParams:
-                fieldModifiers = []
-                fieldType = i[0]
-                dims = 0
-                if fieldType[-1] == "]":
-                    dims = fieldType.count("[")
-                    fieldType = fieldType[:fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
-                pass
-            traverse_tree(tree[2])
-            symbol_table.exit_scope()
 
         case "StaticInitializer":
             static_init_name = "<clinit>"
             symbol_table.add_symbol(MethodSymbol(static_init_name, "void", symbol_table.current, [], []))
-            symbol_table.enter_scope(static_init_name)
-            traverse_tree(tree[2])
-            symbol_table.exit_scope()
 
         case "ConstructorDeclaration":
             constructorModifiers = get_Modifiers(tree[1])
@@ -96,44 +178,12 @@ def traverse_tree(tree):
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.add_symbol(MethodSymbol(constructorSignature, None, symbol_table.current, constructorModifiers, constructorThrows))
-            symbol_table.enter_scope(constructorSignature)
-            for i in constructorParams:
-                fieldModifiers = []
-                fieldType = i[0]
-                dims = 0
-                if fieldType[-1] == "]":
-                    dims = fieldType.count("[")
-                    fieldType = fieldType[:fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
-            traverse_tree(tree[4])
-            symbol_table.exit_scope()
-
-
-        case "InterfaceDeclaration":
-            interfaceName = tree[3]
-            interfaceModifiers = get_Modifiers(tree[1])
-            interfaceInterfaces = get_Interfaces(tree[4])
-            symbol_table.add_symbol(InterfaceSymbol(interfaceName, symbol_table.current, interfaceModifiers, interfaceInterfaces))
-            symbol_table.enter_scope(interfaceName)
-            traverse_tree(tree[5])
-            symbol_table.exit_scope()
-            
-        case "Block":    
-            pass
-
-        case "VariableDeclarator":
-            pass
-            # variableName = get_Name(tree[1])
-            # variableType = get_Type(tree[2])
-            # variableModifiers = get_Modifiers(tree[0])
-            # print("Variable", variableName, variableType, variableModifiers)
-            # symbol_table.add_symbol(VariableSymbol(variableName, variableType, variableModifiers))
-
-                    
         
         case _:
-            for i in range(1, len(tree)):
-                traverse_tree(tree[i])
+            if type(tree) == tuple:
+                for i in range(1, len(tree)):
+                    initial_Traverse(tree[i])
+        
 
 
 def get_Name(tree):
@@ -192,6 +242,8 @@ def get_Modifiers(tree):
     match tree[0]:
         case "BetaAlphaModifier":
             return get_Modifiers(tree[1])
+        case "":
+            return []
         case "AlphaModifier":
             if len(tree) == 2:
                 return get_Modifiers(tree[1])
@@ -246,6 +298,8 @@ def get_Exceptions(tree):
                 return [get_Name(tree[1])]
             else:
                 return get_Exceptions(tree[1]) + [get_Name(tree[3])]
+        case _:
+            return []
         
 def get_Variables(tree):
     match tree[0]:

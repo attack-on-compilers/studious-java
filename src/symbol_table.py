@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-DELIMERTER = ","
+DELIMERTER = "\t\t"
 
 
 class VariableScope(Enum):
@@ -183,6 +183,7 @@ class RootSymbolTable:
         self.current = self.root
 
     def add_symbol(self, symbol):
+        print("Adding symbol: " + symbol.name)
         self.current.add_symbol(symbol)
 
     def get_symbol(self, name, symbol_type=None):
