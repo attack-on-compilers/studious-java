@@ -70,7 +70,7 @@ def p_IdentifierId(p):
     p[0] = ("IdentifierId",) + tuple(p[-len(p) + 1 :])
 
 
-def p_IdentifierIdAlphaDotIdentifierId(p):
+def p_NameDotIdentifierId(p):
     """NameDotIdentifierId : Name DOT IDENTIFIER"""
     p[0] = ("NameDotIdentifierId",) + tuple(p[-len(p) + 1 :])
 
