@@ -32,9 +32,7 @@ public static private class Person extends Human implements HumanInterface, Huma
         age = age;
     }
 
-    public void setAddress(String address) {
-        address = address;
-    }
+    public void setAddress(String address) ;
 
     public String getName() {
         return name;

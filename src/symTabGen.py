@@ -91,17 +91,37 @@ def traverse_tree(tree):
             symbol_table.enter_scope(interfaceName)
             traverse_tree(tree[5])
             symbol_table.exit_scope()
-            
-        case "Block":    
-            pass
 
-        case "VariableDeclarator":
-            pass
-            # variableName = get_Name(tree[1])
-            # variableType = get_Type(tree[2])
-            # variableModifiers = get_Modifiers(tree[0])
-            # print("Variable", variableName, variableType, variableModifiers)
-            # symbol_table.add_symbol(VariableSymbol(variableName, variableType, variableModifiers))
+        case "AbstractMethodDeclaration":
+            methodName = get_Name(tree[1][3])
+            methodParams = []
+            if len(tree[1][3]) == 5:
+                methodParams = get_Parameters(tree[1][3][3])
+            methodSignature = methodName + "(" 
+            for i in methodParams:
+                methodSignature += i[0] + ","
+            methodSignature += ")"
+            symbol_table.enter_scope(methodSignature)
+            for i in methodParams:
+                fieldModifiers = []
+                fieldType = i[0]
+                dims = 0
+                if fieldType[-1] == "]":
+                    dims = fieldType.count("[")
+                    fieldType = fieldType[:fieldType.find("[")]
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
+            symbol_table.exit_scope()
+            
+        # case "Block":    
+        #     pass
+
+        # case "VariableDeclarator":
+        #     pass
+        #     # variableName = get_Name(tree[1])
+        #     # variableType = get_Type(tree[2])
+        #     # variableModifiers = get_Modifiers(tree[0])
+        #     # print("Variable", variableName, variableType, variableModifiers)
+        #     # symbol_table.add_symbol(VariableSymbol(variableName, variableType, variableModifiers))
 
                     
         
@@ -178,6 +198,23 @@ def initial_Traverse(tree):
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.add_symbol(MethodSymbol(constructorSignature, None, symbol_table.current, constructorModifiers, constructorThrows))
+
+        case "AbstractMethodDeclaration":
+            methodModifiers = get_Modifiers(tree[1][1])
+            if tree[1][2] == "void":
+                methodReturnType = "void"
+            else:
+                methodReturnType = get_Type(tree[1][2])
+            methodName = get_Name(tree[1][3])
+            methodParams = []
+            if len(tree[1][3]) == 5:
+                methodParams = get_Parameters(tree[1][3][3])
+            methodThrows = get_Exceptions(tree[1][4])
+            methodSignature = methodName + "(" 
+            for i in methodParams:
+                methodSignature += i[0] + ","
+            methodSignature += ")"
+            symbol_table.add_symbol(MethodSymbol(methodSignature, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
         
         case _:
             if type(tree) == tuple:
