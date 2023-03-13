@@ -16,53 +16,61 @@ def traverse_tree(tree):
             return
         
         case "PackageDeclaration":
-            packageName = traverse_tree(tree[2])
+            packageName = get_Name(tree[2])
             print("Package",packageName)
             symbol_table.add_symbol(PackageSymbol(packageName))
         
         case "SingleTypeImportDeclaration":
-            importName = traverse_tree(tree[2])
+            importName = get_Name(tree[2])
             print("Import",importName)
             symbol_table.add_symbol(ImportSymbol(importName))
 
         case "TypeImportOnDemandDeclaration":
-            importName = traverse_tree(tree[2]) + ".*"
+            importName = get_Name(tree[2]) + ".*"
             print("Import",importName)
             symbol_table.add_symbol(ImportSymbol(importName))
-
-        case "Name":
-            # Returns a string of the name
-            return traverse_tree(tree[1])
-        
-        case "IdentifierId":
-            return tree[1]
-        
-        case "NameDotIdentifierId":
-            # Need to see if a better representation is possible
-            return traverse_tree(tree[1]) + "." + tree[3]
         
         case "TypeDeclaration":
-            if tree[1] == ";":
-                return
+            # if tree[1] == ";":
+            #     return
             traverse_tree(tree[1])
         
-        # case "ClassDeclaration":
-        #     className = tree[3]
-        #     print("Class",className)
-        #     current_symbol_table.add_symbol(ClassSymbol(className))
-        #     previous_symbol_table = current_symbol_table
-        #     if( current_symbol_table.get_symbol(className) is not None ):
-        #         print("Class",className,"already exists!")
-        #     current_symbol_table = SymbolTable(current_symbol_table)
-        #     for i in range(3, len(tree)):
-        #         traverse_tree(tree[i])
-        #     current_symbol_table = previous_symbol_table
-            # Not complete yet
+        case "ClassDeclaration":
+            className = get_Name(tree[3])
+            classModifiers = get_Modifiers(tree[1])
+            # SuperClass Todo
+            # classInterface Todo
+            # Add class to symob Table
+            pass
+
+        case "ClassMemberDeclaration":
+            pass
+
+        case "StaticInitializer":
+            pass
+
+        case "ConstructorDeclaration":
+            pass
+
+        case "InterfaceDeclaration":
+            pass
+        
+        case "VariableDeclarator":
+            pass
+        
         case _:
             for i in range(1, len(tree)):
                 traverse_tree(tree[i])
 
 
-
+def get_Name(tree):
+    match tree[0]:
+        case "Name":
+            return get_Name(tree[1])
+        case "IdentifierId":
+            return tree[1]
+        case "NameDotIdentifierId":
+            return get_Name(tree[1]) + "." + tree[3]
         
-
+def get_Modifiers(tree):
+    pass
