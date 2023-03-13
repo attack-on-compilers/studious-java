@@ -92,14 +92,14 @@ class InterfaceSymbol(Symbol):
 
 
 class VariableSymbol(Symbol):
-    def __init__(self, name, data_type, scope=VariableScope.PRIVATE, dims=1):
+    def __init__(self, name, data_type, scope=VariableScope.PRIVATE, dims=0):
         super().__init__(name, "variable")
         self.data_type = data_type
         self.scope = scope
         self.dims = dims
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.data_type, self.scope, str(self.dims)])
+        return DELIMERTER.join([self.name, self.symbol_type, self.data_type, str(self.scope), str(self.dims)])
 
 ##check once constructor symbol class
 class ConstructorSymbol(Symbol):

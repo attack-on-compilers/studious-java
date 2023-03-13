@@ -41,10 +41,13 @@ def traverse_tree(tree):
         case "FieldDeclaration":
             fieldModifiers = get_Modifiers(tree[1])
             fieldType = get_Type(tree[2])
-            print("Field", fieldType, fieldModifiers)
-            # for i in range(4, len(tree), 2):
-            #     fieldName = get_Name(tree[i])
-            #     symbol_table.add_symbol(FieldSymbol(fieldName, fieldType, fieldModifiers))
+            dims = 0
+            if fieldType[-1] == "]":
+                dims = fieldType.count("[")
+                fieldType = fieldType[:fieldType.find("[")]
+            fieldVariables = get_Variables(tree[3])
+            for i in fieldVariables:
+                symbol_table.add_symbol(VariableSymbol(i, fieldType, fieldModifiers, dims))
 
         case "MethodDeclaration":
             pass
@@ -94,6 +97,12 @@ def get_Name(tree):
             return get_Name(tree[1])
         case "ClassType":
             return get_Name(tree[1])
+        case "VariableDeclaratorId":
+            match len(tree):
+                case 2:
+                    return tree[1]
+                case 4:
+                    return tree[1] + "[]"
         
 def get_Type(tree):
     match tree[0]:
@@ -172,3 +181,18 @@ def get_Exceptions(tree):
             return []
         case "Throw":
             return [get_Name(exception) for exception in tree[1][1:]]
+        
+def get_Variables(tree):
+    match tree[0]:
+        case "AlphaVariableDeclarator":
+            if len(tree) == 2:
+                return get_Variables(tree[1])
+            else:
+                return get_Variables(tree[1]) + get_Variables(tree[3])
+        case "VariableDeclarator":
+            if len(tree) == 2:
+                return [get_Name(tree[1])]
+            else:
+                # traverse_tree(tree)
+                # Need to add traverse logic for VariableDeclaratorId : VariableDeclaratorId ASSIGN Expression
+                return [get_Name(tree[1])]
