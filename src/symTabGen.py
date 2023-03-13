@@ -6,6 +6,7 @@ def generate_symbol_table(tree):
     symbol_table = RootSymbolTable()
     # pprint(tree)
     traverse_tree(tree)
+    symbol_table.tprint()
     return
 
 def traverse_tree(tree):
@@ -17,31 +18,25 @@ def traverse_tree(tree):
         
         case "PackageDeclaration":
             packageName = get_Name(tree[2])
-            print("Package",packageName)
             symbol_table.add_symbol(PackageSymbol(packageName))
         
         case "SingleTypeImportDeclaration":
             importName = get_Name(tree[2])
-            print("Import",importName)
             symbol_table.add_symbol(ImportSymbol(importName))
 
         case "TypeImportOnDemandDeclaration":
             importName = get_Name(tree[2]) + ".*"
-            print("Import",importName)
             symbol_table.add_symbol(ImportSymbol(importName))
         
-        case "TypeDeclaration":
-            # if tree[1] == ";":
-            #     return
-            traverse_tree(tree[1])
-        
         case "ClassDeclaration":
-            className = get_Name(tree[3])
+            className = tree[3]
             classModifiers = get_Modifiers(tree[1])
-            # SuperClass Todo
-            # classInterface Todo
-            # Add class to symob Table
-            pass
+            classParent = get_Parent(tree[4])
+            classInterfaces = get_Interfaces(tree[5])
+            symbol_table.add_symbol(ClassSymbol(className, symbol_table, classModifiers, classParent, classInterfaces))
+            symbol_table.enter_scope(className)
+            traverse_tree(tree[6])
+            symbol_table.exit_scope()
 
         case "ClassMemberDeclaration":
             pass
@@ -77,6 +72,12 @@ def get_Name(tree):
             return tree[1]
         case "NameDotIdentifierId":
             return get_Name(tree[1]) + "." + tree[3]
+        case "InterfaceType":
+            return get_Name(tree[1])
+        case "ClassOrInterfaceType":
+            return get_Name(tree[1])
+        case "ClassType":
+            return get_Name(tree[1])
         
 def get_Type(tree):
     match tree[0]:
@@ -96,4 +97,34 @@ def get_Type(tree):
 
         
 def get_Modifiers(tree):
-    pass
+    match tree[0]:
+        case "BetaAlphaModifier":
+            return get_Modifiers(tree[1])
+        case "AlphaModifier":
+            if len(tree) == 2:
+                return get_Modifiers(tree[1])
+            else:
+                return get_Modifiers(tree[1]) + ", " + get_Modifiers(tree[2])
+        case "Modifier":
+            return tree[1]
+
+def get_Parent(tree):
+    match tree[0]:
+        case "BetaSuper":
+            return get_Parent(tree[1])
+        case "Super":
+            return get_Name(tree[2])
+        
+def get_Interfaces(tree):
+    match tree[0]:
+        case "BetaAlphaInterface":
+            return get_Interfaces(tree[1])
+        case "AlphaInterface":
+            return get_Interfaces(tree[2])
+        case "InterfaceTypeList":
+            if len(tree) == 2:
+                return get_Interfaces(tree[1])
+            else:
+                return get_Interfaces(tree[1]) + ", " + get_Interfaces(tree[3])
+        case "InterfaceType":
+            return get_Name(tree[1])

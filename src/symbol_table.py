@@ -51,14 +51,15 @@ class Symbol:
 
 
 class ClassSymbol(Symbol):
-    def __init__(self, name, parent_symbol_table, scope=VariableScope.PRIVATE, parent_class=None):
+    def __init__(self, name, parent_symbol_table, scope=VariableScope.PRIVATE, parent_class=None, interfaces=None):
         super().__init__(name, "class")
         self.symbol_table = SymbolTable(parent=parent_symbol_table, name=name + " symbol table")
         self.scope = scope
         self.parent_class = parent_class
+        self.interfaces = interfaces
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name, self.scope, self.parent_class])
+        return DELIMERTER.join([str(self.name), str(self.symbol_type), str(self.symbol_table.name), str(self.scope), str(self.parent_class), str(self.interfaces)])
 
 
 class MethodSymbol(Symbol):
@@ -166,7 +167,8 @@ class RootSymbolTable:
         return self.current.get_symbol(name, symbol_type)
 
     def enter_scope(self, name):
-        self.current = self.current.get_symbol(name)
+        self.current = self.current.get_symbol(name).symbol_table
+        # What if there are two scopes with same name???????????
 
     def exit_scope(self):
         self.current = self.current.parent

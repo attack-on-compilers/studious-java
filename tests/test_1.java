@@ -5,7 +5,7 @@ import java.io.h;
 import System.out;
 import System.out.*;
 
-public class Person {
+public static private class Person extends Human implements HumanInterface, HumanInterface2 {
     private String name;
     private int age;
     private String address;
