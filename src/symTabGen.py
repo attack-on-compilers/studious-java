@@ -11,6 +11,15 @@ def generate_symbol_table(tree):
 
 def traverse_tree(tree):
     global symbol_table
+    
+    if tree[0] == 'Assignment':
+        left = tree[1]
+        right = tree[3]
+        if type_check(left, tree[2], right):
+            print("Type checking is fine")     
+        else:
+            print('Incompatible Types')
+            return   
     # We perform a depth first traversal of the tree
     match tree[0]:
 
@@ -394,3 +403,50 @@ def get_Parameters(tree):
             return [[parameterType, parameterName]]
         case _:
             return []
+        
+
+#sample type check        
+def type_check(left, op, right):
+    left_type = get_expression_Type(get_Name(left[1]))
+    print("inside type check", right)
+    right_type = get_expression_Type(get_Name(right[1]))
+    # check if left and right types are the same
+    if left_type != right_type or left_type == False or right_type == False:
+        print(f"Type Error: Incompatible types")
+        #raise Exception
+        return False
+    
+    # if both types are compatible and operator is supported, return True
+    return True
+
+###yet to complete
+def get_expression_Type(expression):
+    if isinstance(expression, str):
+        symbol = symbol_table.get_symbol(expression)
+        print('hiiii', symbol.data_type)
+        if symbol is None:
+            print(f"Type Error: Symbol {expression} not found in symbol table")
+            return None
+        else:
+            return symbol.data_type
+    elif isinstance(expression, list):
+        if expression[0] == "Name":
+            return get_expression_Type(get_Name(expression[1]))
+        elif expression[0] == "Constant":
+            if isinstance(expression[1], int):
+                return "int"
+            elif isinstance(expression[1], float):
+                return "float"
+            elif isinstance(expression[1], str):
+                return "str"
+            elif isinstance(expression[1], bool):
+                return "bool"
+            elif expression[1] is None:
+                return "None"
+            else:
+                print(f"Type Error: Unsupported constant type {type(expression[1])}")
+                return False
+    else:
+        print(f"Type Error: Unsupported expression type {type(expression)}")
+        return False
+        
