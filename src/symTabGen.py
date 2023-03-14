@@ -137,21 +137,18 @@ def initial_Traverse(tree):
         case "":
             return
         
+        case "BetaAlphaTypeDeclaration":
+            initial_initial_Traverse(tree)
+            initial_Traverse(tree[1])
+        
         case "ClassDeclaration":
             className = tree[3]
-            classModifiers = get_Modifiers(tree[1])
-            classParent = get_Parent(tree[4])
-            classInterfaces = get_Interfaces(tree[5])
-            symbol_table.add_symbol(ClassSymbol(className, symbol_table.current, classModifiers, classParent, classInterfaces))
             symbol_table.enter_scope(className)
             initial_Traverse(tree[6])
             symbol_table.exit_scope()
 
         case "InterfaceDeclaration":
             interfaceName = tree[3]
-            interfaceModifiers = get_Modifiers(tree[1])
-            interfaceInterfaces = get_Interfaces(tree[4])
-            symbol_table.add_symbol(InterfaceSymbol(interfaceName, symbol_table.current, interfaceModifiers, interfaceInterfaces))
             symbol_table.enter_scope(interfaceName)
             initial_Traverse(tree[5])
             symbol_table.exit_scope()
@@ -220,6 +217,32 @@ def initial_Traverse(tree):
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
                     initial_Traverse(tree[i])
+
+def initial_initial_Traverse(tree):
+    global symbol_table
+    match tree[0]:
+
+        case "":
+            return
+        
+        case "ClassDeclaration":
+            className = tree[3]
+            classModifiers = get_Modifiers(tree[1])
+            classParent = get_Parent(tree[4])
+            classInterfaces = get_Interfaces(tree[5])
+            symbol_table.add_symbol(ClassSymbol(className, symbol_table.current, classModifiers, classParent, classInterfaces))
+
+        case "InterfaceDeclaration":
+            interfaceName = tree[3]
+            interfaceModifiers = get_Modifiers(tree[1])
+            interfaceInterfaces = get_Interfaces(tree[4])
+            symbol_table.add_symbol(InterfaceSymbol(interfaceName, symbol_table.current, interfaceModifiers, interfaceInterfaces))
+
+        case _:
+            if type(tree) == tuple:
+                for i in range(1, len(tree)):
+                    initial_initial_Traverse(tree[i])
+        
         
 
 
