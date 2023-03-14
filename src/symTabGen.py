@@ -1,6 +1,10 @@
 from symbol_table import *
 from pprint import pprint as pprint
 
+static_init_count = 0
+previous_block_count = 0
+block_count = 0
+
 def generate_symbol_table(tree):
     global symbol_table
     symbol_table = RootSymbolTable()
@@ -11,6 +15,9 @@ def generate_symbol_table(tree):
 
 def traverse_tree(tree):
     global symbol_table
+    global static_init_count
+    global previous_block_count
+    global block_count
     
     if tree[0] == 'Assignment':
         left = tree[1]
@@ -43,6 +50,7 @@ def traverse_tree(tree):
             symbol_table.add_symbol(ImportSymbol(importName))
         
         case "ClassDeclaration":
+            static_init_count = 0
             className = tree[3]
             symbol_table.enter_scope(className)
             traverse_tree(tree[6])
@@ -70,7 +78,9 @@ def traverse_tree(tree):
             symbol_table.exit_scope()
 
         case "StaticInitializer":
-            static_init_name = "<clinit>"
+            static_init_count += 1
+            static_init_name = "<static_init_" + str(static_init_count) + ">"
+            symbol_table.add_symbol(MethodSymbol(static_init_name, "void", symbol_table.current, [], []))
             symbol_table.enter_scope(static_init_name)
             traverse_tree(tree[2])
             symbol_table.exit_scope()
@@ -120,26 +130,36 @@ def traverse_tree(tree):
                     fieldType = fieldType[:fieldType.find("[")]
                 symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
             symbol_table.exit_scope()
+
+        case "LocalVariableDeclaration":
+            fieldType = get_Type(tree[1])
+            dims = 0
+            if fieldType[-1] == "]":
+                dims = fieldType.count("[")
+                fieldType = fieldType[:fieldType.find("[")]
+            fieldVariables = get_Variables(tree[2])
+            for i in fieldVariables:
+                symbol_table.add_symbol(VariableSymbol(i, fieldType, [], dims))
+
+        case "StatementWithoutTrailingSubstatement":
+            match tree[1][0]:
+                case "Block":
+                    block_count += 1
+                    previous_block_count = block_count
+                    symbol_table.add_symbol(BlockSymbol("block"+str(block_count), symbol_table.current))
+                    symbol_table.enter_scope("block"+str(block_count))
+                    block_count = 0
+                    traverse_tree(tree[1])
+                    symbol_table.exit_scope()
+                    block_count = previous_block_count
             
-        # case "Block":    
-        #     pass
-
-        # case "VariableDeclarator":
-        #     pass
-        #     # variableName = get_Name(tree[1])
-        #     # variableType = get_Type(tree[2])
-        #     # variableModifiers = get_Modifiers(tree[0])
-        #     # print("Variable", variableName, variableType, variableModifiers)
-        #     # symbol_table.add_symbol(VariableSymbol(variableName, variableType, variableModifiers))
-
-                    
-        
         case _:
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
                     traverse_tree(tree[i])
 
 def initial_Traverse(tree):
+    # A separate traversal to get the class body declarations and interface body declarations
     global symbol_table
     match tree[0]:
 
@@ -191,8 +211,7 @@ def initial_Traverse(tree):
             symbol_table.add_symbol(MethodSymbol(methodSignature, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
 
         case "StaticInitializer":
-            static_init_name = "<clinit>"
-            symbol_table.add_symbol(MethodSymbol(static_init_name, "void", symbol_table.current, [], []))
+            return
 
         case "ConstructorDeclaration":
             constructorModifiers = get_Modifiers(tree[1])
@@ -228,6 +247,7 @@ def initial_Traverse(tree):
                     initial_Traverse(tree[i])
 
 def initial_initial_Traverse(tree):
+    # A separate traversal to get the class names and interface names
     global symbol_table
     match tree[0]:
 

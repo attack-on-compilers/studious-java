@@ -18,6 +18,10 @@ public static private class Person extends Human implements HumanInterface, Huma
         System.out.println("Hello");
     }
 
+    static {
+        System.out.println("Hello");
+    }
+
     public Person(String name, int age, String address) {
         name = name;
         age = (int) 55.55;
@@ -51,8 +55,16 @@ public class Main {
     int x;
     public static void main(String[][][] args, myType var1) {
         Person p = new Person("John", 26, "London");
-        System.out.println(p.getName());
-        System.out.println(p.getAge());
-        System.out.println(p.getAddress());
+        Person[][][][][] q;
+        {
+            int x;
+            x = 5;
+            System.out.println(x);
+            {
+                int y;
+                {int y;}
+                {int z;int k;}
+            }
+        }
     }
 }
