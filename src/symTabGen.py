@@ -1,5 +1,6 @@
 from symbol_table import *
 from pprint import pprint as pprint
+from ast import literal_eval
 
 static_init_count = 0
 previous_block_count = 0
@@ -8,7 +9,8 @@ block_count = 0
 def generate_symbol_table(tree):
     global symbol_table
     symbol_table = RootSymbolTable()
-    # pprint(tree)
+    # pprint(tree) 
+        
     traverse_tree(tree)
     symbol_table.tprint()
     return
@@ -18,15 +20,22 @@ def traverse_tree(tree):
     global static_init_count
     global previous_block_count
     global block_count
-    
-    if tree[0] == 'Assignment':
-        left = tree[1]
-        right = tree[3]
-        if type_check(left, tree[2], right):
-            print("Type checking is fine")     
-        else:
-            print('Incompatible Types')
-            return   
+
+    #print(tree)
+    #print("end\n\n\n\n\n\n")
+    if tree[0] == "Assignment":
+        left = get_expression_Type(tree[1])
+        print("Succesfully printing left type", left)
+        operator = tree[2][1]
+        #print('\n', tree[3], '\n')
+        right = get_expression_Type(tree[3])
+        print("Succesfully printing right type", right)
+        # if type_check(left, operator, right):
+        #     print("Type checking is fine")     
+        # else:
+        #     print('Incompatible Types')
+        #     return  
+
     # We perform a depth first traversal of the tree
     match tree[0]:
 
@@ -152,6 +161,8 @@ def traverse_tree(tree):
                     traverse_tree(tree[1])
                     symbol_table.exit_scope()
                     block_count = previous_block_count
+                case _:
+                    traverse_tree(tree[1])
             
         case _:
             if type(tree) == tuple:
@@ -161,6 +172,9 @@ def traverse_tree(tree):
 def initial_Traverse(tree):
     # A separate traversal to get the class body declarations and interface body declarations
     global symbol_table
+
+    
+        
     match tree[0]:
 
         case "":
@@ -192,6 +206,7 @@ def initial_Traverse(tree):
             fieldVariables = get_Variables(tree[3])
             for i in fieldVariables:
                 symbol_table.add_symbol(VariableSymbol(i, fieldType, fieldModifiers, dims))
+            
 
         case "MethodDeclaration":
             methodModifiers = get_Modifiers(tree[1][1])
@@ -423,50 +438,125 @@ def get_Parameters(tree):
             return [[parameterType, parameterName]]
         case _:
             return []
-        
 
-#sample type check        
+
 def type_check(left, op, right):
-    left_type = get_expression_Type(get_Name(left[1]))
-    print("inside type check", right)
-    right_type = get_expression_Type(get_Name(right[1]))
+    # print("inside type check", left)
+    # left_type = get_expression_Type(get_Name(left[1]))
+    # print("inside type check", right)
+    # right_type = get_expression_Type(get_Terminal(right[1]))
     # check if left and right types are the same
-    if left_type != right_type or left_type == False or right_type == False:
-        print(f"Type Error: Incompatible types")
-        #raise Exception
-        return False
+    # if left_type != right_type or left_type == False or right_type == False:
+    #     print(f"Type Error: Incompatible types")
+    #     #raise Exception
+    #     return False
     
     # if both types are compatible and operator is supported, return True
     return True
 
+def string_to_type(expression):
+
+    try:
+         literal_type = literal_eval(expression)
+         return type(literal_type).__name__ 
+    except:
+        return type(expression).__name__
+
 ###yet to complete
 def get_expression_Type(expression):
-    if isinstance(expression, str):
-        symbol = symbol_table.get_symbol(expression)
-        print('hiiii', symbol.data_type)
-        if symbol is None:
-            print(f"Type Error: Symbol {expression} not found in symbol table")
-            return None
-        else:
-            return symbol.data_type
-    elif isinstance(expression, list):
-        if expression[0] == "Name":
-            return get_expression_Type(get_Name(expression[1]))
-        elif expression[0] == "Constant":
-            if isinstance(expression[1], int):
-                return "int"
-            elif isinstance(expression[1], float):
-                return "float"
-            elif isinstance(expression[1], str):
-                return "str"
-            elif isinstance(expression[1], bool):
-                return "bool"
-            elif expression[1] is None:
-                return "None"
-            else:
-                print(f"Type Error: Unsupported constant type {type(expression[1])}")
-                return False
-    else:
-        print(f"Type Error: Unsupported expression type {type(expression)}")
-        return False
-        
+    #print("This is", expression[0])
+
+    match expression[0]:
+        case "LeftHandSide":
+            return get_expression_Type(expression[1])
+        case "FieldAccess":
+            pass
+
+        case "ArrayAccess":
+            pass
+
+        case "Name":  
+            return get_expression_Type(expression[1])
+        case "IdentifierId":
+            #print("inside identifier", expression[0])
+            return symbol_table.get_symbol(expression[1]).data_type    
+            # symbol = symbol_table.get_symbol(expression)
+            # print('hiiii', symbol)
+            # if symbol is None:
+            #     print(f"Type Error: Symbol {expression} not found in symbol table")
+            #     return None
+            # else:
+            #     return symbol.data_type
+        case "AssignmentExpression":
+            return get_expression_Type(expression[1])
+        case "ConditionalExpression":
+            return get_expression_Type(expression[1])
+        case "ConditionalOrExpression":
+            return get_expression_Type(expression[1])
+        case "ConditionalAndExpression":
+            return get_expression_Type(expression[1])
+        case "InclusiveOrExpression":
+            return get_expression_Type(expression[1])
+        case "ExclusiveOrExpression":
+            return get_expression_Type(expression[1])
+        case "AndExpression":
+            return get_expression_Type(expression[1])
+        case "EqualityExpression":
+            return get_expression_Type(expression[1])
+        case "RelationalExpression":
+            return get_expression_Type(expression[1])
+        case "ShiftExpression":
+            return get_expression_Type(expression[1])
+        case "AdditiveExpression":
+            return get_expression_Type(expression[1])
+        case "MultiplicativeExpression":
+            return get_expression_Type(expression[1])
+        case "UnaryExpression":
+            return get_expression_Type(expression[1])
+        case "PreIncrementExpression":
+            return get_expression_Type(expression[1])
+        case "PreDecrementExpression":
+            return get_expression_Type(expression[1])
+        case "UnaryExpressionNotPlusMinus":
+            return get_expression_Type(expression[1])
+        case "PostfixExpression":
+            return get_expression_Type(expression[1])
+        case "PostIncrementExpression":
+            return get_expression_Type(expression[1])
+        case "PostDecrementExpression":
+            return get_expression_Type(expression[1])
+        case "CastExpression":
+            return get_expression_Type(expression[1])
+        case "Primary":
+            return get_expression_Type(expression[1])
+        case "PrimaryNoNewArray":
+            return get_expression_Type(expression[1])
+        case "PrimaryArrayCreationExpression":
+            return get_expression_Type(expression[1])
+        case "Literal":
+            return string_to_type(expression[1])
+        case "THIS":
+            pass
+        case "LEFT_PAREN Expression RIGHT_PAREN":
+            pass
+        case "ClassInstanceCreationExpression":
+            pass
+        case "FieldAccess":
+            pass
+        case "MethodInvocation":
+            pass
+        case "ArrayAccess":
+            pass
+
+
+    #print("\n yooooooo", get_Type(expression))
+
+    # if isinstance(expression, str):
+    #     symbol = symbol_table.get_symbol(expression)
+    #     print('hiiii', symbol)
+    #     if symbol is None:
+    #         print(f"Type Error: Symbol {expression} not found in symbol table")
+    #         return None
+    #     else:
+    #         return symbol.data_type
+

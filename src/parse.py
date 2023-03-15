@@ -989,6 +989,7 @@ def p_empty(p):
 
 def p_error(p):
     print("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
+    #raise Exception("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
 
 
 yacc.yacc(debug=False, debugfile="parser.out")
