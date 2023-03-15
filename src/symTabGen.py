@@ -20,21 +20,34 @@ def traverse_tree(tree):
     global static_init_count
     global previous_block_count
     global block_count
+    
+    #print(tree, '\n')
 
-    #print(tree)
-    #print("end\n\n\n\n\n\n")
+    #print(len(tree))
     if tree[0] == "Assignment":
+        
+        #print('\n', tree[1], '\n')
+       
         left = get_expression_Type(tree[1])
         print("Succesfully printing left type", left)
         operator = tree[2][1]
         #print('\n', tree[3], '\n')
+       
         right = get_expression_Type(tree[3])
         print("Succesfully printing right type", right)
-        # if type_check(left, operator, right):
-        #     print("Type checking is fine")     
-        # else:
-        #     print('Incompatible Types')
-        #     return  
+
+    #print(len(tree))
+    if tree[0] == "AdditiveExpression" and len(tree) ==4:
+        #print('\n', tree[1], '\n')
+       
+        left = get_expression_Type(tree[1])
+        print("Succesfully printing left type", left)
+        operator = tree[2]
+       # print('\n', tree[3], '\n')
+       
+        right = get_expression_Type(tree[3])
+        #print("Succesfully printing right type", right)   
+        
 
     # We perform a depth first traversal of the tree
     match tree[0]:
@@ -464,7 +477,7 @@ def string_to_type(expression):
 
 ###yet to complete
 def get_expression_Type(expression):
-    #print("This is", expression[0])
+   # print("This is", expression[0])
 
     match expression[0]:
         case "LeftHandSide":
@@ -479,7 +492,7 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "IdentifierId":
             #print("inside identifier", expression[0])
-            return symbol_table.get_symbol(expression[1]).data_type    
+            return symbol_table.get_symbol(expression[1]).data_type 
             # symbol = symbol_table.get_symbol(expression)
             # print('hiiii', symbol)
             # if symbol is None:
@@ -535,6 +548,7 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "Literal":
             return string_to_type(expression[1])
+            
         case "THIS":
             pass
         case "LEFT_PAREN Expression RIGHT_PAREN":
@@ -548,15 +562,17 @@ def get_expression_Type(expression):
         case "ArrayAccess":
             pass
 
+    
+
 
     #print("\n yooooooo", get_Type(expression))
 
-    # if isinstance(expression, str):
-    #     symbol = symbol_table.get_symbol(expression)
-    #     print('hiiii', symbol)
-    #     if symbol is None:
-    #         print(f"Type Error: Symbol {expression} not found in symbol table")
-    #         return None
-    #     else:
-    #         return symbol.data_type
+    if isinstance(expression, str):
+        symbol = symbol_table.get_symbol(expression)
+        print('hiiii', symbol)
+        if symbol is None:
+            print(f"Type Error: Symbol {expression} not found in symbol table")
+            return None
+        else:
+            return symbol.data_type
 

@@ -5,10 +5,14 @@ public class test1{
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        double y = 0;
-        double x = 10.5 + 20.5;
-        x+=y;
-        x += 1.6;
+        double y ;
+        double x;
+        double z;
+        x = 4;
+        x = "fs";
+        x +=1.6; 
+        x = y + z + 5;
+        string str = "a";
         return x;
     }
 
