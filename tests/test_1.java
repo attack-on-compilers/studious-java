@@ -12,6 +12,7 @@ public class test1{
         x = "fs";
         x +=1.6; 
         x = y + z + 5;
+        x = y + z + z;  
         string str = "a";
         return x;
     }

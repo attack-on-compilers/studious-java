@@ -21,9 +21,8 @@ def traverse_tree(tree):
     global previous_block_count
     global block_count
     
-    #print(tree, '\n')
 
-    #print(len(tree))
+
     if tree[0] == "Assignment":
         
         #print('\n', tree[1], '\n')
@@ -47,7 +46,19 @@ def traverse_tree(tree):
        
         right = get_expression_Type(tree[3])
         #print("Succesfully printing right type", right)   
+
+    if tree[0] == "MethodDeclaration":
         
+        if tree[1][2] == "void":
+            methodheader_type = tree[1][2]
+        else:
+            methodheader_type = get_expression_Type(tree[1][2])
+        print("Succesfully printing method header type", methodheader_type)
+
+        ##yet to do
+        
+        # methodbodyreturn_type = get_expression_Type(tree[2][1][2])     ##case semicolon left
+        # print("Succesfully printing final return type", methodbodyreturn_type)
 
     # We perform a depth first traversal of the tree
     match tree[0]:
@@ -561,6 +572,27 @@ def get_expression_Type(expression):
             pass
         case "ArrayAccess":
             pass
+        case "Type":
+            return get_Type(expression[1])
+        case "BetaAlphaBlockStatement":
+            return get_expression_Type(expression[1])
+        case "AlphaBlockStatement":
+            return get_expression_Type(expression[2])
+        case "BlockStatement":
+            return get_expression_Type(expression[1])
+        case "LocalVariableDeclarationStatement":
+            pass
+        case "Statement":
+            return get_expression_Type(expression[1])
+        case "StatementWithoutTrailingSubstatement":
+            return get_expression_Type(expression[1])
+        case "ReturnStatement":
+            return get_expression_Type(expression[2])
+        case "BetaExpression":
+            return get_expression_Type(expression[1])
+        case "Expression":
+            return get_expression_Type(expression[1])
+    
 
     
 
