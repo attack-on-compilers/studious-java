@@ -56,7 +56,24 @@ def traverse_tree(tree):
         print('\n', tree[1], '\n')
        
         right = get_expression_Type(tree[2])
-        print("Succesfully printing right type", right)      
+        print("Succesfully printing right type", right)  
+
+    if tree[0] == "PreIncrementExpression" or tree[0] == "PreDecrementExpression":
+
+        operator = tree[1]
+        print('\n', tree[1], '\n')
+       
+        right = get_expression_Type(tree[2])
+        print("Succesfully printing right type", right)
+
+
+    if tree[0] == "PostIncrementExpression" or tree[0] == "PostDecrementExpression":
+
+        operator = tree[2]
+        print('\n', tree[2], '\n')
+       
+        left = get_expression_Type(tree[1])
+        print("Succesfully printing left type", left)
 
     # if tree[0] == "BlockStatement" and len(tree) ==1:
     #     print('\n', tree[1], '\n')
@@ -560,9 +577,9 @@ def get_expression_Type(expression):
         case "UnaryExpression":
             return get_expression_Type(expression[1])
         case "PreIncrementExpression":
-            return get_expression_Type(expression[1])
+            return get_expression_Type(expression[2])
         case "PreDecrementExpression":
-            return get_expression_Type(expression[1])
+            return get_expression_Type(expression[2])
         case "UnaryExpressionNotPlusMinus":
             if(len(expression) == 3):
                 return get_expression_Type(expression[2])
