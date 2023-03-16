@@ -195,7 +195,7 @@ class RootSymbolTable:
         current_temp = self.current
         while current_temp.parent is not None:
             scope_name = current_temp.name[:-13].replace(" ", "_")
-            sym_name = current_temp.name[:-13] + "_" + sym_name
+            sym_name = scope_name + "_" + sym_name
             current_temp = current_temp.parent
         return sym.name
 
@@ -209,5 +209,14 @@ class RootSymbolTable:
         self.current = self.current.parent
         print("Parent scope: " + self.current.name)
 
+    def get_method_symbol(self):
+        current_sym = self.current
+        while current_sym is not None:
+            cur_sym_tab_name = current_sym.name[:-13]
+            sym = self.get_symbol(cur_sym_tab_name)
+            if sym.symbol_type == "method":
+                return sym.return_type
+            current_sym = current_sym.parent
+        raise Exception("Method symbol not found")
     def tprint(self):
         self.root.tprint()

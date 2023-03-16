@@ -4,6 +4,13 @@
 public class test1{
 
     public static void main(String[] args) {
+        {
+            {
+                {
+                    return 5;
+                }
+            }
+        }
         System.out.println("Hello World!");
         double y ;
         double x;
