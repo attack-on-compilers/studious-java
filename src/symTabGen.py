@@ -22,30 +22,52 @@ def traverse_tree(tree):
     global block_count
     
 
+    
+    print((tree), '\n')
 
+    print(len(tree))
     if tree[0] == "Assignment":
         
-        #print('\n', tree[1], '\n')
+        print('\n', tree[1], '\n')
        
         left = get_expression_Type(tree[1])
         print("Succesfully printing left type", left)
         operator = tree[2][1]
-        #print('\n', tree[3], '\n')
+        print('\n', tree[3], '\n')
        
         right = get_expression_Type(tree[3])
         print("Succesfully printing right type", right)
 
-    #print(len(tree))
+    
     if tree[0] == "AdditiveExpression" and len(tree) ==4:
-        #print('\n', tree[1], '\n')
+        print('\n', tree[1], '\n')
        
         left = get_expression_Type(tree[1])
         print("Succesfully printing left type", left)
         operator = tree[2]
-       # print('\n', tree[3], '\n')
+        print('\n', tree[3], '\n')
        
         right = get_expression_Type(tree[3])
-        #print("Succesfully printing right type", right)   
+        print("Succesfully printing right type", right)  
+
+    if tree[0] == "UnaryExpressionNotPlusMinus" and len(tree) ==3:
+        
+        operator = tree[1]
+        print('\n', tree[1], '\n')
+       
+        right = get_expression_Type(tree[2])
+        print("Succesfully printing right type", right)      
+
+    # if tree[0] == "BlockStatement" and len(tree) ==1:
+    #     print('\n', tree[1], '\n')
+       
+    #     left = get_expression_Type(tree[1])
+    #     print("Succesfully printing left type", left)
+    #     operator = tree[2]
+    #     print('\n', tree[3], '\n')
+       
+    #     right = get_expression_Type(tree[3])
+    #     print("Succesfully printing right type", right)       
 
     if tree[0] == "MethodDeclaration":
         
@@ -488,7 +510,7 @@ def string_to_type(expression):
 
 ###yet to complete
 def get_expression_Type(expression):
-   # print("This is", expression[0])
+    print("This is", expression[0])
 
     match expression[0]:
         case "LeftHandSide":
@@ -542,7 +564,10 @@ def get_expression_Type(expression):
         case "PreDecrementExpression":
             return get_expression_Type(expression[1])
         case "UnaryExpressionNotPlusMinus":
-            return get_expression_Type(expression[1])
+            if(len(expression) == 3):
+                return get_expression_Type(expression[2])
+            else:                                                             
+                return get_expression_Type(expression[1])
         case "PostfixExpression":
             return get_expression_Type(expression[1])
         case "PostIncrementExpression":
@@ -592,6 +617,10 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "Expression":
             return get_expression_Type(expression[1])
+        # case "TILDE":
+        #     return get_expression_Type(expression[1])   
+        # case "EXCLAMATION":
+        #     return get_expression_Type(expression[1]) 
     
 
     

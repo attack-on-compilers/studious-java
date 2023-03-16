@@ -11,9 +11,10 @@ public class test1{
         x = 4;
         x = "fs";
         x +=1.6; 
-        x = y + z + 5;
-        x = y + z + z;  
-        string str = "a";
+        x = y + z + 5; 
+        x++;
+        ++x;
+        x = ~x;
         return x;
     }
 
