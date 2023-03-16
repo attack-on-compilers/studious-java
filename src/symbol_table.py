@@ -188,6 +188,16 @@ class RootSymbolTable:
 
     def get_symbol(self, name, symbol_type=None):
         return self.current.get_symbol(name, symbol_type)
+    
+    def get_symbol_name(self, name, symbol_type=None):
+        sym = self.current.get_symbol(name, symbol_type)
+        sym_name = sym.name
+        current_temp = self.current
+        while current_temp.parent is not None:
+            scope_name = current_temp.name[:-13].replace(" ", "_")
+            sym_name = current_temp.name[:-13] + "_" + sym_name
+            current_temp = current_temp.parent
+        return sym.name
 
     def enter_scope(self, name):
         print("Entering scope: " + name)
