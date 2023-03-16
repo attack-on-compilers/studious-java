@@ -6,9 +6,10 @@ static_init_count = 0
 previous_block_count = 0
 block_count = 0
 
+global symbol_table
+symbol_table = RootSymbolTable()
+
 def generate_symbol_table(tree):
-    global symbol_table
-    symbol_table = RootSymbolTable()
     # pprint(tree) 
         
     traverse_tree(tree)
@@ -16,7 +17,6 @@ def generate_symbol_table(tree):
     return
 
 def traverse_tree(tree):
-    global symbol_table
     global static_init_count
     global previous_block_count
     global block_count
@@ -245,7 +245,6 @@ def traverse_tree(tree):
 
 def initial_Traverse(tree):
     # A separate traversal to get the class body declarations and interface body declarations
-    global symbol_table
 
     
         
