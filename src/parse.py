@@ -793,7 +793,6 @@ def p_PostDecrementExpression(p):
     """PostDecrementExpression : PostfixExpression MINUS_MINUS"""
     p[0] = ("PostDecrementExpression",) + tuple(p[-len(p) + 1 :])
 
-
 def p_UnaryExpression(p):
     """UnaryExpression : PreIncrementExpression
     | PreDecrementExpression

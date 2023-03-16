@@ -50,6 +50,17 @@ def traverse_tree(tree):
         right = get_expression_Type(tree[3])
         print("Succesfully printing right type", right)  
 
+    if tree[0] == "MultiplicativeExpression" and len(tree) ==4:
+        print('\n', tree[1], '\n')
+       
+        left = get_expression_Type(tree[1])
+        print("Succesfully printing left type", left)
+        operator = tree[2]
+        print('\n', tree[3], '\n')
+       
+        right = get_expression_Type(tree[3])
+        print("Succesfully printing right type", right)     
+
     if tree[0] == "UnaryExpressionNotPlusMinus" and len(tree) ==3:
         
         operator = tree[1]
@@ -575,7 +586,10 @@ def get_expression_Type(expression):
         case "MultiplicativeExpression":
             return get_expression_Type(expression[1])
         case "UnaryExpression":
-            return get_expression_Type(expression[1])
+            if(len(expression) == 3):
+                return get_expression_Type(expression[2])
+            else:                                                             
+                return get_expression_Type(expression[1])
         case "PreIncrementExpression":
             return get_expression_Type(expression[2])
         case "PreDecrementExpression":
