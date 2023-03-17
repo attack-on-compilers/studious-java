@@ -53,7 +53,7 @@ public class LinkedList {
 
 class Node {
     private int value;
-    private Node neIxt;
+    private Node next;
 
     public Node(int value) {
         value = value;

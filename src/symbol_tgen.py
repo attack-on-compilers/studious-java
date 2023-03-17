@@ -21,73 +21,25 @@ def traverse_tree(tree):
     global previous_block_count
     global block_count
     
+   ###########DON'T REMOVE THE BELOW COMMENTED CODE 
+    
+    # print((tree), '\n')
+
+    # print(len(tree))
+    # if tree[0] == "Assignment":
+        
+    #     print('\n', tree[1], '\n')
+       
+    #     left = get_expression_Type(tree[1])
+    #     print("Succesfully printing left type", left)
+    #     operator = tree[2][1]
+    #     print('\n', tree[3], '\n')
+       
+    #     right = get_expression_Type(tree[3])
+    #     print("Succesfully printing right type", right)
 
     
-   # print((tree), '\n')
-
-    #print(len(tree))
-    if tree[0] == "Assignment":
-        
-       # print('\n', tree[1], '\n')
-       
-        left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
-        operator = tree[2][1]
-       # print('\n', tree[3], '\n')
-       
-        right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)
-
-    
-    if tree[0] == "AdditiveExpression" and len(tree) ==4:
-       # print('\n', tree[1], '\n')
-       
-        left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
-        operator = tree[2]
-       # print('\n', tree[3], '\n')
-       
-        right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)  
-
-    if tree[0] == "MultiplicativeExpression" and len(tree) ==4:
-        #print('\n', tree[1], '\n')
-       
-        left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
-        operator = tree[2]
-        #print('\n', tree[3], '\n')
-       
-        right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)     
-
-    if tree[0] == "UnaryExpressionNotPlusMinus" and len(tree) ==3:
-        
-        operator = tree[1]
-        
-        #print('\n', tree[1], '\n')
-       
-        right = get_expression_Type(tree[2])
-        print("Succesfully printing right type", right)  
-
-    if tree[0] == "PreIncrementExpression" or tree[0] == "PreDecrementExpression":
-
-        operator = tree[1]
-        #print('\n', tree[1], '\n')
-       
-        right = get_expression_Type(tree[2])
-        print("Succesfully printing right type", right)
-
-
-    if tree[0] == "PostIncrementExpression" or tree[0] == "PostDecrementExpression":
-
-        operator = tree[2]
-        #print('\n', tree[2], '\n')
-       
-        left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
-
-    # if tree[0] == "BlockStatement" and len(tree) ==1:
+    # if tree[0] == "AdditiveExpression" and len(tree) ==4:
     #     print('\n', tree[1], '\n')
        
     #     left = get_expression_Type(tree[1])
@@ -96,26 +48,85 @@ def traverse_tree(tree):
     #     print('\n', tree[3], '\n')
        
     #     right = get_expression_Type(tree[3])
-    #     print("Succesfully printing right type", right)       
+    #     print("Succesfully printing right type", right)  
 
-    if tree[0] == "ReturnStatement":
+    # if tree[0] == "MultiplicativeExpression" and len(tree) ==4:
+    #     print('\n', tree[1], '\n')
+       
+    #     left = get_expression_Type(tree[1])
+    #     print("Succesfully printing left type", left)
+    #     operator = tree[2]
+    #     print('\n', tree[3], '\n')
+       
+    #     right = get_expression_Type(tree[3])
+    #     print("Succesfully printing right type", right)     
+
+    # # if tree[0] == "AndExpression" and len(tree) ==4:
+    # #     #print('\n', tree[1], '\n')
+       
+    # #     left = get_expression_Type(tree[1])
+    # #     print("Succesfully printing left type", left)
+    # #     operator = tree[2]
+    # #     #print('\n', tree[3], '\n')
+       
+    # #     right = get_expression_Type(tree[3])
+    # #     print("Succesfully printing right type", right)      
+
+    # if tree[0] == "UnaryExpressionNotPlusMinus" and len(tree) ==3:
         
-        methodreturn_type = get_expression_Type(tree[2])
-
-        print("Succesfully printing method return type", methodreturn_type)
+    #     operator = tree[1]
         
-        methodheader_type = symbol_table.get_method_symbol()
+    #     print('\n', tree[1], '\n')
+       
+    #     right = get_expression_Type(tree[2])
+    #     print("Succesfully printing right type", right)  
 
-        print("Successfully printing method header type", methodheader_type)
+    # if tree[0] == "PreIncrementExpression" or tree[0] == "PreDecrementExpression":
+
+    #     operator = tree[1]
+    #     print('\n', tree[1], '\n')
+       
+    #     right = get_expression_Type(tree[2])
+    #     print("Succesfully printing right type", right)
+
+
+    # if tree[0] == "PostIncrementExpression" or tree[0] == "PostDecrementExpression":
+
+    #     operator = tree[2]
+    #     print('\n', tree[2], '\n')
+       
+    #     left = get_expression_Type(tree[1])
+    #     print("Succesfully printing left type", left)
+
+    # # if tree[0] == "BlockStatement" and len(tree) ==1:
+    # #     print('\n', tree[1], '\n')
+       
+    # #     left = get_expression_Type(tree[1])
+    # #     print("Succesfully printing left type", left)
+    # #     operator = tree[2]
+    # #     print('\n', tree[3], '\n')
+       
+    # #     right = get_expression_Type(tree[3])
+    # #     print("Succesfully printing right type", right)       
+
+    # if tree[0] == "ReturnStatement":
         
-        #symbol_table.tprint()
+    #     methodreturn_type = get_expression_Type(tree[2])
 
-        ##yet to do
+    #     print("Succesfully printing method return type", methodreturn_type)
         
-        # methodbodyreturn_type = get_expression_Type(tree[2][1][2])     ##case semicolon left
-        # print("Succesfully printing final return type", methodbodyreturn_type)
+    #     methodheader_type = symbol_table.get_method_symbol()
 
-    # We perform a depth first traversal of the tree
+    #     print("Successfully printing method header type", methodheader_type)
+        
+    #     #symbol_table.tprint()
+
+    #     ##yet to do
+        
+    #     # methodbodyreturn_type = get_expression_Type(tree[2][1][2])     ##case semicolon left
+    #     # print("Succesfully printing final return type", methodbodyreturn_type)
+
+    # # We perform a depth first traversal of the tree
     match tree[0]:
 
 
@@ -534,16 +545,28 @@ def type_check(left, op, right):
     return True
 
 def string_to_type(expression):
-
     try:
-         literal_type = literal_eval(expression)
-         return type(literal_type).__name__ 
-    except:
-        return type(expression).__name__
+        # Try to convert expression to a Python literal
+        literal_type = literal_eval(expression)
+        return type(literal_type).__name__
+    except (ValueError, SyntaxError):
+        # If the conversion fails, try to match expression to a Java literal
+        if expression.endswith('L') or expression.endswith('l'):
+            return 'long'
+        elif expression.endswith('f') or expression.endswith('F'):
+            return 'float'
+        elif expression.endswith('d') or expression.endswith('D'):
+            return 'double'
+        elif expression.endswith('l') or expression.endswith('L'):
+            return 'long'
+        elif expression == 'true' or expression == 'false':
+            return 'bool'
+        else:
+            return 'str'
 
 ###yet to complete
 def get_expression_Type(expression):
-   # print("This is", expression[0])
+    print("This is", expression[0])
 
     match expression[0]:
         case "LeftHandSide":
@@ -557,15 +580,9 @@ def get_expression_Type(expression):
         case "Name":  
             return get_expression_Type(expression[1])
         case "IdentifierId":
-            #print("inside identifier", expression[0])
             return symbol_table.get_symbol(expression[1]).data_type 
-            # symbol = symbol_table.get_symbol(expression)
-            # print('hiiii', symbol)
-            # if symbol is None:
-            #     print(f"Type Error: Symbol {expression} not found in symbol table")
-            #     return None
-            # else:
-            #     return symbol.data_type
+        case "Expression":
+            return get_expression_Type(expression[1])    
         case "AssignmentExpression":
             return get_expression_Type(expression[1])
         case "ConditionalExpression":
@@ -615,18 +632,23 @@ def get_expression_Type(expression):
         case "Primary":
             return get_expression_Type(expression[1])
         case "PrimaryNoNewArray":
-            return get_expression_Type(expression[1])
-        case "PrimaryArrayCreationExpression":
-            return get_expression_Type(expression[1])
+            if len(expression) == 4:
+                return get_expression_Type(expression[3])
+            else:
+                return get_expression_Type(expression[1])    
+        case "ArrayCreationExpression":
+            pass
         case "Literal":
             return string_to_type(expression[1])
-            
-        case "THIS":
-            pass
-        case "LEFT_PAREN Expression RIGHT_PAREN":
-            pass
         case "ClassInstanceCreationExpression":
             pass
+        case "BetaArgumentList":
+            pass
+        case "ArgumentList":
+            if len(expression) == 4:
+                return get_expression_Type(expression[4])
+            else:
+                return get_expression_Type(expression[1])
         case "FieldAccess":
             pass
         case "MethodInvocation":
@@ -653,23 +675,3 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "Expression":
             return get_expression_Type(expression[1])
-        # case "TILDE":
-        #     return get_expression_Type(expression[1])   
-        # case "EXCLAMATION":
-        #     return get_expression_Type(expression[1]) 
-    
-
-    
-
-
-    #print("\n yooooooo", get_Type(expression))
-
-    if isinstance(expression, str):
-        symbol = symbol_table.get_symbol(expression)
-        print('hiiii', symbol)
-        if symbol is None:
-            print(f"Type Error: Symbol {expression} not found in symbol table")
-            return None
-        else:
-            return symbol.data_type
-
