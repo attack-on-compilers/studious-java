@@ -2,6 +2,10 @@ from symbol_table import *
 from pprint import pprint as pprint
 from ast import literal_eval
 
+import ply.yacc as yacc
+from lexer import *
+import io
+
 static_init_count = 0
 previous_block_count = 0
 block_count = 0
@@ -21,7 +25,7 @@ def traverse_tree(tree):
     global previous_block_count
     global block_count
     
-   ###########DON'T REMOVE THE BELOW COMMENTED CODE 
+   ##########DON'T REMOVE THE BELOW COMMENTED CODE 
     
     # print((tree), '\n')
 
@@ -546,27 +550,25 @@ def type_check(left, op, right):
 
 def string_to_type(expression):
     try:
-        # Try to convert expression to a Python literal
-        literal_type = literal_eval(expression)
-        return type(literal_type).__name__
-    except (ValueError, SyntaxError):
-        # If the conversion fails, try to match expression to a Java literal
-        if expression.endswith('L') or expression.endswith('l'):
-            return 'long'
-        elif expression.endswith('f') or expression.endswith('F'):
-            return 'float'
-        elif expression.endswith('d') or expression.endswith('D'):
-            return 'double'
-        elif expression.endswith('l') or expression.endswith('L'):
-            return 'long'
-        elif expression == 'true' or expression == 'false':
-            return 'bool'
-        else:
-            return 'str'
+        output_buffer = io.StringIO()
+        sys.stdout = output_buffer
+
+        # Run the lexer and store the output
+        lex.runmain(lexer, expression)
+        output = output_buffer.getvalue()
+        # Reset standard output to its original value
+        sys.stdout = sys.__stdout__
+        start = output.index('(') + 1  # get the index of the opening parenthesis and add 1 to skip it
+        end = output.index(',')       # get the index of the first comma
+        result = output[start:end]    # extract the substring between the two indices
+        #print(result)                 
+        return result
+    except:
+        return type(expression).__name__
 
 ###yet to complete
 def get_expression_Type(expression):
-    print("This is", expression[0])
+    #print("This is", expression[0])
 
     match expression[0]:
         case "LeftHandSide":
