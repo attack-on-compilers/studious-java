@@ -10,7 +10,7 @@ public class test1{
         double z;
         x += 0;
         x = "fs";
-        x +=1.6; 
+        x += 0xa; 
         x = y + z + 5; 
         x++;
         ++x;
