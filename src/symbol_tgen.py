@@ -27,23 +27,96 @@ def traverse_tree(tree):
     
    ##########DON'T REMOVE THE BELOW COMMENTED CODE 
     
-    # print((tree), '\n')
+    print((tree), '\n')
 
-    # print(len(tree))
-    # if tree[0] == "Assignment":
+    print(len(tree))
+    if tree[0] == "Assignment":
         
-    #     print('\n', tree[1], '\n')
+        print('\n', tree[1], '\n')
        
-    #     left = get_expression_Type(tree[1])
-    #     print("Succesfully printing left type", left)
-    #     operator = tree[2][1]
-    #     print('\n', tree[3], '\n')
+        left = get_expression_Type(tree[1])
+        print("Succesfully printing left type", left)
+        operator = tree[2][1]
+        print('\n', tree[3], '\n')
        
-    #     right = get_expression_Type(tree[3])
-    #     print("Succesfully printing right type", right)
+        right = get_expression_Type(tree[3])
+        print("Succesfully printing right type", right)
+
+        binop_type_check(left, operator, right, tree[0])
+
+
 
     
-    # if tree[0] == "AdditiveExpression" and len(tree) ==4:
+    if tree[0] == "AdditiveExpression" and len(tree) ==4:
+        print('\n', tree[1], '\n')
+       
+        left = get_expression_Type(tree[1])
+        print("Succesfully printing left type", left)
+        operator = tree[2]
+        print('\n', tree[3], '\n')
+       
+        right = get_expression_Type(tree[3])
+        print("Succesfully printing right type", right)  
+
+        binop_type_check(left, operator, right, tree[0])
+
+    if tree[0] == "MultiplicativeExpression" and len(tree) ==4:
+        print('\n', tree[1], '\n')
+       
+        left = get_expression_Type(tree[1])
+        print("Succesfully printing left type", left)
+        operator = tree[2]
+        print('\n', tree[3], '\n')
+       
+        right = get_expression_Type(tree[3])
+        print("Succesfully printing right type", right)    
+
+        binop_type_check(left, operator, right, tree[0])
+
+    # if tree[0] == "AndExpression" and len(tree) ==4:
+    #     #print('\n', tree[1], '\n')
+       
+    #     left = get_expression_Type(tree[1])
+    #     print("Succesfully printing left type", left)
+    #     operator = tree[2]
+    #     #print('\n', tree[3], '\n')
+       
+    #     right = get_expression_Type(tree[3])
+    #     print("Succesfully printing right type", right)      
+
+    if tree[0] == "UnaryExpressionNotPlusMinus" and len(tree) ==3:
+        
+        operator = tree[1]
+        
+        print('\n', tree[1], '\n')
+       
+        right = get_expression_Type(tree[2])
+        print("Succesfully printing right type", right)  
+
+        unop_type_check(operator, right, tree[0])
+
+    if tree[0] == "PreIncrementExpression" or tree[0] == "PreDecrementExpression":
+
+        operator = tree[1]
+        print('\n', tree[1], '\n')
+       
+        right = get_expression_Type(tree[2])
+        print("Succesfully printing right type", right)
+
+        unop_type_check(operator, right, tree[0])
+
+
+    if tree[0] == "PostIncrementExpression" or tree[0] == "PostDecrementExpression":
+
+        operator = tree[2]
+        print('\n', tree[2], '\n')
+       
+        left = get_expression_Type(tree[1])
+        print("Succesfully printing left type", left)
+
+        unop_type_check(operator, left, tree[0])
+
+    #if tree[0] == "BlockStatement":
     #     print('\n', tree[1], '\n')
        
     #     left = get_expression_Type(tree[1])
@@ -52,86 +125,31 @@ def traverse_tree(tree):
     #     print('\n', tree[3], '\n')
        
     #     right = get_expression_Type(tree[3])
-    #     print("Succesfully printing right type", right)  
+    #     print("Succesfully printing right type", right)       
 
-    # if tree[0] == "MultiplicativeExpression" and len(tree) ==4:
-    #     print('\n', tree[1], '\n')
-       
-    #     left = get_expression_Type(tree[1])
-    #     print("Succesfully printing left type", left)
-    #     operator = tree[2]
-    #     print('\n', tree[3], '\n')
-       
-    #     right = get_expression_Type(tree[3])
-    #     print("Succesfully printing right type", right)     
-
-    # # if tree[0] == "AndExpression" and len(tree) ==4:
-    # #     #print('\n', tree[1], '\n')
-       
-    # #     left = get_expression_Type(tree[1])
-    # #     print("Succesfully printing left type", left)
-    # #     operator = tree[2]
-    # #     #print('\n', tree[3], '\n')
-       
-    # #     right = get_expression_Type(tree[3])
-    # #     print("Succesfully printing right type", right)      
-
-    # if tree[0] == "UnaryExpressionNotPlusMinus" and len(tree) ==3:
+    if tree[0] == "ReturnStatement":
         
-    #     operator = tree[1]
+        methodreturn_type = get_expression_Type(tree[2])
+
+        print("Succesfully printing method return type", methodreturn_type)
         
-    #     print('\n', tree[1], '\n')
-       
-    #     right = get_expression_Type(tree[2])
-    #     print("Succesfully printing right type", right)  
+        methodheader_type = symbol_table.get_method_symbol()
 
-    # if tree[0] == "PreIncrementExpression" or tree[0] == "PreDecrementExpression":
+        print("Successfully printing method header type", methodheader_type)
 
-    #     operator = tree[1]
-    #     print('\n', tree[1], '\n')
-       
-    #     right = get_expression_Type(tree[2])
-    #     print("Succesfully printing right type", right)
-
-
-    # if tree[0] == "PostIncrementExpression" or tree[0] == "PostDecrementExpression":
-
-    #     operator = tree[2]
-    #     print('\n', tree[2], '\n')
-       
-    #     left = get_expression_Type(tree[1])
-    #     print("Succesfully printing left type", left)
-
-    # #if tree[0] == "BlockStatement":
-    # #     print('\n', tree[1], '\n')
-       
-    # #     left = get_expression_Type(tree[1])
-    # #     print("Succesfully printing left type", left)
-    # #     operator = tree[2]
-    # #     print('\n', tree[3], '\n')
-       
-    # #     right = get_expression_Type(tree[3])
-    # #     print("Succesfully printing right type", right)       
-
-    # if tree[0] == "ReturnStatement":
+        method_type_check(methodreturn_type, methodheader_type)
         
-    #     methodreturn_type = get_expression_Type(tree[2])
+    if tree[0] == "ShiftExpression" and len(tree) ==4:
 
-    #     print("Succesfully printing method return type", methodreturn_type)
-        
-    #     methodheader_type = symbol_table.get_method_symbol()
+        operator = tree[2]
 
-    #     print("Successfully printing method header type", methodheader_type)
-        
-    # if tree[0] == "ShiftExpression" and len(tree) ==4:
+        left = get_expression_Type(tree[1]) 
+        print("Succesfully printing left type", left)
 
-    #     operator = tree[2]
+        right = get_expression_Type(tree[3])
+        print("Succesfully printing right type", right)
 
-    #     left = get_expression_Type(tree[1]) 
-    #     print("Succesfully printing left type", left)
-
-    #     right = get_expression_Type(tree[3])
-    #     print("Succesfully printing right type", right)
+        binop_type_check(left, operator, right, tree[0])
 
     # # We perform a depth first traversal of the tree
     match tree[0]:
@@ -537,19 +555,32 @@ def get_Parameters(tree):
             return []
 
 
-def type_check(left, op, right):
-    # print("inside type check", left)
-    # left_type = get_expression_Type(get_Name(left[1]))
-    # print("inside type check", right)
-    # right_type = get_expression_Type(get_Terminal(right[1]))
-    # check if left and right types are the same
-    # if left_type != right_type or left_type == False or right_type == False:
-    #     print(f"Type Error: Incompatible types")
-    #     #raise Exception
-    #     return False
-    
-    # if both types are compatible and operator is supported, return True
-    return True
+def binop_type_check(left, operator, right, expression):
+
+    pass
+
+def unop_type_check(operator, left_or_right, expression):
+
+    pass
+
+
+def method_type_check(methodreturn_type, methodheader_type):
+
+    if methodreturn_type == methodheader_type:
+        pass
+    elif methodreturn_type is None and methodheader_type == "void":
+        pass
+    elif methodreturn_type == "int" and methodheader_type == "long":
+        pass
+    elif methodreturn_type == "long" and methodheader_type == "int":
+        pass
+    elif methodreturn_type == "float" and methodheader_type == "double":
+        pass
+    elif methodreturn_type == "double" and methodheader_type == "float":
+        pass
+    else:
+        raise Exception("Type mismatch in method return type and method header type")
+        
 
 def string_to_type(expression):
     try:

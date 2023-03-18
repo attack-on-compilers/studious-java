@@ -10,7 +10,7 @@ public class test1{
         double z = 0;
         
         x= ((y*z) + y);
-        return x;
+        return;
     }
 
     public double assignmnet() {
