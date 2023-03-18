@@ -27,82 +27,23 @@ def traverse_tree(tree):
     
    ##########DON'T REMOVE THE BELOW COMMENTED CODE 
     
-    print((tree), '\n')
+    # print((tree), '\n')
 
-    print(len(tree))
-    if tree[0] == "Assignment":
+    # print(len(tree))
+    # if tree[0] == "Assignment":
         
-        print('\n', tree[1], '\n')
-       
-        left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
-        operator = tree[2][1]
-        print('\n', tree[3], '\n')
-       
-        right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)
-
-    
-    if tree[0] == "AdditiveExpression" and len(tree) ==4:
-        print('\n', tree[1], '\n')
-       
-        left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
-        operator = tree[2]
-        print('\n', tree[3], '\n')
-       
-        right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)  
-
-    if tree[0] == "MultiplicativeExpression" and len(tree) ==4:
-        print('\n', tree[1], '\n')
-       
-        left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
-        operator = tree[2]
-        print('\n', tree[3], '\n')
-       
-        right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)     
-
-    # if tree[0] == "AndExpression" and len(tree) ==4:
-    #     #print('\n', tree[1], '\n')
+    #     print('\n', tree[1], '\n')
        
     #     left = get_expression_Type(tree[1])
     #     print("Succesfully printing left type", left)
-    #     operator = tree[2]
-    #     #print('\n', tree[3], '\n')
+    #     operator = tree[2][1]
+    #     print('\n', tree[3], '\n')
        
     #     right = get_expression_Type(tree[3])
-    #     print("Succesfully printing right type", right)      
+    #     print("Succesfully printing right type", right)
 
-    if tree[0] == "UnaryExpressionNotPlusMinus" and len(tree) ==3:
-        
-        operator = tree[1]
-        
-        print('\n', tree[1], '\n')
-       
-        right = get_expression_Type(tree[2])
-        print("Succesfully printing right type", right)  
-
-    if tree[0] == "PreIncrementExpression" or tree[0] == "PreDecrementExpression":
-
-        operator = tree[1]
-        print('\n', tree[1], '\n')
-       
-        right = get_expression_Type(tree[2])
-        print("Succesfully printing right type", right)
-
-
-    if tree[0] == "PostIncrementExpression" or tree[0] == "PostDecrementExpression":
-
-        operator = tree[2]
-        print('\n', tree[2], '\n')
-       
-        left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
-
-    # if tree[0] == "BlockStatement" and len(tree) ==1:
+    
+    # if tree[0] == "AdditiveExpression" and len(tree) ==4:
     #     print('\n', tree[1], '\n')
        
     #     left = get_expression_Type(tree[1])
@@ -111,24 +52,83 @@ def traverse_tree(tree):
     #     print('\n', tree[3], '\n')
        
     #     right = get_expression_Type(tree[3])
-    #     print("Succesfully printing right type", right)       
+    #     print("Succesfully printing right type", right)  
 
-    if tree[0] == "ReturnStatement":
-        
-        methodreturn_type = get_expression_Type(tree[2])
+    # if tree[0] == "MultiplicativeExpression" and len(tree) ==4:
+    #     print('\n', tree[1], '\n')
+       
+    #     left = get_expression_Type(tree[1])
+    #     print("Succesfully printing left type", left)
+    #     operator = tree[2]
+    #     print('\n', tree[3], '\n')
+       
+    #     right = get_expression_Type(tree[3])
+    #     print("Succesfully printing right type", right)     
 
-        print("Succesfully printing method return type", methodreturn_type)
-        
-        methodheader_type = symbol_table.get_method_symbol()
+    # # if tree[0] == "AndExpression" and len(tree) ==4:
+    # #     #print('\n', tree[1], '\n')
+       
+    # #     left = get_expression_Type(tree[1])
+    # #     print("Succesfully printing left type", left)
+    # #     operator = tree[2]
+    # #     #print('\n', tree[3], '\n')
+       
+    # #     right = get_expression_Type(tree[3])
+    # #     print("Succesfully printing right type", right)      
 
-        print("Successfully printing method header type", methodheader_type)
+    # if tree[0] == "UnaryExpressionNotPlusMinus" and len(tree) ==3:
         
-        #symbol_table.tprint()
+    #     operator = tree[1]
+        
+    #     print('\n', tree[1], '\n')
+       
+    #     right = get_expression_Type(tree[2])
+    #     print("Succesfully printing right type", right)  
 
-        ##yet to do
+    # if tree[0] == "PreIncrementExpression" or tree[0] == "PreDecrementExpression":
+
+    #     operator = tree[1]
+    #     print('\n', tree[1], '\n')
+       
+    #     right = get_expression_Type(tree[2])
+    #     print("Succesfully printing right type", right)
+
+
+    # if tree[0] == "PostIncrementExpression" or tree[0] == "PostDecrementExpression":
+
+    #     operator = tree[2]
+    #     print('\n', tree[2], '\n')
+       
+    #     left = get_expression_Type(tree[1])
+    #     print("Succesfully printing left type", left)
+
+    # #if tree[0] == "BlockStatement":
+    # #     print('\n', tree[1], '\n')
+       
+    # #     left = get_expression_Type(tree[1])
+    # #     print("Succesfully printing left type", left)
+    # #     operator = tree[2]
+    # #     print('\n', tree[3], '\n')
+       
+    # #     right = get_expression_Type(tree[3])
+    # #     print("Succesfully printing right type", right)       
+
+    # if tree[0] == "ReturnStatement":
         
-        # methodbodyreturn_type = get_expression_Type(tree[2][1][2])     ##case semicolon left
-        # print("Succesfully printing final return type", methodbodyreturn_type)
+    #     methodreturn_type = get_expression_Type(tree[2])
+
+    #     print("Succesfully printing method return type", methodreturn_type)
+        
+    #     methodheader_type = symbol_table.get_method_symbol()
+
+    #     print("Successfully printing method header type", methodheader_type)
+        
+    #     #symbol_table.tprint()
+
+    #     ##yet to do
+        
+    #     # methodbodyreturn_type = get_expression_Type(tree[2][1][2])     ##case semicolon left
+    #     # print("Succesfully printing final return type", methodbodyreturn_type)
 
     # # We perform a depth first traversal of the tree
     match tree[0]:
@@ -679,10 +679,14 @@ def get_expression_Type(expression):
         case "BlockStatement":
             return get_expression_Type(expression[1])
         case "LocalVariableDeclarationStatement":
-            pass
+            return get_expression_Type(expression[1])
         case "Statement":
             return get_expression_Type(expression[1])
         case "StatementWithoutTrailingSubstatement":
+            return get_expression_Type(expression[1])
+        case "ExpressionStatement":
+            return get_expression_Type(expression[1])
+        case "StatementExpression":
             return get_expression_Type(expression[1])
         case "ReturnStatement":
             return get_expression_Type(expression[2])
@@ -690,3 +694,24 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "Expression":
             return get_expression_Type(expression[1])
+        case "VariableInitializer":
+            return get_expression_Type(expression[1])
+        case "Block":
+            return get_expression_Type(expression[2])
+        case "BetaAlphaBlockStatement":
+            return get_expression_Type(expression[1])
+        # case "AlphaBlockStatement": 
+        #     return get_expression_Type(expression[1])
+        # case "BlockStatement":
+        #     return get_expression_Type(expression[1])
+            
+        ##case need to add logic for variabledeclator
+        # case "FormalParameterList":
+        #     if len(expression) == 4:
+        #         return get_expression_Type(expression[3])
+        #     else:
+        #         return get_expression_Type(expression[1])
+        # case "FormalParameter":
+        #     return get_expression_Type(expression[1])    
+        case _:
+            pass 
