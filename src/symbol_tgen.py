@@ -205,7 +205,7 @@ def traverse_tree(tree):
         case "StaticInitializer":
             static_init_count += 1
             static_init_name = "<static_init_" + str(static_init_count) + ">"
-            symbol_table.add_symbol(MethodSymbol(static_init_name, "void", symbol_table.current, [], []))
+            symbol_table.add_symbol(MethodSymbol(static_init_name, [], "void", symbol_table.current, [], []))
             symbol_table.enter_scope(static_init_name)
             traverse_tree(tree[2][2])
             symbol_table.exit_scope()
@@ -420,10 +420,13 @@ def initial_Traverse(tree):
                 methodParams = get_Parameters(tree[1][3][3])
             methodThrows = get_Exceptions(tree[1][4])
             methodSignature = methodName + "(" 
+            methodParamTypes = []
             for i in methodParams:
                 methodSignature += i[0] + ","
+                methodParamTypes.append(i[0])
             methodSignature += ")"
-            symbol_table.add_symbol(MethodSymbol(methodSignature, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",methodParamTypes)
+            symbol_table.add_symbol(MethodSymbol(methodSignature, methodParamTypes, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
 
         case "StaticInitializer":
             return
@@ -434,10 +437,12 @@ def initial_Traverse(tree):
             constructorParams = get_Parameters(tree[2][3])
             constructorThrows = get_Exceptions(tree[3])
             constructorSignature = constructorName + "("
+            constructorParamTypes = []
             for i in constructorParams:
                 constructorSignature += i[0] + ","
+                constructorParamTypes.append(i[0])
             constructorSignature += ")"
-            symbol_table.add_symbol(MethodSymbol(constructorSignature, None, symbol_table.current, constructorModifiers, constructorThrows))
+            symbol_table.add_symbol(MethodSymbol(constructorSignature, constructorParamTypes, None, symbol_table.current, constructorModifiers, constructorThrows))
 
         case "AbstractMethodDeclaration":
             methodModifiers = get_Modifiers(tree[1][1])
@@ -454,7 +459,7 @@ def initial_Traverse(tree):
             for i in methodParams:
                 methodSignature += i[0] + ","
             methodSignature += ")"
-            symbol_table.add_symbol(MethodSymbol(methodSignature, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
+            symbol_table.add_symbol(MethodSymbol(methodSignature, methodParams, methodReturnType, symbol_table.current, methodModifiers, methodThrows))
         
         case _:
             if type(tree) == tuple:
