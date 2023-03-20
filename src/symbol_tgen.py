@@ -294,7 +294,11 @@ def traverse_tree(tree):
                 fieldType = fieldType[:fieldType.find("[")]
             fieldVariables = get_Variables(tree[2])
             for i in fieldVariables:
-                symbol_table.add_symbol(VariableSymbol(i, fieldType, [], dims))
+                newi=i
+                if i[-1] == "]":
+                    dims = i.count("[")
+                    newi = i[:i.find("[")]
+                symbol_table.add_symbol(VariableSymbol(newi, fieldType, [], dims))
 
         case "Block":
             block_count += 1
@@ -435,7 +439,11 @@ def initial_Traverse(tree):
                 fieldType = fieldType[:fieldType.find("[")]
             fieldVariables = get_Variables(tree[3])
             for i in fieldVariables:
-                symbol_table.add_symbol(VariableSymbol(i, fieldType, fieldModifiers, dims))
+                newi = i
+                if i[-1] == "]":
+                    dims = i.count("[")
+                    newi = i[:i.find("[")]
+                symbol_table.add_symbol(VariableSymbol(newi, fieldType, fieldModifiers, dims))
             
 
         case "MethodDeclaration":
@@ -544,7 +552,7 @@ def get_Name(tree):
                 case 2:
                     return tree[1]
                 case 4:
-                    return tree[1] + "[]"
+                    return get_Name(tree[1]) + "[]"
         case "MethodDeclarator":
             if len(tree) == 5:
                 return tree[1]

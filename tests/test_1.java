@@ -2,11 +2,14 @@
  * test10
  */
 public class test1{
-
+    int a[][][][][];
+    int[][][][][][][][][][][] f;
     static {}
     static {}
 
     public static void main(String[] args) {
+        int b[][][][][][];
+        int[][][][][][][][][][][] d;
         System.out.println("Hello World!");
         double y =0;
         double x =0;
