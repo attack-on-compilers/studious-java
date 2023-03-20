@@ -165,16 +165,18 @@ class SymbolTable:
         else:
             raise Exception("Symbol not found")
 
-    def tprint(self):
+    def tprint(self,level):
         symbols_with_symbol_tables = ["class", "method", "block", "interface"]
         symbol_tables = []
-        print(self.name)
+        print("\t"*level, "-"*100)
+        print("\t"*level, self.name)
         for symbol in self.symbols.values():
-            print(symbol)
+            print("\t"*level, symbol)
             if symbol.symbol_type in symbols_with_symbol_tables:
                 symbol_tables.append(symbol.symbol_table)
+        print("\t"*level, "-"*100)
         for symbol_table in symbol_tables:
-            symbol_table.tprint()
+            symbol_table.tprint(level+1)
 
 
 class RootSymbolTable:
@@ -219,4 +221,4 @@ class RootSymbolTable:
             current_sym = current_sym.parent
         raise Exception("Method symbol not found")
     def tprint(self):
-        self.root.tprint()
+        self.root.tprint(0)

@@ -199,7 +199,7 @@ def traverse_tree(tree):
                     dims = fieldType.count("[")
                     fieldType = fieldType[:fieldType.find("[")]
                 symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
-            traverse_tree(tree[2])
+            traverse_tree(tree[2][1][2])
             symbol_table.exit_scope()
 
         case "StaticInitializer":
@@ -207,7 +207,7 @@ def traverse_tree(tree):
             static_init_name = "<static_init_" + str(static_init_count) + ">"
             symbol_table.add_symbol(MethodSymbol(static_init_name, "void", symbol_table.current, [], []))
             symbol_table.enter_scope(static_init_name)
-            traverse_tree(tree[2])
+            traverse_tree(tree[2][2])
             symbol_table.exit_scope()
 
         case "ConstructorDeclaration":
@@ -266,19 +266,104 @@ def traverse_tree(tree):
             for i in fieldVariables:
                 symbol_table.add_symbol(VariableSymbol(i, fieldType, [], dims))
 
-        case "StatementWithoutTrailingSubstatement":
-            match tree[1][0]:
-                case "Block":
-                    block_count += 1
-                    previous_block_count = block_count
-                    symbol_table.add_symbol(BlockSymbol("block"+str(block_count), symbol_table.current))
-                    symbol_table.enter_scope("block"+str(block_count))
-                    block_count = 0
-                    traverse_tree(tree[1])
-                    symbol_table.exit_scope()
-                    block_count = previous_block_count
-                case _:
-                    traverse_tree(tree[1])
+        case "Block":
+            block_count += 1
+            previous_block_count = block_count
+            symbol_table.add_symbol(BlockSymbol("block"+str(block_count), symbol_table.current))
+            symbol_table.enter_scope("block"+str(block_count))
+            # block_count = 0
+            traverse_tree(tree[2])
+            symbol_table.exit_scope()
+            # block_count = previous_block_count
+
+        case "ForStatement":
+            block_count += 1
+            previous_block_count = block_count
+            symbol_table.add_symbol(BlockSymbol("block"+str(block_count), symbol_table.current))
+            symbol_table.enter_scope("block"+str(block_count))
+            # block_count = 0
+            traverse_tree(tree[3])
+            traverse_tree(tree[5])
+            traverse_tree(tree[7])
+            if tree[9][1][0]== "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
+                traverse_tree(tree[9][1][1][2])
+            else:
+                traverse_tree(tree[9])
+            symbol_table.exit_scope()
+            # block_count = previous_block_count
+
+        case "ForStatementNoShortIf":
+            block_count += 1
+            previous_block_count = block_count
+            symbol_table.add_symbol(BlockSymbol("block"+str(block_count), symbol_table.current))
+            symbol_table.enter_scope("block"+str(block_count))
+            # block_count = 0
+            traverse_tree(tree[3])
+            traverse_tree(tree[5])
+            traverse_tree(tree[7])
+            if tree[9][1][0]== "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
+                traverse_tree(tree[9][1][1][2])
+            else:
+                traverse_tree(tree[9])
+            symbol_table.exit_scope()
+            # block_count = previous_block_count
+
+        case "SwitchBlock":
+            block_count += 1
+            previous_block_count = block_count
+            symbol_table.add_symbol(BlockSymbol("switch_block"+str(block_count), symbol_table.current))
+            symbol_table.enter_scope("switch_block"+str(block_count))
+            # block_count = 0
+            traverse_tree(tree[2])
+            traverse_tree(tree[3])
+            symbol_table.exit_scope()
+            # block_count = previous_block_count
+
+        # case "StatementWithoutTrailingSubstatement":
+        #     match tree[1][0]:
+        #         case "Block":
+        #             block_count += 1
+        #             previous_block_count = block_count
+        #             symbol_table.add_symbol(BlockSymbol("block"+str(block_count), symbol_table.current))
+        #             symbol_table.enter_scope("block"+str(block_count))
+        #             block_count = 0
+        #             traverse_tree(tree[1][2])
+        #             symbol_table.exit_scope()
+        #             block_count = previous_block_count
+        #         case "SwitchBlock":
+        #             block_count += 1
+        #             previous_block_count = block_count
+        #             symbol_table.add_symbol(BlockSymbol("switch_block"+str(block_count), symbol_table.current))
+        #             symbol_table.enter_scope("switch_block"+str(block_count))
+        #             block_count = 0
+        #             traverse_tree(tree[1][2])
+        #             traverse_tree(tree[1][3])
+        #             symbol_table.exit_scope()
+        #             block_count = previous_block_count
+        #         case "DoStatement":
+        #             block_count += 1
+        #             previous_block_count = block_count
+        #             symbol_table.add_symbol(BlockSymbol("do_block"+str(block_count), symbol_table.current))
+        #             symbol_table.enter_scope("do_block"+str(block_count))
+        #             block_count = 0
+        #             traverse_tree(tree[1][2])
+        #             traverse_tree(tree[1][5])
+        #             symbol_table.exit_scope()
+        #             block_count = previous_block_count
+        #         case "TryStatement":
+        #             block_count += 1
+        #             previous_block_count = block_count
+        #             symbol_table.add_symbol(BlockSymbol("try_block"+str(block_count), symbol_table.current))
+        #             symbol_table.enter_scope("try_block"+str(block_count))
+        #             block_count = 0
+        #             traverse_tree(tree[1][2])
+        #             traverse_tree(tree[2][3])
+        #             if len(tree[1]) == 5:
+        #                 traverse_tree(tree[1][4])
+        #             symbol_table.exit_scope()
+        #             block_count = previous_block_count
+        #         case _:
+        #             traverse_tree(tree[1])
             
         case _:
             if type(tree) == tuple:

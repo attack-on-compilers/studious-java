@@ -426,9 +426,14 @@ def p_AbstractMethodDeclaration(p):
 
 
 def p_ArrayInitializer(p):
-    """ArrayInitializer : LEFT_BRACE BetaAlphaVariableInitializer COMMA RIGHT_BRACE
+    """ArrayInitializer : LEFT_BRACE BetaAlphaVariableInitializer BetaComma RIGHT_BRACE
     | LEFT_BRACE BetaAlphaVariableInitializer RIGHT_BRACE"""
     p[0] = ("ArrayInitializer",) + tuple(p[-len(p) + 1 :])
+
+def p_BetaComma(p):
+    """BetaComma : COMMA
+    | empty"""
+    p[0] = ("BetaComma",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaAlphaVariableInitializer(p):
@@ -729,9 +734,14 @@ def p_ArgumentList(p):
 
 
 def p_ArrayCreationExpression(p):
-    """ArrayCreationExpression : NEW PrimitiveType BetaAlphaDimExpr AlphaDim
-    | NEW ClassOrInterfaceType BetaAlphaDimExpr AlphaDim"""
+    """ArrayCreationExpression : NEW PrimitiveType BetaAlphaDimExpr BetaAlphaDim
+    | NEW ClassOrInterfaceType BetaAlphaDimExpr BetaAlphaDim"""
     p[0] = ("ArrayCreationExpression",) + tuple(p[-len(p) + 1 :])
+
+def p_BetaAlphaDim(p):
+    """BetaAlphaDim : AlphaDim
+    | empty"""
+    p[0] = ("BetaAlphaDim",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaAlphaDimExpr(p):
@@ -825,12 +835,6 @@ def p_CastExpression(p):
     | LEFT_PAREN Expression RIGHT_PAREN UnaryExpressionNotPlusMinus
     | LEFT_PAREN Name AlphaDim RIGHT_PAREN UnaryExpressionNotPlusMinus"""
     p[0] = ("CastExpression",) + tuple(p[-len(p) + 1 :])
-
-def p_BetaAlphaDim(p):
-    """BetaAlphaDim : AlphaDim
-    | empty"""
-    p[0] = ("BetaAlphaDim",) + tuple(p[-len(p) + 1 :])
-
 
 def p_MultiplicativeExpression(p):
     """MultiplicativeExpression : UnaryExpression

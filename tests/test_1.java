@@ -3,17 +3,51 @@
  */
 public class test1{
 
+    static {}
+    static {}
+
     public static void main(String[] args) {
         System.out.println("Hello World!");
         double y =0;
         double x =0;
         double z = 0;
+        // a.c=6;
+
+        while(true) {
+            int x=1;
+        }
         
         x= ((y*z) + y);
         return;
+        // {
+        //     {int x="d";}
+        // }
+        while(true) {
+            x=1;
+        }
+        if (x==0) {
+            if (y==1){
+                int z=1;}
+        }
+        else if (x==1) {
+            x=1.2;
+        }
+        else {
+            x=2;
+        }
+        for (int i=0; i<10; i++) {
+            int x=1;
+            // int i=5;
+        }
+        while(true)
+            x="d";
     }
 
     public double assignmnet() {
         
     }
+}
+
+public class yo{
+
 }
