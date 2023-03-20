@@ -138,7 +138,37 @@ def traverse_tree(tree):
         #print("Successfully printing method header type", methodheader_type)
 
         method_type_check(methodreturn_type, methodheader_type)
-        
+
+    if tree[0] == "MethodInvocation":
+
+        if(len(tree)==5):
+            methodInvocationName = get_Name(tree[1])
+            print("yuoouoou", methodInvocationName)
+            methodInvocationParams = []
+            newtree = tree[3]
+            if(newtree[1]==""):
+                methodInvocationParams = []
+            else:
+                newtree = newtree[1]
+                while(len(newtree)==4):
+                    methodInvocationParams.append(get_expression_Type(newtree[3]))
+                    newtree = newtree[1]
+                methodInvocationParams.append(get_expression_Type(newtree[1]))
+                methodInvocationParams.reverse()
+            print("yuoouoou", methodInvocationParams)
+
+            methodInvocationSignature = methodInvocationName + "("
+            for i in methodInvocationParams:
+                methodInvocationSignature += i + ","
+            methodInvocationSignature += ")"
+
+            print ("youuuuuuu", methodInvocationSignature)
+
+            #methodcalledtype = symbol_table.get_symbol(methodInvocationSignature)
+
+        elif(len(tree)==7):
+            pass    
+
     if tree[0] == "ShiftExpression" and len(tree) ==4:
 
         operator = tree[2]

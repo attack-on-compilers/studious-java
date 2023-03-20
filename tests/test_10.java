@@ -10,7 +10,7 @@ public class test10 {
         return;
     }
 
-    public double assignmnet() {
+    public double assignmnet(int a) {
         double x = 10.5 + 20.5;
         x += 1.6;
 
