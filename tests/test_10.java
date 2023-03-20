@@ -12,11 +12,11 @@ public class test10 {
         return;
     }
 
-    public double assignmnet(int a) {
+    public float assignmnet(int a) {
         double x = 10.5 + 20.5;
         x += 1.6;
 
 
-        return x;
+        return 3;
     }
 }

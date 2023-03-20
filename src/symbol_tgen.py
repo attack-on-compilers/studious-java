@@ -717,11 +717,13 @@ def method_type_check(methodreturn_type, methodheader_type):
         pass
     elif methodreturn_type == "int" and methodheader_type == "long":
         pass
-    elif methodreturn_type == "long" and methodheader_type == "int":
-        pass
     elif methodreturn_type == "float" and methodheader_type == "double":
         pass
     elif methodreturn_type == "double" and methodheader_type == "float":
+        raise Exception("Type mismatch in method return type and method header type")
+    elif methodheader_type == "float" and (methodreturn_type == "int" or methodreturn_type == "long" or methodreturn_type == "short" or methodreturn_type == "byte" or methodreturn_type =="char"):
+        pass
+    elif methodheader_type == "double" and (methodreturn_type == "int" or methodreturn_type == "long" or methodreturn_type == "short" or methodreturn_type == "byte" or methodreturn_type =="char"):
         pass
     else:
         raise Exception("Type mismatch in method return type and method header type")
