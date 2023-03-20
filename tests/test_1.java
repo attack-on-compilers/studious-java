@@ -12,10 +12,11 @@ public class test1{
         int[][][][][][][][][][][] d;
         System.out.println("Hello World!");
         double y =0;
-        double x =0;
-        double z = 0;
+        int x =0;
+        double z;
         // a.c=6;
-
+        int a =5;
+        a =a>>x;
         while(true) {
             int x=1;
         }

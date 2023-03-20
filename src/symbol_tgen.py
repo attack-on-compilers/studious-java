@@ -177,9 +177,11 @@ def traverse_tree(tree):
         #print("Succesfully printing left type", left)
 
         right = get_expression_Type(tree[3])
-        #print("Succesfully printing right type", right)
+        print("Succesfully printing right type", right)
 
         binop_type_check(left, operator, right, tree[0])
+
+
 
     # # We perform a depth first traversal of the tree
     match tree[0]:
@@ -685,7 +687,22 @@ def get_Parameters(tree):
 
 def binop_type_check(left, operator, right, expression):
 
-    pass
+    match operator:
+        case "=":
+            if left == right:
+                pass
+            elif (left == "int" or left == "long" or left == "short" or left == "byte" or left == "char") and (right == "int" or right == "long" or right == "short" or right == "byte" or right =="char"):
+                pass
+            elif left == "float" and right == "double":
+                raise Exception("Type mismatch in binary operation")
+            elif left == "double" and right == "float": 
+                pass
+            elif left == "float" and (right == "int" or right == "long" or right == "short" or right == "byte" or right =="char"):
+                pass
+            elif left == "double" and (right == "int" or right == "long" or right == "short" or right == "byte" or right =="char"):
+                pass
+            else:
+                raise Exception("Type mismatch in binary operation")
 
 def unop_type_check(operator, left_or_right, expression):
 
@@ -726,7 +743,9 @@ def string_to_type(expression):
         #print(result)                 
         if result == 'INTEGER_LITERAL_OCTAL' or result == 'INTEGER_LITERAL_DEC' or result == 'INTEGER_LITERAL_HEXADEC' or result == 'INTEGER_LITERAL_BINAR':
             return 'int'
-        if result == 'FLOATING_LITERAL_REDUCED_POINT':
+        if result == 'FLOATING_LITERAL_REDUCED_POINT' and not (expression[-1] == 'f' or expression[-1] =='F'):
+            return 'double'
+        if result == 'FLOATING_LITERAL_REDUCED_POINT' and (expression[-1] == 'f' or expression[-1] =='F'):
             return 'float'
         if result == 'BOOLEAN_LITERAL':
             return 'boolean'
@@ -741,6 +760,36 @@ def string_to_type(expression):
     except:
         return type(expression).__name__
 
+def big(t1, t2):
+
+    if t1==t2:
+        return t1
+    if t1=="double" and (t2=="float" or t2=="int" or t2 == "short" or t2 == "long" or t2=="byte"):
+        return t1
+    if t2=="double" and (t1=="float" or t1=="int" or t1 == "short" or t1 == "long" or t1=="byte"):
+        return t2
+    if t1=="float" and (t2=="int" or t2 == "short" or t2 == "long" or t2=="byte"):
+        return t1
+    if t2=="float" and (t1=="int" or t1 == "short" or t1 == "long" or t1=="byte"):
+        return t2
+    if t1=="long" and (t2=="int" or t2 == "short" or t2=="byte"):
+        return t1
+    if t2=="long" and (t1=="int" or t1 == "short" or t1=="byte"):
+        return t2
+    if t1=="int" and (t2 == "short" or t2=="byte"):
+        return t1
+    if t2=="int" and (t1 == "short" or t1=="byte"):
+        return t2
+    if t1=="short" and t2=="byte":
+        return t1
+    if t2=="short" and t1=="byte":
+        return t2
+    if t1=="char" and (t2=="int" or t2 == "short" or t2=="byte"):
+        return t1
+    if t2=="char" and (t1=="int" or t1 == "short" or t1=="byte"):
+        return t2
+    else:
+        raise Exception("Type mismatch in binary operation")
 ###yet to complete
 def get_expression_Type(expression):
     #print("This is", expression[0])
@@ -781,21 +830,19 @@ def get_expression_Type(expression):
         case "ShiftExpression":
             return get_expression_Type(expression[1])
         case "AdditiveExpression":
-            return get_expression_Type(expression[1])
-            # if(len(expression)==2):
-            #     return get_expression_Type(expression[1])
-            # else:
-            #     t1 = get_expression_Type(expression[1])
-            #     t2 = get_expression_Type(expression[3])
-            #     return max (t1,t2)
-
-            # t1=
-            # t3=
-            # return max(t1,t3) - > Logoc to raise Exception
-
-            
+            if(len(expression)==2):
+                return get_expression_Type(expression[1])
+            else:
+                t1 = get_expression_Type(expression[1])
+                t2 = get_expression_Type(expression[3])
+                return big(t1,t2)
         case "MultiplicativeExpression":
-            return get_expression_Type(expression[1])
+            if(len(expression)==2):
+                return get_expression_Type(expression[1])
+            else:
+                t1 = get_expression_Type(expression[1])
+                t2 = get_expression_Type(expression[3])
+                return big(t1,t2)
         case "UnaryExpression":
             if(len(expression) == 3):
                 return get_expression_Type(expression[2])
