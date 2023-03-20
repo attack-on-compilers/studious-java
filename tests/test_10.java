@@ -17,6 +17,6 @@ public class test10 {
         x += 1.6;
 
 
-        return 3;
+        return 'a';
     }
 }

@@ -715,7 +715,7 @@ def method_type_check(methodreturn_type, methodheader_type):
         pass
     elif methodreturn_type is None and methodheader_type == "void":
         pass
-    elif methodreturn_type == "int" and methodheader_type == "long":
+    elif (methodreturn_type == "int" or methodreturn_type == "long" or methodreturn_type== "char" or methodreturn_type=="byte" or methodreturn_type =="short") and (methodheader_type == "long" or methodheader_type == "int" or methodheader_type == "short" or methodheader_type == "byte" or methodheader_type =="char"):
         pass
     elif methodreturn_type == "float" and methodheader_type == "double":
         pass
