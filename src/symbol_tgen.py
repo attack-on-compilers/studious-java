@@ -27,20 +27,20 @@ def traverse_tree(tree):
     
    ##########DON'T REMOVE THE BELOW COMMENTED CODE 
     
-    print((tree), '\n')
+    #print((tree), '\n')
 
-    print(len(tree))
+    #print(len(tree))
     if tree[0] == "Assignment":
         
-        print('\n', tree[1], '\n')
+        #print('\n', tree[1], '\n')
        
         left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
+        #print("Succesfully printing left type", left)
         operator = tree[2][1]
-        print('\n', tree[3], '\n')
+        #print('\n', tree[3], '\n')
        
         right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)
+        #print("Succesfully printing right type", right)
 
         binop_type_check(left, operator, right, tree[0])
 
@@ -48,28 +48,28 @@ def traverse_tree(tree):
 
     
     if tree[0] == "AdditiveExpression" and len(tree) ==4:
-        print('\n', tree[1], '\n')
+        #print('\n', tree[1], '\n')
        
         left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
+        #print("Succesfully printing left type", left)
         operator = tree[2]
-        print('\n', tree[3], '\n')
+        #print('\n', tree[3], '\n')
        
         right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)  
+        #print("Succesfully printing right type", right)  
 
         binop_type_check(left, operator, right, tree[0])
 
     if tree[0] == "MultiplicativeExpression" and len(tree) ==4:
-        print('\n', tree[1], '\n')
+        #print('\n', tree[1], '\n')
        
         left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
+        #print("Succesfully printing left type", left)
         operator = tree[2]
-        print('\n', tree[3], '\n')
+        #print('\n', tree[3], '\n')
        
         right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)    
+        #print("Succesfully printing right type", right)    
 
         binop_type_check(left, operator, right, tree[0])
 
@@ -88,20 +88,20 @@ def traverse_tree(tree):
         
         operator = tree[1]
         
-        print('\n', tree[1], '\n')
+        #print('\n', tree[1], '\n')
        
         right = get_expression_Type(tree[2])
-        print("Succesfully printing right type", right)  
+        #print("Succesfully printing right type", right)  
 
         unop_type_check(operator, right, tree[0])
 
     if tree[0] == "PreIncrementExpression" or tree[0] == "PreDecrementExpression":
 
         operator = tree[1]
-        print('\n', tree[1], '\n')
+        #print('\n', tree[1], '\n')
        
         right = get_expression_Type(tree[2])
-        print("Succesfully printing right type", right)
+        #print("Succesfully printing right type", right)
 
         unop_type_check(operator, right, tree[0])
 
@@ -109,10 +109,10 @@ def traverse_tree(tree):
     if tree[0] == "PostIncrementExpression" or tree[0] == "PostDecrementExpression":
 
         operator = tree[2]
-        print('\n', tree[2], '\n')
+        #print('\n', tree[2], '\n')
        
         left = get_expression_Type(tree[1])
-        print("Succesfully printing left type", left)
+        #print("Succesfully printing left type", left)
 
         unop_type_check(operator, left, tree[0])
 
@@ -131,11 +131,11 @@ def traverse_tree(tree):
         
         methodreturn_type = get_expression_Type(tree[2])
 
-        print("Succesfully printing method return type", methodreturn_type)
+        #print("Succesfully printing method return type", methodreturn_type)
         
         methodheader_type = symbol_table.get_method_symbol()
 
-        print("Successfully printing method header type", methodheader_type)
+        #print("Successfully printing method header type", methodheader_type)
 
         method_type_check(methodreturn_type, methodheader_type)
         
@@ -144,10 +144,10 @@ def traverse_tree(tree):
         operator = tree[2]
 
         left = get_expression_Type(tree[1]) 
-        print("Succesfully printing left type", left)
+        #print("Succesfully printing left type", left)
 
         right = get_expression_Type(tree[3])
-        print("Succesfully printing right type", right)
+        #print("Succesfully printing right type", right)
 
         binop_type_check(left, operator, right, tree[0])
 
@@ -615,7 +615,7 @@ def string_to_type(expression):
 
 ###yet to complete
 def get_expression_Type(expression):
-    print("This is", expression[0])
+    #print("This is", expression[0])
 
     match expression[0]:
         case "LeftHandSide":
