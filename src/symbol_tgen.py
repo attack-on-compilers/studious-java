@@ -690,7 +690,7 @@ def string_to_type(expression):
         if result == 'CHARACTER_LITERAL':
             return 'char'
         if result == 'STRING_LITERAL':
-            return 'str'
+            return 'String'
         if result == 'TEXT_BLOCK':
             return 'str'  ##verify once
         if result == 'NULL_LITERAL':

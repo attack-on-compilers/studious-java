@@ -43,8 +43,9 @@ public class test1{
             x="d";
     }
 
-    public double assignmnet() {
-        
+    public double assignmnet(int a, float b, double c, String d) {
+        // yo1 x = new yo1();
+        return 5.5f;
     }
 }
 
