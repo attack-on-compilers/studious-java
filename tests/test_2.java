@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class LinkedList {
     private Node head;
+    int x =4+5;
 
     public LinkedList() {
         head = null;
@@ -11,6 +12,10 @@ public class LinkedList {
 
     public void add(int value) {
         Node newNode = new Node(value);
+        if("fsdd")
+        {
+            System.out.println("Hello World!");
+        }
         if (head == null) {
             head = newNode;
         } else {

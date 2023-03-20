@@ -2,7 +2,7 @@
  * test10
  */
 public class test10 {
-
+    int x = 4 + 5 + 5.0;
     public static void main(String[] args) {
         System.out.println("Hello World!");
         int a =5;  

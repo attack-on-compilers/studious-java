@@ -774,6 +774,18 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "AdditiveExpression":
             return get_expression_Type(expression[1])
+            # if(len(expression)==2):
+            #     return get_expression_Type(expression[1])
+            # else:
+            #     t1 = get_expression_Type(expression[1])
+            #     t2 = get_expression_Type(expression[3])
+            #     return max (t1,t2)
+
+            # t1=
+            # t3=
+            # return max(t1,t3) - > Logoc to raise Exception
+
+            
         case "MultiplicativeExpression":
             return get_expression_Type(expression[1])
         case "UnaryExpression":
