@@ -5,7 +5,7 @@ all:
 	pip install -r requirements.txt
 	python ./src/parse.py
 	
-dev: clean
+dev: 
 	clear
 	python ./src/parse.py -i ./tests/test_$(ARG).java -o src/ast.dot -v -a
 
