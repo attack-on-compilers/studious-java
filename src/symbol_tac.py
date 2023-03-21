@@ -2,7 +2,7 @@ from symbol_table import *
 from pprint import pprint as pprint
 from tac import TAC
 from lexer import *
-from symbol_thelper import *
+from utils import *
 
 static_init_count = 0
 previous_block_count = 0

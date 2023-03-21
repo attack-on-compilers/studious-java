@@ -4,7 +4,7 @@ import ply.yacc as yacc
 from lexer import *
 import argparse
 from dot import tree_gen, tree_reduce
-from symbol_tgen import generate_symbol_table
+from symbol_tac import generate_symbol_table
 from symbol_table import *
 
 start = "Start"
