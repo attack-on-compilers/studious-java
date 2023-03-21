@@ -18,10 +18,10 @@ ClassInstanceCreationExpression, MethodInvocation
 
 
 
-Block redclaration
-Line number
-Variable size
-Array Initializer
-Offset
-Static
-This
+Block redclaration 
+Line number -Ask to sir (Akshan)
+Variable size -Arpit
+Array Initializer -Akshan int[] a = {1,2,3};  
+Offset -Arpit
+Static - In some future dreams
+This - "
