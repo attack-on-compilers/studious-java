@@ -392,7 +392,7 @@ def p_ConstructorDeclarator(p):
 
 
 def p_ConstructorBody(p):
-    """ConstructorBody : LEFT_BRACE BetaExplicitConstructorInvocation BetaAlphaBlockStatement RIGHT_BRACE"""
+    """ConstructorBody : LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE"""
     p[0] = ("ConstructorBody",) + tuple(p[-len(p) + 1 :])
 
 
@@ -400,18 +400,6 @@ def p_BetaAlphaBlockStatement(p):
     """BetaAlphaBlockStatement : AlphaBlockStatement
     | empty"""
     p[0] = ("BetaAlphaBlockStatement",) + tuple(p[-len(p) + 1 :])
-
-
-def p_BetaExplicitConstructorInvocation(p):
-    """BetaExplicitConstructorInvocation : ExplicitConstructorInvocation
-    | empty"""
-    p[0] = ("BetaExplicitConstructorInvocation",) + tuple(p[-len(p) + 1 :])
-
-
-def p_ExplicitConstructorInvocation(p):
-    """ExplicitConstructorInvocation : THIS LEFT_PAREN BetaArgumentList RIGHT_PAREN SEMICOLON
-    | SUPER LEFT_PAREN BetaArgumentList RIGHT_PAREN SEMICOLON"""
-    p[0] = ("ExplicitConstructorInvocation",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaArgumentList(p):
@@ -429,6 +417,7 @@ def p_ArrayInitializer(p):
     """ArrayInitializer : LEFT_BRACE BetaAlphaVariableInitializer BetaComma RIGHT_BRACE
     | LEFT_BRACE BetaAlphaVariableInitializer RIGHT_BRACE"""
     p[0] = ("ArrayInitializer",) + tuple(p[-len(p) + 1 :])
+
 
 def p_BetaComma(p):
     """BetaComma : COMMA
@@ -718,7 +707,6 @@ def p_PrimaryNoNewArray(p):
     | FieldAccess
     | MethodInvocation
     | ArrayAccess"""
-
     p[0] = ("PrimaryNoNewArray",) + tuple(p[-len(p) + 1 :])
 
 
@@ -737,6 +725,7 @@ def p_ArrayCreationExpression(p):
     """ArrayCreationExpression : NEW PrimitiveType BetaAlphaDimExpr BetaAlphaDim
     | NEW ClassOrInterfaceType BetaAlphaDimExpr BetaAlphaDim"""
     p[0] = ("ArrayCreationExpression",) + tuple(p[-len(p) + 1 :])
+
 
 def p_BetaAlphaDim(p):
     """BetaAlphaDim : AlphaDim
@@ -803,6 +792,7 @@ def p_PostDecrementExpression(p):
     """PostDecrementExpression : PostfixExpression MINUS_MINUS"""
     p[0] = ("PostDecrementExpression",) + tuple(p[-len(p) + 1 :])
 
+
 def p_UnaryExpression(p):
     """UnaryExpression : PreIncrementExpression
     | PreDecrementExpression
@@ -835,6 +825,7 @@ def p_CastExpression(p):
     | LEFT_PAREN Expression RIGHT_PAREN UnaryExpressionNotPlusMinus
     | LEFT_PAREN Name AlphaDim RIGHT_PAREN UnaryExpressionNotPlusMinus"""
     p[0] = ("CastExpression",) + tuple(p[-len(p) + 1 :])
+
 
 def p_MultiplicativeExpression(p):
     """MultiplicativeExpression : UnaryExpression
@@ -991,8 +982,7 @@ def p_empty(p):
 
 
 def p_error(p):
-    print("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
-    #raise Exception("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
+    raise Exception("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
 
 
 yacc.yacc(debug=False, debugfile="parser.out")
@@ -1037,4 +1027,3 @@ if __name__ == "__main__":
         global_symbol_table = generate_symbol_table(tree)
         if args.verbose:
             print("Symbol Table generated")
-
