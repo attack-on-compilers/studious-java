@@ -11,9 +11,9 @@ public class test1{
         int b[][][][][][];
         int[][][][][][][][][][][] d;
         System.out.println("Hello World!");
-        double y =0;
+        int y =0;
         int x =0;
-        double z;
+        int z;
         // a.c=6;
         int a =5;
         a =a>>x;
@@ -21,7 +21,7 @@ public class test1{
             int x=1;
         }
         
-        x= ((y*z) + y);
+        
         return;
         // {
         //     {int x="d";}
@@ -34,7 +34,7 @@ public class test1{
                 int z=1;}
         }
         else if (x==1) {
-            x=1.2;
+            x=1;
         }
         else {
             x=2;
@@ -44,7 +44,7 @@ public class test1{
             // int i=5;
         }
         while(true)
-            x="d";
+            x=1;
     }
 
     public double assignmnet(int a, float b, double c, String d) {
