@@ -14,3 +14,14 @@ Static block
 Import and package handling
 Type conversions
 ClassInstanceCreationExpression, MethodInvocation
+
+
+
+
+Block redclaration
+Line number
+Variable size
+Array Initializer
+Offset
+Static
+This

@@ -413,8 +413,7 @@ def p_AbstractMethodDeclaration(p):
 
 
 def p_ArrayInitializer(p):
-    """ArrayInitializer : LEFT_BRACE BetaAlphaVariableInitializer BetaComma RIGHT_BRACE
-    | LEFT_BRACE BetaAlphaVariableInitializer RIGHT_BRACE"""
+    """ArrayInitializer : LEFT_BRACE BetaAlphaVariableInitializer BetaComma RIGHT_BRACE"""
     p[0] = ("ArrayInitializer",) + tuple(p[-len(p) + 1 :])
 
 
