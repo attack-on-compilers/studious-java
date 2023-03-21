@@ -72,16 +72,17 @@ class ClassSymbol(Symbol):
 
 
 class MethodSymbol(Symbol):
-    def __init__(self, name, params, return_type, parent, scope=VariableScope.PUBLIC, throws=None):
+    def __init__(self, name, signature, params, return_type, parent, scope=VariableScope.PUBLIC, throws=None):
         super().__init__(name, "method")
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+        self.signature = signature
         self.params = params
         self.return_type = return_type
         self.scope = scope
         self.throws = throws
 
     def __str__(self):
-        return DELIMERTER.join([str(self.name), str(self.symbol_type), str(self.symbol_table.name), str(self.params), str(self.return_type), str(self.scope), str(self.throws)])
+        return DELIMERTER.join([str(self.name), str(self.signature), str(self.symbol_type), str(self.symbol_table.name), str(self.params), str(self.return_type), str(self.scope), str(self.throws)])
 
 
 class BlockSymbol(Symbol):

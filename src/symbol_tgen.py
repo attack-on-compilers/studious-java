@@ -135,34 +135,46 @@ def traverse_tree(tree):
         method_type_check(methodreturn_type, methodheader_type)
 
     if tree[0] == "MethodInvocation":
-        pass
-        # if(len(tree)==5):
-        #     methodInvocationName = get_Name(tree[1])
-        #     print("yuoouoou", methodInvocationName)
-        #     methodInvocationParams = []
-        #     newtree = tree[3]
-        #     if(newtree[1]==""):
-        #         methodInvocationParams = []
-        #     else:
-        #         newtree = newtree[1]
-        #         while(len(newtree)==4):
-        #             methodInvocationParams.append(get_expression_Type(newtree[3]))
-        #             newtree = newtree[1]
-        #         methodInvocationParams.append(get_expression_Type(newtree[1]))
-        #         methodInvocationParams.reverse()
-        #     print("yuoouoou", methodInvocationParams)
+        
+        if(len(tree)==5):
+            methodInvocationName = get_Name(tree[1])
 
-        #     methodInvocationSignature = methodInvocationName + "("
-        #     for i in methodInvocationParams:
-        #         methodInvocationSignature += i + ","
-        #     methodInvocationSignature += ")"
+            if methodInvocationName == "System.out.println":
+                pass
+            else:
+                print("yuoouoou", methodInvocationName)
+                methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
+                methodInvocationParams = []
+                newtree = tree[3]
+                if(newtree[1]==""):
+                    methodInvocationParams = []
+                else:
+                    newtree = newtree[1]
+                    while(len(newtree)==4):
+                        methodInvocationParams.append(get_expression_Type(newtree[3]))
+                        newtree = newtree[1]
+                    methodInvocationParams.append(get_expression_Type(newtree[1]))
+                    methodInvocationParams.reverse()
+                print("yuoouoou", methodInvocationParams)
 
-        #     print ("youuuuuuu", methodInvocationSignature)
+                print(len(methodInvocationParams))
 
-        # methodcalledtype = symbol_table.get_symbol(methodInvocationSignature,"method")
+                arr = methodcalledtype.params
 
-        # elif(len(tree)==7):
-        #     pass
+                print("ffgf",arr)
+
+                print(len(arr))
+
+                if(len(methodInvocationParams)!=len(arr)):
+                    raise Exception("Error: Method Invocation Parameters don't match the method declaration")
+                else:
+                    for i in range(len(methodInvocationParams)):
+                        print(arr[i])
+                        print(methodInvocationParams[i])
+                        big_method(methodInvocationParams[i], arr[i])
+
+        elif(len(tree)==7):
+            pass
 
     if tree[0] == "ShiftExpression" and len(tree) == 4:
         operator = tree[2]
@@ -209,14 +221,14 @@ def traverse_tree(tree):
             tac.add_label(methodName)
             methodParams = []
             if len(tree[1][3]) == 5:
-                methodParams = get_Parameters(tree[1][3][3])
+                methodParams = get_Parameters(tree[1][3][3])    
             methodSignature = methodName + "("
             for i in methodParams:
                 methodSignature += i[0] + ","
             methodSignature += ")"
-            method_sym_name = symbol_table.get_symbol_name(methodSignature)
+            method_sym_name = symbol_table.get_symbol_name(methodName)
             tac.add_label(method_sym_name)
-            symbol_table.enter_scope(methodSignature)
+            symbol_table.enter_scope(methodName)
             for i in methodParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -459,7 +471,7 @@ def initial_Traverse(tree):
             methodSignature += ")"
             print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", methodParamTypes)
             symbol_table.add_symbol(
-                MethodSymbol(
+                MethodSymbol(methodName, 
                     methodSignature, methodParamTypes, methodReturnType, symbol_table.current, methodModifiers, methodThrows
                 )
             )
@@ -872,7 +884,37 @@ def big(t1, t2):
     else:
         raise Exception("Type mismatch in binary operation")
     # pass
-
+def big_method(t1, t2):
+    #t1: method invocation params
+    #t2: method called type
+    if t1 == t2:
+        return
+    # if t1 == "double" and (t2 == "float" or t2 == "int" or t2 == "short" or t2 == "long" or t2 == "byte"):
+    #     pass
+    if t2 == "double" and (t1 == "float" or t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte"):
+        return
+    # if t1 == "float" and (t2 == "int" or t2 == "short" or t2 == "long" or t2 == "byte"):
+    #     pass
+    if t2 == "float" and (t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte"):
+        return
+    # if t1 == "long" and (t2 == "int" or t2 == "short" or t2 == "byte"):
+    #     return t1
+    if t2 == "long" and (t1 == "int" or t1 == "short" or t1 == "byte"):
+        return
+    # if t1 == "int" and (t2 == "short" or t2 == "byte"):
+    #     return t1
+    if t2 == "int" and (t1 == "short" or t1 == "byte"):
+        return 
+    # if t1 == "short" and t2 == "byte":
+    #     return t1
+    if t2 == "short" and t1 == "byte":
+        return
+    # if (t1 == "char" or t1 == "String") and (t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "long" or t1 == "char"):
+    #     return t1
+    # if (t2 == "char" or t2 == "String") and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "long" or t1 == "char"):
+    #     pass
+    else:
+        raise Exception("Method invocation type mismatch")
 
 ###yet to complete
 def get_expression_Type(expression):
