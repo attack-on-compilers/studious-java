@@ -10,7 +10,7 @@ class TestIfElse {
         arr[0][0] = 1;
         int a, b=10, c=intArray[0];
         System.out.println("Hello World");
-        foo();
+        // foo();
     }
 
 }

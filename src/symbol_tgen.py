@@ -854,21 +854,21 @@ def string_to_type(expression):
 def big(t1, t2):
     if t1 == t2:
         return t1
-    if t1 == "double" and (t2 == "float" or t2 == "int" or t2 == "short" or t2 == "long" or t2 == "byte"):
+    if t1 == "double" and (t2 == "float" or t2 == "int" or t2 == "short" or t2 == "long" or t2 == "byte" or t2 == "char"):
         return t1
-    if t2 == "double" and (t1 == "float" or t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte"):
+    if t2 == "double" and (t1 == "float" or t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte" or t1 == "char"):
         return t2
-    if t1 == "float" and (t2 == "int" or t2 == "short" or t2 == "long" or t2 == "byte"):
+    if t1 == "float" and (t2 == "int" or t2 == "short" or t2 == "long" or t2 == "byte" or t2 == "char"):
         return t1
-    if t2 == "float" and (t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte"):
+    if t2 == "float" and (t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte" or t1 == "char"):
         return t2
-    if t1 == "long" and (t2 == "int" or t2 == "short" or t2 == "byte"):
+    if t1 == "long" and (t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "char"):
         return t1
-    if t2 == "long" and (t1 == "int" or t1 == "short" or t1 == "byte"):
+    if t2 == "long" and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "char"):
         return t2
-    if t1 == "int" and (t2 == "short" or t2 == "byte"):
+    if t1 == "int" and (t2 == "short" or t2 == "byte" or t2 == "char"):
         return t1
-    if t2 == "int" and (t1 == "short" or t1 == "byte"):
+    if t2 == "int" and (t1 == "short" or t1 == "byte" or t1 == "char"):
         return t2
     if t1 == "short" and t2 == "byte":
         return t1
@@ -888,23 +888,23 @@ def big_method(t1, t2):
         return
     # if t1 == "double" and (t2 == "float" or t2 == "int" or t2 == "short" or t2 == "long" or t2 == "byte"):
     #     pass
-    if t2 == "double" and (t1 == "float" or t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte"):
+    if t2 == "double" and (t1 == "float" or t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte" or t1 == "char"):
         return
     # if t1 == "float" and (t2 == "int" or t2 == "short" or t2 == "long" or t2 == "byte"):
     #     pass
-    if t2 == "float" and (t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte"):
+    if t2 == "float" and (t1 == "int" or t1 == "short" or t1 == "long" or t1 == "byte" or t1 == "char"):
         return
     # if t1 == "long" and (t2 == "int" or t2 == "short" or t2 == "byte"):
     #     return t1
-    if t2 == "long" and (t1 == "int" or t1 == "short" or t1 == "byte"):
+    if t2 == "long" and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "char"):
         return
     # if t1 == "int" and (t2 == "short" or t2 == "byte"):
     #     return t1
-    if t2 == "int" and (t1 == "short" or t1 == "byte"):
+    if t2 == "int" and (t1 == "short" or t1 == "byte" or t1 == "char"):
         return 
     # if t1 == "short" and t2 == "byte":
     #     return t1
-    if t2 == "short" and t1 == "byte":
+    if t2 == "short" and t1 == "byte" :
         return
     # if (t1 == "char" or t1 == "String") and (t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "long" or t1 == "char"):
     #     return t1

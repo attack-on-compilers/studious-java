@@ -55,7 +55,7 @@ public class test1{
 
     public double assignmnet(long a, float b, double c, String d) {
         // yo1 x = new yo1();
-        assignmnet(1, 2, 3, "4");
+        assignmnet('a', 2, 3, "4");
         // assignment(int,float,int,String)
         //assignment(int,float,double,String)
         return 5.5f;
