@@ -301,6 +301,7 @@ def traverse_tree(tree):
                     dims = i.count("[")
                     newi = i[:i.find("[")]
                 symbol_table.add_symbol(VariableSymbol(newi, fieldType, [], dims))
+            post_type_check(tree)    
 
         case "Block":
             block_count += 1
@@ -727,8 +728,42 @@ def method_type_check(methodreturn_type, methodheader_type):
         pass
     else:
         raise Exception("Type mismatch in method return type and method header type")
-        
 
+def post_type_check(expression):
+    
+    match expression[0]:
+        case "LocalVariableDeclaration":
+            temp = expression[2]
+            # #print(temp)
+            # # if len(temp) == 2 and len(temp[1]) == 4:
+            # #     left = get_expression_Type(temp[1][1])
+            # #     right = get_expression_Type(temp[1][3])  
+            # #     binop_type_check(left, "=", right, expression)
+            if len(temp) == 4:
+                post_type_check(temp[3])
+                post_type_check(temp[1])
+            else:
+                post_type_check(temp[1])
+        case "VariableDeclarator":
+            if len(expression) == 2:
+                pass
+            else:
+                left = get_expression_Type(expression[1])
+                right = get_expression_Type(expression[3])
+                binop_type_check(left, "=", right, expression)
+
+        case "VariableInitializer":
+            get_expression_Type(expression[1])
+
+        case "AlphaVariableDeclarator":
+            if len(expression) == 2:
+                post_type_check(expression[1])
+            else:
+                post_type_check(expression[1])
+                post_type_check(expression[3])        
+
+        case _:
+            pass
 def string_to_type(expression):
     try:
         output_buffer = io.StringIO()
@@ -918,6 +953,15 @@ def get_expression_Type(expression):
         case "Expression":
             return get_expression_Type(expression[1])
         case "VariableInitializer":
+            return get_expression_Type(expression[1])
+        case "VariableDeclarator":
+            return get_expression_Type(expression[1])
+        case "VariableDeclaratorId":
+            if len(expression) == 2:
+                return symbol_table.get_symbol(expression[1]).data_type
+            else:
+                return get_expression_Type(expression[1])
+        case "VariableDeclaratorInitializer":
             return get_expression_Type(expression[1])
         case "Block":
             return get_expression_Type(expression[2])

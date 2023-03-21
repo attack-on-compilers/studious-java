@@ -2,12 +2,12 @@
  * test10
  */
 public class test10 {
-    int x = 4 + 5 + 5.0;
+    int x = 4;
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        float a;  
-        double z;
-        z = (1.1f + 3.2);
+        int a=5, vv=x, zz=10;  
+        float z=x;
+        float zzz = (1.1f + 2);
         assignment(a);
         return;
     }
