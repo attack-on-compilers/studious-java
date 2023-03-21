@@ -26,7 +26,7 @@ private class TestIfElse {
                 }
             }
         }
-        //System.out.println("Score: " + score + ", Grade: " + grade);
+        System.out.println("Score: " + score + ", Grade: " + grade);
     }
 
 }

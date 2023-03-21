@@ -821,12 +821,13 @@ def big(t1, t2):
         return t1
     if t2=="short" and t1=="byte":
         return t2
-    if t1=="char" and (t2=="int" or t2 == "short" or t2=="byte"):
+    if (t1=="char" or t1=="String") and (t2=="int" or t2 == "short" or t2=="byte" or t2 =="long" or t1 =="char"):
         return t1
-    if t2=="char" and (t1=="int" or t1 == "short" or t1=="byte"):
+    if (t2=="char" or t2=="String") and (t1=="int" or t1 == "short" or t1=="byte" or t1 == "long" or t1 =="char"):
         return t2
     else:
         raise Exception("Type mismatch in binary operation")
+       # pass
 ###yet to complete
 def get_expression_Type(expression):
     #print("This is", expression[0])
