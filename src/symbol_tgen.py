@@ -159,7 +159,7 @@ def traverse_tree(tree):
 
         #     print ("youuuuuuu", methodInvocationSignature)
 
-        # methodcalledtype = symbol_table.get_symbol(methodInvocationSignature)
+        # methodcalledtype = symbol_table.get_symbol(methodInvocationSignature,"method")
 
         # elif(len(tree)==7):
         #     pass

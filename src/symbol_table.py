@@ -74,7 +74,7 @@ class ClassSymbol(Symbol):
 class MethodSymbol(Symbol):
     def __init__(self, name, params, return_type, parent, scope=VariableScope.PUBLIC, throws=None):
         super().__init__(name, "method")
-        self.symbol_table = SymbolTable(parent=parent, name=name.split("(")[0] + " symbol table")
+        self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
         self.params = params
         self.return_type = return_type
         self.scope = scope
