@@ -1024,7 +1024,14 @@ def get_expression_Type(expression):
         case "FieldAccess":
             pass
         case "MethodInvocation":
-            pass
+            if(len(expression)==5):
+               methodInvocationName = get_Name(expression[1])
+               if methodInvocationName == "System.out.println":
+                    pass
+               else:
+                    return symbol_table.get_symbol_name(methodInvocationName).return_type
+            elif(len(expression)==7):
+                pass
         case "ArrayAccess":
             pass
         case "Type":
