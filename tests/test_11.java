@@ -10,6 +10,9 @@ class TestIfElse {
         arr[0][0] = 1;
         int a, b=10, c=intArray[0];
         System.out.println("Hello World");
+
+        double[]g = {1,2,3};  
+        int[][]g2= {{1,2,3},{1,2,3}};
         // foo();
     }
 

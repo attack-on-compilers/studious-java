@@ -428,7 +428,9 @@ def post_type_check(expression):
                 pass
             else:
                 left = get_expression_Type(expression[1])
+                
                 right = get_expression_Type(expression[3])
+
                 binop_type_check(left, "=", right, expression)
 
         case "VariableInitializer":
@@ -637,14 +639,18 @@ def get_expression_Type(expression):
         #     return get_expression_Type(expression[1])
         # case "BlockStatement":
         #     return get_expression_Type(expression[1])
+        case "ArrayInitializer":
+            return get_expression_Type(expression[2])
+        case "BetaAlphaVariableInitializer":
+            return get_expression_Type(expression[1])
+        case "AlphaVariableInitializer":
+            if len(expression) == 2:
 
-        ##case need to add logic for variabledeclator
-        # case "FormalParameterList":
-        #     if len(expression) == 4:
-        #         return get_expression_Type(expression[3])
-        #     else:
-        #         return get_expression_Type(expression[1])
-        # case "FormalParameter":
-        #     return get_expression_Type(expression[1])
+                return get_expression_Type(expression[1])
+            else:
+                t1 = get_expression_Type(expression[1])
+                t2 = get_expression_Type(expression[3])
+                return big(t1, t2)
+        
         case _:
             pass

@@ -2,7 +2,7 @@ import java.io.*;
 
 class GoGo {
 	String a;
-
+    
 	GoGo() { System.out.println("Constructor called"); }
 }
 
