@@ -518,7 +518,7 @@ def initial_Traverse(tree):
                 methodSignature += i[0] + ","
             methodSignature += ")"
             symbol_table.add_symbol(
-                MethodSymbol(methodSignature, methodParams, methodReturnType, symbol_table.current, methodModifiers, methodThrows)
+                MethodSymbol(methodName,methodSignature, methodParams, methodReturnType, symbol_table.current, methodModifiers, methodThrows)
             )
 
         case _:
