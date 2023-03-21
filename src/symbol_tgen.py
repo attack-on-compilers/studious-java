@@ -783,11 +783,6 @@ def post_type_check(expression):
     match expression[0]:
         case "LocalVariableDeclaration":
             temp = expression[2]
-            # #print(temp)
-            # # if len(temp) == 2 and len(temp[1]) == 4:
-            # #     left = get_expression_Type(temp[1][1])
-            # #     right = get_expression_Type(temp[1][3])
-            # #     binop_type_check(left, "=", right, expression)
             if len(temp) == 4:
                 post_type_check(temp[3])
                 post_type_check(temp[1])
@@ -799,6 +794,7 @@ def post_type_check(expression):
             else:
                 left = get_expression_Type(expression[1])
                 right = get_expression_Type(expression[3])
+                # print("Left: " + left + " Right: " + right + "")
                 binop_type_check(left, "=", right, expression)
 
         case "VariableInitializer":
@@ -927,7 +923,20 @@ def get_expression_Type(expression):
             pass
 
         case "ArrayAccess":
-            pass
+            # print("ArrayAccess", expression[1])
+            t = get_expression_Type(expression[3])
+            if t != "int":
+                raise Exception("Array index must be of type int")
+            if expression[1][0] == "Name":
+                return symbol_table.get_symbol(get_Name(expression[1])).data_type
+            else:
+                return get_expression_Type(expression[1])
+        
+        case "ArrayCreationExpression":
+            return get_Type(expression[2])
+        
+        case "ClassInstanceCreationExpression":
+            return get_Type(expression[2])
 
         case "Name":
             return get_expression_Type(expression[1])

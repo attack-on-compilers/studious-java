@@ -1,10 +1,14 @@
-private class TestIfElse {
+class TestIfElse {
     
+    final int x =5;
+    final public int y =4;
     public static void main(String[] args) {
-        int[] intArray = new int[20];
-        intArray[0] = 10;
+        int[] intArray = new int[100];
+        intArray[5] = 5;
+        // int[] a,b,c;
         int[][] arr = new int[10][20];
         arr[0][0] = 1;
+        int a, b=10, c=intArray[0][0][0];
     }
 
 }
