@@ -165,6 +165,21 @@ class SymbolTable:
             return self.parent.get_symbol(name, symbol_type)
         else:
             raise Exception("Symbol not found")
+        
+    def get_symbol_name(self, name, symbol_type=None):
+        symbol = self.symbols.get(name)
+        if symbol is not None and (symbol_type is None or symbol.symbol_type == symbol_type):
+            sym_name =  symbol.name
+            current_temp = self
+            while current_temp.parent is not None:
+                scope_name = current_temp.name[:-13].replace(" ", "_")
+                sym_name = scope_name + "_" + sym_name
+                current_temp = current_temp.parent
+            return sym_name
+        elif self.parent is not None:
+            return self.parent.get_symbol(name, symbol_type)
+        else:
+            raise Exception("Symbol not found")
 
     def tprint(self,level):
         symbols_with_symbol_tables = ["class", "method", "block", "interface"]
@@ -193,14 +208,7 @@ class RootSymbolTable:
         return self.current.get_symbol(name, symbol_type)
     
     def get_symbol_name(self, name, symbol_type=None):
-        sym = self.current.get_symbol(name, symbol_type)
-        sym_name = sym.name
-        current_temp = self.current
-        while current_temp.parent is not None:
-            scope_name = current_temp.name[:-13].replace(" ", "_")
-            sym_name = scope_name + "_" + sym_name
-            current_temp = current_temp.parent
-        return sym.name
+        return self.current.get_symbol_name(name, symbol_type)
 
     def enter_scope(self, name):
         print("Entering scope: " + name)

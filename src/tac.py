@@ -12,10 +12,10 @@ class TAC:
     def new_temp(self):
         self.temp_var.count += 1
         return self.temp_var.prefix + str(self.temp_var.count) + self.temp_var.suffix
-    
+
     def add(self, op, arg1, arg2, result):
         self.table.append([op, arg1, arg2, result])
-    
+
     def add_label(self, label=""):
         if not label:
             label = "L" + str(len(self.labels))
@@ -23,7 +23,9 @@ class TAC:
         self.labels.append(label)
         return label
 
+    def add_param(self, param):
+        self.table.append(["PopFromStack", param])
+
     def tprint(self):
         for i in range(len(self.table)):
             print(self.table[i])
-
