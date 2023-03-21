@@ -180,6 +180,7 @@ def binop_type_check(left, operator, right, expression):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation")
+                #pass
 
 
 def unop_type_check(operator, left_or_right, expression):

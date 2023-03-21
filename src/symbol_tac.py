@@ -75,33 +75,15 @@ def traverse_tree(tree):
         method_type_check(methodreturn_type, methodheader_type)
 
     if tree[0] == "MethodInvocation":
-        if len(tree) == 5:
-            methodInvocationName = get_Name(tree[1])
+        method_check(tree)
+    
+    # if tree[0] == "ClassInstanceCreationExpression":
+        
+    #     print("kokki")
+    #     methodInvocationName = get_expression_Type(tree[2])
 
-            if methodInvocationName == "System.out.println":
-                pass
-            else:
-                methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
-                methodInvocationParams = []
-                newtree = tree[3]
-                if newtree[1] == "":
-                    methodInvocationParams = []
-                else:
-                    newtree = newtree[1]
-                    while len(newtree) == 4:
-                        methodInvocationParams.append(get_expression_Type(newtree[3]))
-                        newtree = newtree[1]
-                    methodInvocationParams.append(get_expression_Type(newtree[1]))
-                    methodInvocationParams.reverse()
-                arr = methodcalledtype.params
-                if len(methodInvocationParams) != len(arr):
-                    raise Exception("Error: Method Invocation Parameters don't match the method declaration")
-                else:
-                    for i in range(len(methodInvocationParams)):
-                        big_method(methodInvocationParams[i], arr[i])
+    #     print("gyggy", methodInvocationName)
 
-        elif len(tree) == 7:
-            pass
 
     if tree[0] == "ShiftExpression" and len(tree) == 4:
         operator = tree[2]
@@ -462,6 +444,34 @@ def post_type_check(expression):
         case _:
             pass
 
+def method_check(expression):
+    if len(expression) == 5:
+            methodInvocationName = get_Name(expression[1])
+
+            if methodInvocationName == "System.out.println":
+                pass
+            else:
+                methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
+                methodInvocationParams = []
+                newtree = expression[3]
+                if newtree[1] == "":
+                    methodInvocationParams = []
+                else:
+                    newtree = newtree[1]
+                    while len(newtree) == 4:
+                        methodInvocationParams.append(get_expression_Type(newtree[3]))
+                        newtree = newtree[1]
+                    methodInvocationParams.append(get_expression_Type(newtree[1]))
+                    methodInvocationParams.reverse()
+                arr = methodcalledtype.params
+                if len(methodInvocationParams) != len(arr):
+                    raise Exception("Error: Method Invocation Parameters don't match the method declaration")
+                else:
+                    for i in range(len(methodInvocationParams)):
+                        big_method(methodInvocationParams[i], arr[i])
+
+    elif len(expression) == 7:
+        pass
 
 ###yet to complete
 def get_expression_Type(expression):
@@ -484,7 +494,7 @@ def get_expression_Type(expression):
             return get_Type(expression[2])
 
         case "ClassInstanceCreationExpression":
-            return get_Type(expression[2])
+            return get_expression_Type(expression[2])
 
         case "Name":
             return get_expression_Type(expression[1])
@@ -559,8 +569,10 @@ def get_expression_Type(expression):
             pass
         case "Literal":
             return string_to_type(expression[1])
-        case "ClassInstanceCreationExpression":
-            pass
+        case "ClassType":
+            return get_expression_Type(expression[1])
+        case "ClassOrInterfaceType":
+            return get_Name(expression[1])
         case "BetaArgumentList":
             pass
         case "ArgumentList":
@@ -571,6 +583,7 @@ def get_expression_Type(expression):
         case "FieldAccess":
             pass
         case "MethodInvocation":
+            method_check(expression)
             if len(expression) == 5:
                 methodInvocationName = get_Name(expression[1])
                 if methodInvocationName == "System.out.println":
