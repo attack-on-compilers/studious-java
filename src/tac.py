@@ -1,6 +1,7 @@
 # A Class for three AC (TAC) system stored in quadripole
 class TAC:
-    def __init__(self, temp_prefix, temp_suffix):
+    def __init__(self, temp_prefix="t", temp_suffix=""):
+        self.temp_var = type("temp_var", (object,), {})()
         self.temp_var.count = 0
         self.temp_var.prefix = temp_prefix + "_"
         self.temp_var.suffix = "_" + temp_suffix if temp_suffix else ""
@@ -15,8 +16,9 @@ class TAC:
     def add(self, op, arg1, arg2, result):
         self.table.append([op, arg1, arg2, result])
     
-    def add_label(self):
-        label = "L" + str(len(self.labels))
+    def add_label(self, label=""):
+        if not label:
+            label = "L" + str(len(self.labels))
         self.table.append([label + ":"])
         self.labels.append(label)
         return label

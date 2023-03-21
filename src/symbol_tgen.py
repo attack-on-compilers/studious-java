@@ -1,8 +1,6 @@
 from symbol_table import *
 from pprint import pprint as pprint
-from ast import literal_eval
-
-import ply.yacc as yacc
+from tac import TAC
 from lexer import *
 import io
 
@@ -13,11 +11,15 @@ block_count = 0
 global symbol_table
 symbol_table = RootSymbolTable()
 
+global tac
+tac = TAC()
+
 def generate_symbol_table(tree):
     # pprint(tree) 
         
     traverse_tree(tree)
     symbol_table.tprint()
+    tac.tprint()
     return
 
 def traverse_tree(tree):
