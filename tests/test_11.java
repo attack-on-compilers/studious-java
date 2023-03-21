@@ -8,7 +8,9 @@ class TestIfElse {
         // int[] a,b,c;
         int[][] arr = new int[10][20];
         arr[0][0] = 1;
-        int a, b=10, c=intArray[0][0][0];
+        int a, b=10, c=intArray[0];
+        System.out.println("Hello World");
+        foo();
     }
 
 }

@@ -7,6 +7,11 @@ public class test1{
     static {}
     static {}
 
+    test1() {
+        int a[][][][][];
+        int[][][][][][][][][][][] f;
+    }
+
     public static void main(String[] args) {
         int b[][][][][][];
         b[0] = 1;
@@ -48,9 +53,9 @@ public class test1{
             x=1;
     }
 
-    public double assignmnet(int a, float b, double c, String d) {
+    public double assignmnet(long a, float b, double c, String d) {
         // yo1 x = new yo1();
-        assignmnet(1, 2.0f, 3.0, "4");
+        assignmnet(1, 2, 3, "4");
         // assignment(int,float,int,String)
         //assignment(int,float,double,String)
         return 5.5f;

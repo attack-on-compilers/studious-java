@@ -244,7 +244,7 @@ def traverse_tree(tree):
         case "StaticInitializer":
             static_init_count += 1
             static_init_name = "<static_init_" + str(static_init_count) + ">"
-            symbol_table.add_symbol(MethodSymbol(static_init_name, [], "void", symbol_table.current, [], []))
+            symbol_table.add_symbol(MethodSymbol(static_init_name,static_init_name, [], "void", symbol_table.current, [], []))
             symbol_table.enter_scope(static_init_name)
             traverse_tree(tree[2][2])
             symbol_table.exit_scope()
@@ -256,7 +256,7 @@ def traverse_tree(tree):
             for i in constructorParams:
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
-            symbol_table.enter_scope(constructorSignature)
+            symbol_table.enter_scope(constructorName)
             for i in constructorParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -469,7 +469,7 @@ def initial_Traverse(tree):
                 methodSignature += i[0] + ","
                 methodParamTypes.append(i[0])
             methodSignature += ")"
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", methodParamTypes)
+            # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", methodParamTypes)
             symbol_table.add_symbol(
                 MethodSymbol(methodName, 
                     methodSignature, methodParamTypes, methodReturnType, symbol_table.current, methodModifiers, methodThrows
@@ -492,6 +492,7 @@ def initial_Traverse(tree):
             constructorSignature += ")"
             symbol_table.add_symbol(
                 MethodSymbol(
+                    constructorName,
                     constructorSignature,
                     constructorParamTypes,
                     None,
