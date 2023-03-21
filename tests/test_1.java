@@ -9,6 +9,7 @@ public class test1{
 
     public static void main(String[] args) {
         int b[][][][][][];
+        b[0] = 1;
         int[][][][][][][][][][][] d;
         System.out.println("Hello World!");
         int y =0;

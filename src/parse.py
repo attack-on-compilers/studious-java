@@ -110,8 +110,7 @@ def p_Modifier(p):
     | NATIVE
     | SYNCHRONIZED
     | TRANSIENT
-    | VOLATILE
-    | STRICTFP"""
+    | VOLATILE"""
     p[0] = ("Modifier",) + tuple(p[-len(p) + 1 :])
 
 

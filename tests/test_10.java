@@ -8,7 +8,7 @@ public class test10 {
         int a=5, vv=x, zz=10;  
         float z=x;
         float zzz = (1.1f + 2);
-        assignment(a);
+        assignmnet(a);
         return;
     }
 
