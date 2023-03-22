@@ -157,10 +157,13 @@ class SymbolTable:
 
     def add_symbol(self, symbol):
         if symbol.name in self.symbols:
-            raise Exception("Symbol already defined")
+            raise Exception("Symbol {} already defined".format(symbol))
         self.symbols[symbol.name] = symbol
 
     def get_symbol(self, name, symbol_type=None):
+        printfuncs = ["System.out.println", "println", "System.out.print", "print"]
+        if name in printfuncs:
+            return
         symbol = self.symbols.get(name)
         if symbol is not None and (symbol_type is None or symbol.symbol_type == symbol_type):
             return symbol

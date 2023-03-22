@@ -26,6 +26,9 @@ def generate_symbol_table(tree):
 
     traverse_tree(tree)
     symbol_table.tprint()
+    global block_count
+    block_count = 0
+    traverse_tree_tac(tree)
     tac.tprint()
 
     store_output_buffer = io.StringIO()
@@ -52,6 +55,84 @@ def generate_symbol_table(tree):
         writer.writerow(csv_output)
 
     return
+
+
+def traverse_tree_tac(tree):
+    global block_count
+    match tree[0]:
+        case "ClassDeclaration":
+            className = tree[3]
+            symbol_table.enter_scope(className)
+            tac.add_label(className)
+            generate_tac(tree[6])
+            traverse_tree_tac(tree[6])
+            symbol_table.exit_scope()
+
+        case "MethodDeclaration":
+            methodName = get_Name(tree[1][3])
+            methodParams = []
+            if len(tree[1][3]) == 5:
+                methodParams = get_Parameters(tree[1][3][3])
+            method_sym_name = symbol_table.get_symbol_name(methodName)
+            tac.add_label(method_sym_name)
+            symbol_table.enter_scope(methodName)
+            for i in methodParams:
+                tac.add_param(symbol_table.get_symbol_name(i[1]))
+            generate_tac(tree[2][1][2])
+            traverse_tree_tac(tree[2][1][2])
+            symbol_table.exit_scope()
+
+        case "ConstructorDeclaration":
+            constructorName = get_Name(tree[2][1])
+            constructorParams = get_Parameters(tree[2][3])
+            tac.add_label(symbol_table.get_symbol_name(constructorName))
+            symbol_table.enter_scope(constructorName)
+            for i in constructorParams:
+                tac.add_param(symbol_table.get_symbol_name(i[1]))
+            generate_tac(tree[4])
+            traverse_tree_tac(tree[4])
+            symbol_table.exit_scope()
+
+        case "Block":
+            block_count += 1
+            previous_block_count = block_count
+            symbol_table.enter_scope("block" + str(block_count))
+            generate_tac(tree[2])
+            traverse_tree_tac(tree[2])
+            symbol_table.exit_scope()
+
+        case "ForStatement":
+            block_count += 1
+            previous_block_count = block_count
+            symbol_table.enter_scope("block" + str(block_count))
+            generate_tac(tree)
+            traverse_tree_tac(tree[3])
+            traverse_tree_tac(tree[5])
+            traverse_tree_tac(tree[7])
+            if tree[9][1][0] == "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
+                traverse_tree_tac(tree[9][1][1][2])
+            else:
+                traverse_tree_tac(tree[9])
+            symbol_table.exit_scope()
+
+        case "ForStatementNoShortIf":
+            block_count += 1
+            previous_block_count = block_count
+            symbol_table.enter_scope("block" + str(block_count))
+            generate_tac(tree)
+            traverse_tree_tac(tree[3])
+            traverse_tree_tac(tree[5])
+            traverse_tree_tac(tree[7])
+            if tree[9][1][0] == "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
+                traverse_tree_tac(tree[9][1][1][2])
+            else:
+                traverse_tree_tac(tree[9])
+            symbol_table.exit_scope()
+
+        case _:
+            if type(tree) == tuple:
+                for i in range(1, len(tree)):
+                    traverse_tree_tac(tree[i])
 
 
 def traverse_tree(tree):
@@ -142,7 +223,6 @@ def traverse_tree(tree):
             static_init_count = 0
             className = tree[3]
             symbol_table.enter_scope(className)
-            tac.add_label(className)
             traverse_tree(tree[6])
             symbol_table.exit_scope()
 
@@ -151,14 +231,12 @@ def traverse_tree(tree):
             methodParams = []
             if len(tree[1][3]) == 5:
                 methodParams = get_Parameters(tree[1][3][3])
-            print("BBBBBBBBBBB", methodParams)
             methodSignature = methodName + "("
             for i in methodParams:
                 # print("NONONONO",i[0].split("[")[0])
-                methodSignature += i[0].split("[")[0]+ ","
+                methodSignature += i[0].split("[")[0] + ","
             methodSignature += ")"
             method_sym_name = symbol_table.get_symbol_name(methodName)
-            tac.add_label(method_sym_name)
             symbol_table.enter_scope(methodName)
             offset = offset + [0]
             for i in methodParams:
@@ -172,9 +250,10 @@ def traverse_tree(tree):
                     if dims == 0:
                         dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], VariableScope.PARAMETER, dims))
+                symbol_table.add_symbol(
+                    VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], VariableScope.PARAMETER, dims)
+                )
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
-                tac.add_param(symbol_table.get_symbol_name(i[1]))
             traverse_tree(tree[2][1][2])
             symbol_table.exit_scope()
             offset.pop()
@@ -196,7 +275,6 @@ def traverse_tree(tree):
             for i in constructorParams:
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
-            tac.add_label(symbol_table.get_symbol_name(constructorName))
             symbol_table.enter_scope(constructorName)
             offset = offset + [0]
             for i in constructorParams:
@@ -212,7 +290,6 @@ def traverse_tree(tree):
                     i[1] = i[1][: i[1].find("[")]
                 symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
-                tac.add_param(symbol_table.get_symbol_name(i[1]))
             traverse_tree(tree[4])
             symbol_table.exit_scope()
             offset.pop()
@@ -258,7 +335,6 @@ def traverse_tree(tree):
             fieldVariables = get_Variables(tree[2])
             variablesizes = get_NumberOfElements(tree[2])
             count = 0
-            # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
             for i in fieldVariables:
                 newi = i
                 if i[-1] == "]":
@@ -269,7 +345,6 @@ def traverse_tree(tree):
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
             post_type_check(tree)
-            generate_tac(tree[2])
 
         case "Block":
             block_count += 1
@@ -371,9 +446,11 @@ def initial_Traverse(tree):
                     if dims == 0:
                         dims = i.count("[")
                     newi = i[: i.find("[")]
-                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count], offset[-1], fieldModifiers, dims))
-                offset[-1] = offset[-1] + typeSize*variablesizes[count]
-                count+=1
+                symbol_table.add_symbol(
+                    VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], fieldModifiers, dims)
+                )
+                offset[-1] = offset[-1] + typeSize * variablesizes[count]
+                count += 1
             post_type_check(tree)
 
         case "MethodDeclaration":
@@ -529,14 +606,19 @@ def method_check(expression):
     if len(expression) == 5:
         methodInvocationName = get_Name(expression[1])
 
-        if methodInvocationName == "System.out.println" or methodInvocationName == "println" or methodInvocationName == "System.out.print" or methodInvocationName == "print":
+        if (
+            methodInvocationName == "System.out.println"
+            or methodInvocationName == "println"
+            or methodInvocationName == "System.out.print"
+            or methodInvocationName == "print"
+        ):
             pass
         else:
             methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
             methodInvocationParams = []
             newtree = expression[3]
             # print("AAAAAAAAAAAAA", newtree[1])
-            if newtree[1][0] == '':
+            if newtree[1][0] == "":
                 methodInvocationParams = []
                 # print("BBBBBBBAAAAAAAAAAAAA", methodInvocationName)
             else:
@@ -548,7 +630,9 @@ def method_check(expression):
                 methodInvocationParams.reverse()
             arr = methodcalledtype.params
             if len(methodInvocationParams) != len(arr):
-                raise Exception("Error: Method Invocation Parameters of {} don't match the method declaration".format(methodInvocationName))
+                raise Exception(
+                    "Error: Method Invocation Parameters of {} don't match the method declaration".format(methodInvocationName)
+                )
             else:
                 for i in range(len(methodInvocationParams)):
                     big_method(methodInvocationParams[i], arr[i])
@@ -588,9 +672,9 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "FieldAccess":
             # print("AAAAAAAAAAAAAAAAAA",symbol_table.get_symbol(expression[3]))
-            return (symbol_table.get_symbol(expression[3]).data_type)
+            return symbol_table.get_symbol(expression[3]).data_type
         case "NameDotIdentifierId":
-            return (symbol_table.get_symbol(expression[3]).data_type)
+            return symbol_table.get_symbol(expression[3]).data_type
 
         case "ArrayAccess":
             t = get_expression_Type(expression[3])
@@ -782,11 +866,10 @@ def generate_tac(tree, begin="", end=""):
         case "VariableDeclarator":
             if len(tree) == 4:
                 right = generate_tac(tree[3])
-                left = symbol_table.get_symbol_name(get_Name(tree[1]))
+                left = symbol_table.get_symbol_name(get_Name(tree[1]).split("[")[0])
                 tac.add3("=", right, left)
                 return
         case "VariableInitializer":
-            pprint(tree[1])
             return generate_tac(tree[1])
         case "Expression":
             return generate_tac(tree[1])
@@ -795,7 +878,7 @@ def generate_tac(tree, begin="", end=""):
         case "AssignmentExpression":
             return generate_tac(tree[1])
         case "Assignment":
-            left = get_Name(tree[1])
+            left = symbol_table.get_symbol_name(get_Name(tree[1]))
             right = generate_tac(tree[3])
             tac.add3(tree[2][1], right, left)
             return left
@@ -865,8 +948,8 @@ def generate_tac(tree, begin="", end=""):
                 out = tac.new_temp()
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
-                tac.add(tree[2][1], left, right, out)
-                if tree[2][1] == "instanceof":
+                tac.add(tree[2], left, right, out)
+                if tree[2] == "instanceof":
                     raise Exception("instanceof not supported")
                 return out
         case "ShiftExpression":
@@ -885,7 +968,8 @@ def generate_tac(tree, begin="", end=""):
                 out = tac.new_temp()
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
-                tac.add(tree[2][1], left, right, out)
+                print(tree[2])
+                tac.add(tree[2], left, right, out)
                 return out
         case "MultiplicativeExpression":
             if len(tree) == 2:
@@ -933,7 +1017,7 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[2])
             return generate_tac(tree[1])
         case "Literal":
-            return tree[1][1]
+            return tree[1]
         case "ClassInstanceCreationExpression":
             args = get_Argument_list(tree[4])
             args.reverse()
@@ -1018,19 +1102,14 @@ def generate_tac(tree, begin="", end=""):
             tac.cond_jump(cond, begin_label)
             tac.add_label(end_label)
         case "IfThenElseStatementNoShortIf":
-            cond = generate_tac(tree[3])
-            then_label = tac.gen_label()
-            else_label = tac.gen_label()
-            end_label = tac.gen_label()
-            tac.cond_jump(cond, then_label)
-            tac.jump(else_label)
-            tac.add_label(then_label)
-            generate_tac(tree[5], begin=then_label, end=end_label)
-            tac.jump(end_label)
-            tac.add_label(else_label)
-            generate_tac(tree[7], begin=else_label, end=end_label)
-            tac.jump(end_label)
-            tac.add_label(end_label)
+            pass
+            # cond = generate_tac(tree[3])
+            # notcond = tac.new_temp()
+            # tac.add3("!", cond, notcond)
+            # else_label = tac.gen_label()
+            # tac.cond_jump(notcond, else_label)
+            # generate_tac(tree[5])
+            # tac.add_label(else_label)
         case "WhileStatementNoShortIf":
             begin_label = tac.gen_label()
             end_label = tac.gen_label()
@@ -1088,6 +1167,20 @@ def generate_tac(tree, begin="", end=""):
             generate_tac(tree[5], begin=begin_label, end=end_label)
             tac.jump(begin_label)
             tac.add_label(end_label)
+        case "ForStatement":
+            generate_tac(tree[3])
+            begin_label = tac.gen_label()
+            end_label = tac.gen_label()
+            tac.add_label(begin_label)
+            cond = generate_tac(tree[5])
+            out = tac.new_temp()
+            tac.add3("!", cond, out)
+            tac.cond_jump(out, end_label)
+            generate_tac(tree[7], begin=begin_label, end=end_label)
+            generate_tac(tree[9])
+            tac.jump(begin_label)
+            tac.add_label(end_label)
+            return
         case "StatementNoShortIf":
             return generate_tac(tree[1])
         case "BreakStatement":
@@ -1099,6 +1192,13 @@ def generate_tac(tree, begin="", end=""):
                 out = generate_tac(tree[2])
                 tac.add_return(out)
         case _:
+            if tree[0] in [
+                "ClassDeclaration",
+                "MethodDeclaration",
+                "ConstructorDeclaration",
+                "SwitchBlock",
+            ]:
+                return
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
                     generate_tac(tree[i])
