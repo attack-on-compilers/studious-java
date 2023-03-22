@@ -205,10 +205,13 @@ def traverse_tree(tree):
                 dims = fieldType.count("[")
                 fieldType = fieldType[: fieldType.find("[")]
             fieldVariables = get_Variables(tree[2])
+            variablesizes = get_NumberOfElements(tree[2])
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
             for i in fieldVariables:
                 newi = i
                 if i[-1] == "]":
-                    dims = i.count("[")
+                    if dims == 0:
+                        dims = i.count("[")
                     newi = i[: i.find("[")]
                 symbol_table.add_symbol(VariableSymbol(newi, fieldType, [], dims))
             post_type_check(tree)
@@ -297,7 +300,8 @@ def initial_Traverse(tree):
             for i in fieldVariables:
                 newi = i
                 if i[-1] == "]":
-                    dims = i.count("[")
+                    if dims == 0:
+                        dims = i.count("[")
                     newi = i[: i.find("[")]
                 symbol_table.add_symbol(VariableSymbol(newi, fieldType, fieldModifiers, dims))
 

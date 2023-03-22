@@ -55,6 +55,42 @@ def get_Type(tree):
                     return get_Name(tree[1]) + "[]"
             return get_Type(tree[1]) + "[]"
 
+def get_NumberOfElements(tree):
+    match tree[0]:
+        case "AlphaVariableDeclarator":
+            if len(tree) == 2:
+                return get_NumberOfElements(tree[1])
+            else:
+                return get_NumberOfElements(tree[1]) + get_NumberOfElements(tree[3])
+        case "VariableDeclarator":
+            if len(tree) == 2:
+                if len(tree[1]) == 2:
+                    return [1]
+                else:
+                    return [0]
+            else:
+                return [get_NumberOfElements(tree[3])]
+        case "VariableInitializer":
+            return get_NumberOfElements(tree[1])
+        case "Expression":
+            return 1
+        case "ArrayInitializer":
+            return get_NumberOfElements(tree[2])
+        case "BetaAlphaVariableInitializer":
+            if tree[1] == "":
+                return 0
+            else:
+                return get_NumberOfElements(tree[1])
+        case "AlphaVariableInitializer":
+            if len(tree) == 2:
+                return get_NumberOfElements(tree[1])
+            else:
+                return get_NumberOfElements(tree[1]) + get_NumberOfElements(tree[3])
+        case _:
+            for i in range(1, len(tree)):
+                if type(tree[i]) == list:
+                    return get_NumberOfElements(tree[i])
+            
 
 def get_Modifiers(tree):
     match tree[0]:

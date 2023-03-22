@@ -3,17 +3,19 @@
  */
 public class test1{
     int a[][][][][];
-    int[][][][][][][][][][][] f;
+    int[][][][][][][][][][][] f[];
     static {}
     static {}
 
     test1() {
-        int a[][][][][];
-        int[][][][][][][][][][][] f;
+        int a[][][][][], b=5;
+        int[][][][][][][][][][][] f, c[][];
     }
 
     public static void main(String[] args) {
-        int b[][][][][][];
+        int kdsfk = 5, sdsfd = 348, sgsgdv[];
+        int b[][][][][][] = {{1,2,3},{4,5,6,{7,8,9}}};
+        int dsb[] = new int[5];
         b[0] = 1;
         int[][][][][][][][][][][] d;
         System.out.println("Hello World!");
