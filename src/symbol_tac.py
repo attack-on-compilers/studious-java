@@ -151,9 +151,11 @@ def traverse_tree(tree):
             methodParams = []
             if len(tree[1][3]) == 5:
                 methodParams = get_Parameters(tree[1][3][3])
+            print("BBBBBBBBBBB", methodParams)
             methodSignature = methodName + "("
             for i in methodParams:
-                methodSignature += i[0] + ","
+                # print("NONONONO",i[0].split("[")[0])
+                methodSignature += i[0].split("[")[0]+ ","
             methodSignature += ")"
             method_sym_name = symbol_table.get_symbol_name(methodName)
             tac.add_label(method_sym_name)
@@ -166,6 +168,10 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
+                if i[1][-1] == "]":
+                    if dims == 0:
+                        dims = i[1].count("[")
+                    i[1] = i[1][: i[1].find("[")]
                 symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], VariableScope.PARAMETER, dims))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
                 tac.add_param(symbol_table.get_symbol_name(i[1]))
@@ -199,6 +205,10 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
+                if i[1][-1] == "]":
+                    if dims == 0:
+                        dims = i[1].count("[")
+                    i[1] = i[1][: i[1].find("[")]
                 symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[4])
@@ -377,8 +387,8 @@ def initial_Traverse(tree):
             methodSignature = methodName + "("
             methodParamTypes = []
             for i in methodParams:
-                methodSignature += i[0] + ","
-                methodParamTypes.append(i[0])
+                methodSignature += i[0].split("[")[0] + ","
+                methodParamTypes.append(i[0].split("[")[0])
             methodSignature += ")"
             symbol_table.add_symbol(
                 MethodSymbol(
@@ -403,8 +413,8 @@ def initial_Traverse(tree):
             constructorSignature = constructorName + "("
             constructorParamTypes = []
             for i in constructorParams:
-                constructorSignature += i[0] + ","
-                constructorParamTypes.append(i[0])
+                constructorSignature += i[0].split("[")[0] + ","
+                constructorParamTypes.append(i[0].split("[")[0])
             constructorSignature += ")"
             symbol_table.add_symbol(
                 MethodSymbol(
@@ -516,7 +526,7 @@ def method_check(expression):
     if len(expression) == 5:
         methodInvocationName = get_Name(expression[1])
 
-        if methodInvocationName == "System.out.println":
+        if methodInvocationName == "System.out.println" or methodInvocationName == "System.out.print":
             pass
         else:
             methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
@@ -545,33 +555,38 @@ def method_check(expression):
 
 
 def constructor_check(expression):
+    pass
 
-    methodInvocationName = get_expression_Type(expression[2])
-    methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
-    methodInvocationParams = []
-    newtree = expression[4]
-    if newtree[1] == "":
-        methodInvocationParams = []
-    else:
-        newtree = newtree[1]
-        while len(newtree) == 4:
-            methodInvocationParams.append(get_expression_Type(newtree[3]))
-            newtree = newtree[1]
-            methodInvocationParams.append(get_expression_Type(newtree[1]))
-            methodInvocationParams.reverse()
-        arr = methodcalledtype.params
-        if len(methodInvocationParams) != len(arr):
-            raise Exception("Error: Invocation parameters don't match the declaration")
-        else:
-            for i in range(len(methodInvocationParams)):
-                big_method(methodInvocationParams[i], arr[i])
+    # methodInvocationName = get_expression_Type(expression[2])
+    # methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
+    # methodInvocationParams = []
+    # newtree = expression[4]
+    # if newtree[1] == "":
+    #     methodInvocationParams = []
+    # else:
+    #     newtree = newtree[1]
+    #     while len(newtree) == 4:
+    #         methodInvocationParams.append(get_expression_Type(newtree[3]))
+    #         newtree = newtree[1]
+    #         methodInvocationParams.append(get_expression_Type(newtree[1]))
+    #         methodInvocationParams.reverse()
+    #     arr = methodcalledtype.params
+    #     if len(methodInvocationParams) != len(arr):
+    #         raise Exception("Error: Invocation parameters don't match the declaration")
+    #     else:
+    #         for i in range(len(methodInvocationParams)):
+    #             big_method(methodInvocationParams[i], arr[i])
 
 
 def get_expression_Type(expression):
+    print("YYYYYYYYYYYY", expression[0])
     match expression[0]:
         case "LeftHandSide":
             return get_expression_Type(expression[1])
         case "FieldAccess":
+            # print("AAAAAAAAAAAAAAAAAA",symbol_table.get_symbol(expression[3]))
+            return (symbol_table.get_symbol(expression[3]).data_type)
+        case "NameDotIdentifierId":
             return (symbol_table.get_symbol(expression[3]).data_type)
 
         case "ArrayAccess":
