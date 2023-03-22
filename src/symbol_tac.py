@@ -567,7 +567,6 @@ def get_expression_Type(expression):
 
         case "ClassInstanceCreationExpression":
             return get_expression_Type(expression[2])
-
         case "Name":
             return get_expression_Type(expression[1])
         case "IdentifierId":
