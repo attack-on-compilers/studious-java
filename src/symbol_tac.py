@@ -3,6 +3,8 @@ from pprint import pprint as pprint
 from tac import TAC
 from lexer import *
 from utils import *
+import csv
+import os
 
 static_init_count = 0
 previous_block_count = 0
@@ -21,6 +23,31 @@ def generate_symbol_table(tree):
     traverse_tree(tree)
     symbol_table.tprint()
     tac.tprint()
+
+    store_output_buffer = io.StringIO()
+    sys.stdout = store_output_buffer
+
+    # store the output
+    symbol_table.tprint()
+    csv_output = store_output_buffer.getvalue()
+    # Reset standard output to its original value
+    sys.stdout = sys.__stdout__
+
+    # open the file in write mode and write the data
+    with open('output_sym.csv', mode='a', newline='') as csv_file:
+
+        file_size = os.path.getsize('output_sym.csv')
+    
+    # if the file is not empty, truncate it
+        if file_size > 0:
+            csv_file.truncate(0)
+    
+    # create a CSV writer object
+        writer = csv.writer(csv_file,delimiter=' ')
+    
+    # write the instance to the CSV file
+        writer.writerow(csv_output)
+
     return
 
 
