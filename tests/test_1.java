@@ -15,7 +15,7 @@ public class test1{
     public static void main(String[] args) {
         int kdsfk = 5, sdsfd = 348, sgsgdv[];
         int b[][][][][][] = {{1,2,3},{4,5,6,{7,8,9}}};
-        int dsb[] = new int[5];
+        int dsb[][][] = new int[5][][];
         b[0] = 1;
         int[][][][][][][][][][][] d;
         System.out.println("Hello World!");

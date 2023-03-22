@@ -720,8 +720,8 @@ def p_ArgumentList(p):
 
 
 def p_ArrayCreationExpression(p):
-    """ArrayCreationExpression : NEW PrimitiveType BetaAlphaDimExpr BetaAlphaDim
-    | NEW ClassOrInterfaceType BetaAlphaDimExpr BetaAlphaDim"""
+    """ArrayCreationExpression : NEW PrimitiveType AlphaDimExpr BetaAlphaDim
+    | NEW ClassOrInterfaceType AlphaDimExpr BetaAlphaDim"""
     p[0] = ("ArrayCreationExpression",) + tuple(p[-len(p) + 1 :])
 
 
