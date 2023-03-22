@@ -20,6 +20,7 @@ tac = TAC()
 
 offset = [0]
 
+
 def generate_symbol_table(tree):
     # pprint(tree)
 
@@ -37,18 +38,17 @@ def generate_symbol_table(tree):
     sys.stdout = sys.__stdout__
 
     # open the file in write mode and write the data
-    with open('output_sym.csv', mode='a', newline='') as csv_file:
+    with open("output_sym.csv", mode="a", newline="") as csv_file:
+        file_size = os.path.getsize("output_sym.csv")
 
-        file_size = os.path.getsize('output_sym.csv')
-    
-    # if the file is not empty, truncate it
+        # if the file is not empty, truncate it
         if file_size > 0:
             csv_file.truncate(0)
-    
-    # create a CSV writer object
-        writer = csv.writer(csv_file,delimiter=' ')
-    
-    # write the instance to the CSV file
+
+        # create a CSV writer object
+        writer = csv.writer(csv_file, delimiter=" ")
+
+        # write the instance to the CSV file
         writer.writerow(csv_output)
 
     return
@@ -160,7 +160,7 @@ def traverse_tree(tree):
             method_sym_name = symbol_table.get_symbol_name(methodName)
             tac.add_label(method_sym_name)
             symbol_table.enter_scope(methodName)
-            offset = offset +[0]
+            offset = offset + [0]
             for i in methodParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -184,7 +184,7 @@ def traverse_tree(tree):
             static_init_name = "<static_init_" + str(static_init_count) + ">"
             symbol_table.add_symbol(MethodSymbol(static_init_name, static_init_name, [], "void", symbol_table.current, [], []))
             symbol_table.enter_scope(static_init_name)
-            offset = offset +[0]
+            offset = offset + [0]
             traverse_tree(tree[2][2])
             symbol_table.exit_scope()
             offset.pop()
@@ -196,8 +196,9 @@ def traverse_tree(tree):
             for i in constructorParams:
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
+            tac.add_label(symbol_table.get_symbol_name(constructorName))
             symbol_table.enter_scope(constructorName)
-            offset = offset +[0]
+            offset = offset + [0]
             for i in constructorParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -211,6 +212,7 @@ def traverse_tree(tree):
                     i[1] = i[1][: i[1].find("[")]
                 symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
+                tac.add_param(symbol_table.get_symbol_name(i[1]))
             traverse_tree(tree[4])
             symbol_table.exit_scope()
             offset.pop()
@@ -218,7 +220,7 @@ def traverse_tree(tree):
         case "InterfaceDeclaration":
             interfaceName = tree[3]
             symbol_table.enter_scope(interfaceName)
-            offset = offset +[0]
+            offset = offset + [0]
             traverse_tree(tree[5])
             symbol_table.exit_scope()
             offset.pop()
@@ -233,7 +235,7 @@ def traverse_tree(tree):
                 methodSignature += i[0] + ","
             methodSignature += ")"
             symbol_table.enter_scope(methodSignature)
-            offset = offset +[0]
+            offset = offset + [0]
             for i in methodParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -255,7 +257,7 @@ def traverse_tree(tree):
             typeSize = get_TypeSize(fieldType)
             fieldVariables = get_Variables(tree[2])
             variablesizes = get_NumberOfElements(tree[2])
-            count=0
+            count = 0
             # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
             for i in fieldVariables:
                 newi = i
@@ -263,17 +265,18 @@ def traverse_tree(tree):
                     if dims == 0:
                         dims = i.count("[")
                     newi = i[: i.find("[")]
-                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count], offset[-1], [], dims))
-                offset[-1] = offset[-1] + typeSize*variablesizes[count]
-                count+=1
+                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], [], dims))
+                offset[-1] = offset[-1] + typeSize * variablesizes[count]
+                count += 1
             post_type_check(tree)
+            generate_tac(tree[2])
 
         case "Block":
             block_count += 1
             previous_block_count = block_count
             symbol_table.add_symbol(BlockSymbol("block" + str(block_count), symbol_table.current))
             symbol_table.enter_scope("block" + str(block_count))
-            offset = offset +[0]
+            offset = offset + [0]
             traverse_tree(tree[2])
             symbol_table.exit_scope()
             offset.pop()
@@ -283,7 +286,7 @@ def traverse_tree(tree):
             previous_block_count = block_count
             symbol_table.add_symbol(BlockSymbol("block" + str(block_count), symbol_table.current))
             symbol_table.enter_scope("block" + str(block_count))
-            offset = offset +[0]
+            offset = offset + [0]
             traverse_tree(tree[3])
             traverse_tree(tree[5])
             traverse_tree(tree[7])
@@ -299,7 +302,7 @@ def traverse_tree(tree):
             previous_block_count = block_count
             symbol_table.add_symbol(BlockSymbol("block" + str(block_count), symbol_table.current))
             symbol_table.enter_scope("block" + str(block_count))
-            offset = offset +[0]
+            offset = offset + [0]
             traverse_tree(tree[3])
             traverse_tree(tree[5])
             traverse_tree(tree[7])
@@ -315,7 +318,7 @@ def traverse_tree(tree):
             previous_block_count = block_count
             symbol_table.add_symbol(BlockSymbol("switch_block" + str(block_count), symbol_table.current))
             symbol_table.enter_scope("switch_block" + str(block_count))
-            offset = offset +[0]
+            offset = offset + [0]
             traverse_tree(tree[2])
             traverse_tree(tree[3])
             symbol_table.exit_scope()
@@ -526,7 +529,7 @@ def method_check(expression):
     if len(expression) == 5:
         methodInvocationName = get_Name(expression[1])
 
-        if methodInvocationName == "System.out.println" or methodInvocationName == "System.out.print":
+        if methodInvocationName == "System.out.println" or methodInvocationName == "println" or methodInvocationName == "System.out.print" or methodInvocationName == "print":
             pass
         else:
             methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
@@ -715,8 +718,6 @@ def get_expression_Type(expression):
                     return symbol_table.get_symbol_name(methodInvocationName).return_type
             elif len(expression) == 7:
                 pass
-        case "ArrayAccess":
-            pass
         case "Type":
             return get_Type(expression[1])
         case "BetaAlphaBlockStatement":
@@ -776,20 +777,21 @@ def TOIMPLEMENT():
     raise Exception("TO IMPLEMENT")
 
 
-def generate_tac(tree):
+def generate_tac(tree, begin="", end=""):
     match tree[0]:
-        case "AlphaVariableDeclarator":
+        case "VariableDeclarator":
             if len(tree) == 4:
                 right = generate_tac(tree[3])
                 left = symbol_table.get_symbol_name(get_Name(tree[1]))
                 tac.add3("=", right, left)
                 return
         case "VariableInitializer":
+            pprint(tree[1])
             return generate_tac(tree[1])
         case "Expression":
             return generate_tac(tree[1])
         case "ArrayInitializer":
-            TOIMPLEMENT()
+            pass
         case "AssignmentExpression":
             return generate_tac(tree[1])
         case "Assignment":
@@ -905,12 +907,14 @@ def generate_tac(tree):
         case "PreIncrementExpression":
             out = tac.new_temp()
             right = generate_tac(tree[2])
-            tac.add("+", right, "1", out)
+            tac.add("+", right, "1", right)
+            tac.add3("=", right, out)
             return out
         case "PreDecrementExpression":
             out = tac.new_temp()
             right = generate_tac(tree[2])
-            tac.add("-", right, "1", out)
+            tac.add("-", right, "1", right)
+            tac.add3("=", right, out)
             return out
         case "UnaryExpressionNotPlusMinus":
             if len(tree) == 2:
@@ -922,6 +926,57 @@ def generate_tac(tree):
                 return out
         case "PostfixExpression":
             return generate_tac(tree[1])
+        case "Primary":
+            return generate_tac(tree[1])
+        case "PrimaryNoNewArray":
+            if len(tree) == 4:
+                return generate_tac(tree[2])
+            return generate_tac(tree[1])
+        case "Literal":
+            return tree[1][1]
+        case "ClassInstanceCreationExpression":
+            args = get_Argument_list(tree[4])
+            args.reverse()
+            for arg in args:
+                tac.add_param(arg)
+            out = tac.new_temp()
+            classname = get_Name(tree[2])
+            tac.add_call(f"{classname}_{classname}", out)
+        case "FieldAccess":
+            try:
+                var = get_Name(tree[1][1])
+                var += "." + tree[3]
+                return var
+            except:
+                pass
+        case "ArrayAccess":
+            var = generate_tac(tree[1])
+            index = generate_tac(tree[3])
+            out = tac.new_temp()
+            tac.add3("[]", var, index, out)
+            return out
+        case "MethodInvocation":
+            if len(tree) == 5:
+                funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
+                args = get_Argument_list(tree[3])
+                args.reverse()
+                for arg in args:
+                    tac.add_param(arg)
+                out = tac.new_temp()
+                tac.add_call(funcname, out)
+                return out
+            if len(tree) == 7:
+                funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
+                funcname += "." + get_Name(tree[3])
+                args = get_Argument_list(tree[5])
+                args.reverse()
+                for arg in args:
+                    tac.add_param(arg)
+                out = tac.new_temp()
+                tac.add_call(funcname, out)
+                return out
+        case "ArrayCreationExpression":
+            pass
         case "CastExpression":
             if tree[2][0] != "PrimitiveType":
                 raise Exception("CastExpression only supported with PrimitiveType, recieved {}".format(tree[2][0]))
@@ -929,18 +984,135 @@ def generate_tac(tree):
             out = tac.new_temp()
             right = generate_tac(tree[5])
             tac.add3("cast_to_" + ctype, right, out)
-        case "Primary":
-            raise Exception("Primary not implement")
         case "Name":
             return symbol_table.get_symbol_name(get_Name(tree[1]))
         case "PostIncrementExpression":
             out = tac.new_temp()
             right = generate_tac(tree[1])
-            tac.add("+", right, "1", out)
+            tac.add3("=", right, out)
+            tac.add("+", right, "1", right)
             return out
         case "PostDecrementExpression":
             out = tac.new_temp()
             right = generate_tac(tree[1])
-            tac.add("-", right, "1", out)
+            tac.add3("=", right, out)
+            tac.add("-", right, "1", right)
             return out
-        
+        case "Statement":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+        case "ExpressionStatement":
+            return generate_tac(tree[1][1])
+        case "SwitchStatement":
+            raise Exception("SwitchStatement not supported")
+        case "StatementWithoutTrailingSubstatement":
+            return generate_tac(tree[1])
+        case "ConstantExpression":
+            return generate_tac(tree[1])
+        case "DoStatement":
+            begin_label = tac.gen_label()
+            end_label = tac.gen_label()
+            tac.add_label(begin_label)
+            generate_tac(tree[2], begin=begin_label, end=end_label)
+            cond = generate_tac(tree[5])
+            tac.cond_jump(cond, begin_label)
+            tac.add_label(end_label)
+        case "IfThenElseStatementNoShortIf":
+            cond = generate_tac(tree[3])
+            then_label = tac.gen_label()
+            else_label = tac.gen_label()
+            end_label = tac.gen_label()
+            tac.cond_jump(cond, then_label)
+            tac.jump(else_label)
+            tac.add_label(then_label)
+            generate_tac(tree[5], begin=then_label, end=end_label)
+            tac.jump(end_label)
+            tac.add_label(else_label)
+            generate_tac(tree[7], begin=else_label, end=end_label)
+            tac.jump(end_label)
+            tac.add_label(end_label)
+        case "WhileStatementNoShortIf":
+            begin_label = tac.gen_label()
+            end_label = tac.gen_label()
+            tac.add_label(begin_label)
+            cond = generate_tac(tree[3])
+            out = tac.new_temp()
+            tac.add3("!", cond, out)
+            tac.cond_jump(out, end_label)
+            generate_tac(tree[5], begin=begin_label, end=end_label)
+            tac.jump(begin_label)
+            tac.add_label(end_label)
+        case "ForStatementNoShortIf":
+            generate_tac(tree[3])
+            begin_label = tac.gen_label()
+            end_label = tac.gen_label()
+            tac.add_label(begin_label)
+            cond = generate_tac(tree[5])
+            out = tac.new_temp()
+            tac.add3("!", cond, out)
+            tac.cond_jump(out, end_label)
+            generate_tac(tree[7], begin=begin_label, end=end_label)
+            generate_tac(tree[9])
+            tac.jump(begin_label)
+            tac.add_label(end_label)
+        case "IfThenStatement":
+            cond = generate_tac(tree[3])
+            end_label = tac.gen_label()
+            notcond = tac.new_temp()
+            tac.add3("!", cond, notcond)
+            tac.cond_jump(notcond, end_label)
+            generate_tac(tree[5])
+            tac.add_label(end_label)
+        case "IfThenElseStatement":
+            cond = generate_tac(tree[3])
+            then_label = tac.gen_label()
+            else_label = tac.gen_label()
+            end_label = tac.gen_label()
+            tac.cond_jump(cond, then_label)
+            tac.jump(else_label)
+            tac.add_label(then_label)
+            generate_tac(tree[5], begin=then_label, end=end_label)
+            tac.jump(end_label)
+            tac.add_label(else_label)
+            generate_tac(tree[7], begin=else_label, end=end_label)
+            tac.jump(end_label)
+            tac.add_label(end_label)
+        case "WhileStatement":
+            begin_label = tac.gen_label()
+            end_label = tac.gen_label()
+            tac.add_label(begin_label)
+            cond = generate_tac(tree[3])
+            notcond = tac.new_temp()
+            tac.add3("!", cond, notcond)
+            tac.cond_jump(notcond, end_label)
+            generate_tac(tree[5], begin=begin_label, end=end_label)
+            tac.jump(begin_label)
+            tac.add_label(end_label)
+        case "StatementNoShortIf":
+            return generate_tac(tree[1])
+        case "BreakStatement":
+            tac.jump(end)
+        case "ContinueStatement":
+            tac.jump(begin)
+        case "ReturnStatement":
+            if len(tree) == 3:
+                out = generate_tac(tree[2])
+                tac.add_return(out)
+        case _:
+            if type(tree) == tuple:
+                for i in range(1, len(tree)):
+                    generate_tac(tree[i])
+
+
+def get_Argument_list(tree):
+    match tree[0]:
+        case "BetaArgumentList":
+            return get_Argument_list(tree[1])
+        case "empty":
+            return []
+        case "ArgumentList":
+            if len(tree) == 2:
+                out = generate_tac(tree[1])
+                return [out]
+            else:
+                return get_Argument_list(tree[1]) + [generate_tac(tree[3])]

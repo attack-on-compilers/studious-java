@@ -10,7 +10,7 @@ Grammar
 <!-- Rule 7     AlphaTypeDeclaration -> TypeDeclaration -->
 <!-- Rule 8     AlphaTypeDeclaration -> AlphaTypeDeclaration TypeDeclaration -->
 
-Rule 22    TypeDeclaration -> ClassDeclaration
+<!-- Rule 22    TypeDeclaration -> ClassDeclaration -->
 <!-- Rule 23    TypeDeclaration -> InterfaceDeclaration ##-->
 <!-- Rule 24    TypeDeclaration -> SEMICOLON -->
 
@@ -37,37 +37,37 @@ Rule 22    TypeDeclaration -> ClassDeclaration
 <!-- Rule 51    AlphaClassBodyDeclaration -> ClassBodyDeclaration -->
 <!-- Rule 52    AlphaClassBodyDeclaration -> AlphaClassBodyDeclaration ClassBodyDeclaration -->
 
-Rule 53    ClassBodyDeclaration -> ClassMemberDeclaration
-Rule 54    ClassBodyDeclaration -> StaticInitializer
-Rule 55    ClassBodyDeclaration -> ConstructorDeclaration
+<!-- Rule 53    ClassBodyDeclaration -> ClassMemberDeclaration -->
+<!-- Rule 54    ClassBodyDeclaration -> StaticInitializer ##-->
+<!-- Rule 55    ClassBodyDeclaration -> ConstructorDeclaration -->
 
 <!-- Rule 56    ClassMemberDeclaration -> FieldDeclaration -->
-Rule 57    ClassMemberDeclaration -> MethodDeclaration
+<!-- Rule 57    ClassMemberDeclaration -> MethodDeclaration -->
 
-Rule 58    Type -> PrimitiveType
-Rule 59    Type -> ReferenceType
+<!-- Rule 58    Type -> PrimitiveType -->
+<!-- Rule 59    Type -> ReferenceType -->
 
-Rule 60    PrimitiveType -> NumericType
-Rule 61    PrimitiveType -> BOOLEAN
-Rule 62    NumericType -> IntegralType
-Rule 63    NumericType -> FloatingPointType
-Rule 64    IntegralType -> BYTE
-Rule 65    IntegralType -> SHORT
-Rule 66    IntegralType -> INT
-Rule 67    IntegralType -> LONG
-Rule 68    IntegralType -> CHAR
-Rule 69    FloatingPointType -> FLOAT
-Rule 70    FloatingPointType -> DOUBLE
+<!-- Rule 60    PrimitiveType -> NumericType -->
+<!-- Rule 61    PrimitiveType -> BOOLEAN -->
+<!-- Rule 62    NumericType -> IntegralType -->
+<!-- Rule 63    NumericType -> FloatingPointType -->
+<!-- Rule 64    IntegralType -> BYTE -->
+<!-- Rule 65    IntegralType -> SHORT -->
+<!-- Rule 66    IntegralType -> INT -->
+<!-- Rule 67    IntegralType -> LONG -->
+<!-- Rule 68    IntegralType -> CHAR -->
+<!-- Rule 69    FloatingPointType -> FLOAT -->
+<!-- Rule 70    FloatingPointType -> DOUBLE -->
 
-Rule 71    ReferenceType -> ClassOrInterfaceType
-Rule 72    ReferenceType -> ArrayType
-Rule 73    ClassOrInterfaceType -> Name
+<!-- Rule 71    ReferenceType -> ClassOrInterfaceType -->
+<!-- Rule 72    ReferenceType -> ArrayType -->
+<!-- Rule 73    ClassOrInterfaceType -> Name -->
 
-Rule 74    ClassType -> ClassOrInterfaceType
+<!-- Rule 74    ClassType -> ClassOrInterfaceType -->
 
-Rule 89    ArrayType -> PrimitiveType LEFT_BRACKET RIGHT_BRACKET
-Rule 90    ArrayType -> Name LEFT_BRACKET RIGHT_BRACKET
-Rule 91    ArrayType -> ArrayType LEFT_BRACKET RIGHT_BRACKET
+<!-- Rule 89    ArrayType -> PrimitiveType LEFT_BRACKET RIGHT_BRACKET -->
+<!-- Rule 90    ArrayType -> Name LEFT_BRACKET RIGHT_BRACKET -->
+<!-- Rule 91    ArrayType -> ArrayType LEFT_BRACKET RIGHT_BRACKET -->
 
 <!-- Rule 100   FieldDeclaration -> BetaAlphaModifier Type AlphaVariableDeclarator SEMICOLON -->
 
@@ -83,93 +83,93 @@ Rule 91    ArrayType -> ArrayType LEFT_BRACKET RIGHT_BRACKET
 <!-- Rule 98    VariableInitializer -> Expression -->
 <!-- Rule 99    VariableInitializer -> ArrayInitializer -->
 
-Rule 101   MethodDeclaration -> MethodHeader MethodBody
+<!-- Rule 101   MethodDeclaration -> MethodHeader MethodBody -->
 
-Rule 102   MethodHeader -> BetaAlphaModifier Type MethodDeclarator
-Rule 103   MethodHeader -> BetaAlphaModifier VOID MethodDeclarator
+<!-- Rule 102   MethodHeader -> BetaAlphaModifier Type MethodDeclarator -->
+<!-- Rule 103   MethodHeader -> BetaAlphaModifier VOID MethodDeclarator -->
 
-Rule 106   MethodDeclarator -> IDENTIFIER LEFT_PAREN BetaFormalParameterList RIGHT_PAREN
-Rule 107   MethodDeclarator -> MethodDeclarator LEFT_BRACKET RIGHT_BRACKET
+<!-- Rule 106   MethodDeclarator -> IDENTIFIER LEFT_PAREN BetaFormalParameterList RIGHT_PAREN -->
+<!-- Rule 107   MethodDeclarator -> MethodDeclarator LEFT_BRACKET RIGHT_BRACKET ##-->
 
-Rule 108   BetaFormalParameterList -> FormalParameterList
-Rule 109   BetaFormalParameterList -> empty
-Rule 110   FormalParameterList -> FormalParameter
-Rule 111   FormalParameterList -> FormalParameterList COMMA FormalParameter
-Rule 112   FormalParameter -> Type VariableDeclaratorId
+<!-- Rule 108   BetaFormalParameterList -> FormalParameterList -->
+<!-- Rule 109   BetaFormalParameterList -> empty -->
+<!-- Rule 110   FormalParameterList -> FormalParameter -->
+<!-- Rule 111   FormalParameterList -> FormalParameterList COMMA FormalParameter -->
+<!-- Rule 112   FormalParameter -> Type VariableDeclaratorId -->
 
-Rule 116   MethodBody -> Block
-Rule 117   MethodBody -> SEMICOLON
+<!-- Rule 116   MethodBody -> Block -->
+<!-- Rule 117   MethodBody -> SEMICOLON -->
 
-Rule 118   StaticInitializer -> STATIC Block
+<!-- Rule 118   StaticInitializer -> STATIC Block ##-->
 
-Rule 119   ConstructorDeclaration -> BetaAlphaModifier ConstructorDeclarator ConstructorBody
-Rule 120   ConstructorDeclarator -> IdentifierId LEFT_PAREN BetaFormalParameterList RIGHT_PAREN
-Rule 121   ConstructorBody -> LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE
+<!-- Rule 119   ConstructorDeclaration -> BetaAlphaModifier ConstructorDeclarator ConstructorBody -->
+<!-- Rule 120   ConstructorDeclarator -> IdentifierId LEFT_PAREN BetaFormalParameterList RIGHT_PAREN -->
+<!-- Rule 121   ConstructorBody -> LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE -->
 
-Rule 134   Block -> LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE
-Rule 122   BetaAlphaBlockStatement -> AlphaBlockStatement
-Rule 123   BetaAlphaBlockStatement -> empty
-Rule 135   AlphaBlockStatement -> BlockStatement
-Rule 136   AlphaBlockStatement -> AlphaBlockStatement BlockStatement
+<!-- Rule 134   Block -> LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE -->
+<!-- Rule 122   BetaAlphaBlockStatement -> AlphaBlockStatement -->
+<!-- Rule 123   BetaAlphaBlockStatement -> empty -->
+<!-- Rule 135   AlphaBlockStatement -> BlockStatement -->
+<!-- Rule 136   AlphaBlockStatement -> AlphaBlockStatement BlockStatement -->
 
-Rule 137   BlockStatement -> LocalVariableDeclarationStatement
-Rule 138   BlockStatement -> Statement
-Rule 139   LocalVariableDeclarationStatement -> LocalVariableDeclaration SEMICOLON
-Rule 140   LocalVariableDeclaration -> Type AlphaVariableDeclarator
+<!-- Rule 137   BlockStatement -> LocalVariableDeclarationStatement -->
+<!-- Rule 138   BlockStatement -> Statement -->
+<!-- Rule 139   LocalVariableDeclarationStatement -> LocalVariableDeclaration SEMICOLON -->
+<!-- Rule 140   LocalVariableDeclaration -> Type AlphaVariableDeclarator -->
 
-Rule 124   BetaArgumentList -> ArgumentList
-Rule 125   BetaArgumentList -> empty
+<!-- Rule 124   BetaArgumentList -> ArgumentList -->
+<!-- Rule 125   BetaArgumentList -> empty -->
 
 Rule 127   ArrayInitializer -> LEFT_BRACE BetaAlphaVariableInitializer BetaComma RIGHT_BRACE
 
-Rule 128   BetaComma -> COMMA
-Rule 129   BetaComma -> empty
+<!-- Rule 128   BetaComma -> COMMA -->
+<!-- Rule 129   BetaComma -> empty -->
 
 Rule 130   BetaAlphaVariableInitializer -> AlphaVariableInitializer
 Rule 131   BetaAlphaVariableInitializer -> empty
 Rule 132   AlphaVariableInitializer -> VariableInitializer
 Rule 133   AlphaVariableInitializer -> AlphaVariableInitializer COMMA VariableInitializer
 
-Rule 141   Statement -> StatementWithoutTrailingSubstatement
-Rule 142   Statement -> LabeledStatement
-Rule 143   Statement -> IfThenStatement
-Rule 144   Statement -> IfThenElseStatement
-Rule 145   Statement -> WhileStatement
-Rule 146   Statement -> 
+<!-- Rule 141   Statement -> StatementWithoutTrailingSubstatement -->
+<!-- Rule 142   Statement -> LabeledStatement -->
+<!-- Rule 143   Statement -> IfThenStatement -->
+<!-- Rule 144   Statement -> IfThenElseStatement -->
+<!-- Rule 145   Statement -> WhileStatement -->
+<!-- Rule 146   Statement ->  -->
 
-Rule 152   StatementWithoutTrailingSubstatement -> Block
-Rule 153   StatementWithoutTrailingSubstatement -> EmptyStatement
-Rule 154   StatementWithoutTrailingSubstatement -> ExpressionStatement
-Rule 155   StatementWithoutTrailingSubstatement -> SwitchStatement
-Rule 156   StatementWithoutTrailingSubstatement -> DoStatement
-Rule 157   StatementWithoutTrailingSubstatement -> BreakStatement
-Rule 158   StatementWithoutTrailingSubstatement -> ContinueStatement
-Rule 159   StatementWithoutTrailingSubstatement -> ReturnStatement
+<!-- Rule 152   StatementWithoutTrailingSubstatement -> Block -->
+<!-- Rule 153   StatementWithoutTrailingSubstatement -> EmptyStatement -->
+<!-- Rule 154   StatementWithoutTrailingSubstatement -> ExpressionStatement -->
+<!-- Rule 155   StatementWithoutTrailingSubstatement -> SwitchStatement ##-->
+<!-- Rule 156   StatementWithoutTrailingSubstatement -> DoStatement -->
+<!-- Rule 157   StatementWithoutTrailingSubstatement -> BreakStatement -->
+<!-- Rule 158   StatementWithoutTrailingSubstatement -> ContinueStatement -->
+<!-- Rule 159   StatementWithoutTrailingSubstatement -> ReturnStatement -->
 
-Rule 163   EmptyStatement -> SEMICOLON
-Rule 147   StatementNoShortIf -> StatementWithoutTrailingSubstatement
-Rule 148   StatementNoShortIf -> LabeledStatementNoShortIf
-Rule 149   StatementNoShortIf -> IfThenElseStatementNoShortIf
-Rule 150   StatementNoShortIf -> WhileStatementNoShortIf
-Rule 151   StatementNoShortIf -> ForStatementNoShortIf
-Rule 164   LabeledStatement -> IDENTIFIER COLON Statement
-Rule 165   LabeledStatementNoShortIf -> IDENTIFIER COLON StatementNoShortIf
+<!-- Rule 163   EmptyStatement -> SEMICOLON -->
+<!-- Rule 147   StatementNoShortIf -> StatementWithoutTrailingSubstatement -->
+<!-- Rule 148   StatementNoShortIf -> LabeledStatementNoShortIf ##-->
+<!-- Rule 149   StatementNoShortIf -> IfThenElseStatementNoShortIf -->
+<!-- Rule 150   StatementNoShortIf -> WhileStatementNoShortIf -->
+<!-- Rule 151   StatementNoShortIf -> ForStatementNoShortIf -->
+<!-- Rule 164   LabeledStatement -> IDENTIFIER COLON Statement ##-->
+<!-- Rule 165   LabeledStatementNoShortIf -> IDENTIFIER COLON StatementNoShortIf ##-->
 
-Rule 166   ExpressionStatement -> StatementExpression SEMICOLON
-Rule 167   StatementExpression -> Assignment
-Rule 168   StatementExpression -> PreIncrementExpression
-Rule 169   StatementExpression -> PreDecrementExpression
-Rule 170   StatementExpression -> PostIncrementExpression
-Rule 171   StatementExpression -> PostDecrementExpression
-Rule 172   StatementExpression -> MethodInvocation
-Rule 173   StatementExpression -> ClassInstanceCreationExpression
+<!-- Rule 166   ExpressionStatement -> StatementExpression SEMICOLON -->
+<!-- Rule 167   StatementExpression -> Assignment -->
+<!-- Rule 168   StatementExpression -> PreIncrementExpression -->
+<!-- Rule 169   StatementExpression -> PreDecrementExpression -->
+<!-- Rule 170   StatementExpression -> PostIncrementExpression -->
+<!-- Rule 171   StatementExpression -> PostDecrementExpression -->
+<!-- Rule 172   StatementExpression -> MethodInvocation -->
+<!-- Rule 173   StatementExpression -> ClassInstanceCreationExpression -->
 
-Rule 174   IfThenStatement -> IF LEFT_PAREN Expression RIGHT_PAREN Statement
-Rule 175   IfThenElseStatement -> IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE Statement
+<!-- Rule 174   IfThenStatement -> IF LEFT_PAREN Expression RIGHT_PAREN Statement -->
+<!-- Rule 175   IfThenElseStatement -> IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE Statement -->
 
-Rule 176   IfThenElseStatementNoShortIf -> IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE StatementNoShortIf
+<!-- Rule 176   IfThenElseStatementNoShortIf -> IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE StatementNoShortIf -->
 
-Rule 177   SwitchStatement -> SWITCH LEFT_PAREN Expression RIGHT_PAREN SwitchBlock
+<!-- Rule 177   SwitchStatement -> SWITCH LEFT_PAREN Expression RIGHT_PAREN SwitchBlock
 Rule 178   SwitchBlock -> LEFT_BRACE BetaAlphaSwitchBlockStatementGroup BetaAlphaSwitchLabel RIGHT_BRACE
 Rule 179   BetaAlphaSwitchBlockStatementGroup -> AlphaSwitchBlockStatementGroup
 Rule 180   BetaAlphaSwitchBlockStatementGroup -> empty
@@ -181,72 +181,72 @@ Rule 185   SwitchBlockStatementGroup -> AlphaSwitchLabel AlphaBlockStatement
 Rule 186   AlphaSwitchLabel -> SwitchLabel
 Rule 187   AlphaSwitchLabel -> AlphaSwitchLabel SwitchLabel
 Rule 188   SwitchLabel -> CASE ConstantExpression COLON
-Rule 189   SwitchLabel -> DEFAULT COLON
+Rule 189   SwitchLabel -> DEFAULT COLON -->
 
-Rule 203   BreakStatement -> BREAK BetaIdentifier SEMICOLON
-Rule 206   ContinueStatement -> CONTINUE BetaIdentifier SEMICOLON
-Rule 204   BetaIdentifier -> IDENTIFIER
-Rule 205   BetaIdentifier -> empty
+<!-- Rule 203   BreakStatement -> BREAK BetaIdentifier SEMICOLON -->
+<!-- Rule 206   ContinueStatement -> CONTINUE BetaIdentifier SEMICOLON -->
+<!-- Rule 204   BetaIdentifier -> IDENTIFIER -->
+<!-- Rule 205   BetaIdentifier -> empty -->
 
-Rule 190   ForStatement -> FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN Statement
-Rule 191   BetaForInit -> ForInit
-Rule 192   BetaForInit -> empty
-Rule 198   ForInit -> StatementExpressionList
-Rule 199   ForInit -> LocalVariableDeclaration
-Rule 193   BetaExpression -> Expression
-Rule 194   BetaExpression -> empty
-Rule 195   BetaForUpdate -> ForUpdate
-Rule 196   BetaForUpdate -> empty
-Rule 200   ForUpdate -> StatementExpressionList
-Rule 201   StatementExpressionList -> StatementExpression
-Rule 202   StatementExpressionList -> StatementExpressionList COMMA StatementExpression
+<!-- Rule 190   ForStatement -> FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN Statement -->
+<!-- Rule 191   BetaForInit -> ForInit -->
+<!-- Rule 192   BetaForInit -> empty -->
+<!-- Rule 198   ForInit -> StatementExpressionList -->
+<!-- Rule 199   ForInit -> LocalVariableDeclaration -->
+<!-- Rule 193   BetaExpression -> Expression -->
+<!-- Rule 194   BetaExpression -> empty -->
+<!-- Rule 195   BetaForUpdate -> ForUpdate -->
+<!-- Rule 196   BetaForUpdate -> empty -->
+<!-- Rule 200   ForUpdate -> StatementExpressionList -->
+<!-- Rule 201   StatementExpressionList -> StatementExpression -->
+<!-- Rule 202   StatementExpressionList -> StatementExpressionList COMMA StatementExpression -->
 
-Rule 320   WhileStatement -> WHILE LEFT_PAREN Expression RIGHT_PAREN Statement
-Rule 321   WhileStatementNoShortIf -> WHILE LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf
-Rule 322   DoStatement -> DO Statement WHILE LEFT_PAREN Expression RIGHT_PAREN SEMICOLON
+<!-- Rule 320   WhileStatement -> WHILE LEFT_PAREN Expression RIGHT_PAREN Statement -->
+<!-- Rule 321   WhileStatementNoShortIf -> WHILE LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf -->
+<!-- Rule 322   DoStatement -> DO Statement WHILE LEFT_PAREN Expression RIGHT_PAREN SEMICOLON -->
 
-Rule 197   ForStatementNoShortIf -> FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN StatementNoShortIf
-Rule 207   ReturnStatement -> RETURN BetaExpression SEMICOLON
+<!-- Rule 197   ForStatementNoShortIf -> FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN StatementNoShortIf -->
+<!-- Rule 207   ReturnStatement -> RETURN BetaExpression SEMICOLON -->
 
-Rule 218   Primary -> PrimaryNoNewArray
-Rule 219   Primary -> ArrayCreationExpression
-Rule 220   PrimaryNoNewArray -> Literal
-Rule 221   PrimaryNoNewArray -> THIS
-Rule 222   PrimaryNoNewArray -> LEFT_PAREN Expression RIGHT_PAREN
-Rule 223   PrimaryNoNewArray -> ClassInstanceCreationExpression
-Rule 224   PrimaryNoNewArray -> FieldAccess
-Rule 225   PrimaryNoNewArray -> MethodInvocation
-Rule 226   PrimaryNoNewArray -> ArrayAccess
-Rule 230   ArrayCreationExpression -> NEW PrimitiveType BetaAlphaDimExpr BetaAlphaDim
-Rule 231   ArrayCreationExpression -> NEW ClassOrInterfaceType BetaAlphaDimExpr BetaAlphaDim
+<!-- Rule 218   Primary -> PrimaryNoNewArray -->
+<!-- Rule 219   Primary -> ArrayCreationExpression -->
+<!-- Rule 220   PrimaryNoNewArray -> Literal -->
+<!-- Rule 221   PrimaryNoNewArray -> THIS ##-->
+<!-- Rule 222   PrimaryNoNewArray -> LEFT_PAREN Expression RIGHT_PAREN -->
+<!-- Rule 223   PrimaryNoNewArray -> ClassInstanceCreationExpression -->
+<!-- Rule 224   PrimaryNoNewArray -> FieldAccess -->
+<!-- Rule 225   PrimaryNoNewArray -> MethodInvocation -->
+<!-- Rule 226   PrimaryNoNewArray -> ArrayAccess -->
+<!-- Rule 230   ArrayCreationExpression -> NEW PrimitiveType BetaAlphaDimExpr BetaAlphaDim -->
+<!-- Rule 231   ArrayCreationExpression -> NEW ClassOrInterfaceType BetaAlphaDimExpr BetaAlphaDim -->
 
-Rule 227   ClassInstanceCreationExpression -> NEW ClassType LEFT_PAREN BetaArgumentList RIGHT_PAREN
+<!-- Rule 227   ClassInstanceCreationExpression -> NEW ClassType LEFT_PAREN BetaArgumentList RIGHT_PAREN -->
 
-Rule 234   BetaAlphaDimExpr -> AlphaDimExpr
-Rule 235   BetaAlphaDimExpr -> empty
-Rule 236   AlphaDimExpr -> DimExpr
-Rule 237   AlphaDimExpr -> AlphaDimExpr DimExpr
-Rule 238   DimExpr -> LEFT_BRACKET Expression RIGHT_BRACKET
+<!-- Rule 234   BetaAlphaDimExpr -> AlphaDimExpr -->
+<!-- Rule 235   BetaAlphaDimExpr -> empty -->
+<!-- Rule 236   AlphaDimExpr -> DimExpr -->
+<!-- Rule 237   AlphaDimExpr -> AlphaDimExpr DimExpr -->
+<!-- Rule 238   DimExpr -> LEFT_BRACKET Expression RIGHT_BRACKET -->
 
-Rule 232   BetaAlphaDim -> AlphaDim
-Rule 233   BetaAlphaDim -> empty
-Rule 239   AlphaDim -> LEFT_BRACKET RIGHT_BRACKET
-Rule 240   AlphaDim -> AlphaDim LEFT_BRACKET RIGHT_BRACKET
+<!-- Rule 232   BetaAlphaDim -> AlphaDim -->
+<!-- Rule 233   BetaAlphaDim -> empty -->
+<!-- Rule 239   AlphaDim -> LEFT_BRACKET RIGHT_BRACKET -->
+<!-- Rule 240   AlphaDim -> AlphaDim LEFT_BRACKET RIGHT_BRACKET -->
 
-Rule 228   ArgumentList -> Expression
-Rule 229   ArgumentList -> ArgumentList COMMA Expression
+<!-- Rule 228   ArgumentList -> Expression -->
+<!-- Rule 229   ArgumentList -> ArgumentList COMMA Expression -->
 
 Rule 241   FieldAccess -> Primary DOT IDENTIFIER
 Rule 242   FieldAccess -> SUPER DOT IDENTIFIER
 
-Rule 246   ArrayAccess -> Name LEFT_BRACKET Expression RIGHT_BRACKET
-Rule 247   ArrayAccess -> PrimaryNoNewArray LEFT_BRACKET Expression RIGHT_BRACKET
+<!-- Rule 246   ArrayAccess -> Name LEFT_BRACKET Expression RIGHT_BRACKET -->
+<!-- Rule 247   ArrayAccess -> PrimaryNoNewArray LEFT_BRACKET Expression RIGHT_BRACKET -->
 
-Rule 243   MethodInvocation -> Name LEFT_PAREN BetaArgumentList RIGHT_PAREN
-Rule 244   MethodInvocation -> Primary DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
-Rule 245   MethodInvocation -> SUPER DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+<!-- Rule 243   MethodInvocation -> Name LEFT_PAREN BetaArgumentList RIGHT_PAREN -->
+<!-- Rule 244   MethodInvocation -> Primary DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN -->
+<!-- Rule 245   MethodInvocation -> SUPER DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN ##-->
 
-Rule 248   PostfixExpression -> Primary !TODO: Get_name
+<!-- Rule 248   PostfixExpression -> Primary !TODO: Get_name -->
 <!-- Rule 249   PostfixExpression -> Name  -->
 <!-- Rule 250   PostfixExpression -> PostIncrementExpression -->
 <!-- Rule 251   PostfixExpression -> PostDecrementExpression -->
@@ -316,7 +316,7 @@ Rule 248   PostfixExpression -> Primary !TODO: Get_name
 
 <!-- Rule 303   LeftHandSide -> Name -->
 Rule 304   LeftHandSide -> FieldAccess !TODO: Get_name
-Rule 305   LeftHandSide -> ArrayAccess !TODO: Get_name
+<!-- Rule 305   LeftHandSide -> ArrayAccess !TODO: Get_name -->
 
 <!-- Rule 306   AssignmentOperator -> ASSIGN -->
 <!-- Rule 307   AssignmentOperator -> STAR_ASSIGN -->
@@ -332,18 +332,18 @@ Rule 305   LeftHandSide -> ArrayAccess !TODO: Get_name
 <!-- Rule 317   AssignmentOperator -> BAR_ASSIGN -->
 
 <!-- Rule 318   Expression -> AssignmentExpression -->
-Rule 319   ConstantExpression -> Expression
+<!-- Rule 319   ConstantExpression -> Expression -->
 
-Rule 323   Literal -> INTEGER_LITERAL_OCTAL
-Rule 324   Literal -> INTEGER_LITERAL_HEXADEC
-Rule 325   Literal -> INTEGER_LITERAL_DEC
-Rule 326   Literal -> INTEGER_LITERAL_BINAR
-Rule 327   Literal -> FLOATING_LITERAL_REDUCED_POINT
-Rule 328   Literal -> BOOLEAN_LITERAL
-Rule 329   Literal -> CHARACTER_LITERAL
-Rule 330   Literal -> STRING_LITERAL
-Rule 331   Literal -> TEXT_BLOCK
-Rule 332   Literal -> NULL_LITERAL
+<!-- Rule 323   Literal -> INTEGER_LITERAL_OCTAL -->
+<!-- Rule 324   Literal -> INTEGER_LITERAL_HEXADEC -->
+<!-- Rule 325   Literal -> INTEGER_LITERAL_DEC -->
+<!-- Rule 326   Literal -> INTEGER_LITERAL_BINAR -->
+<!-- Rule 327   Literal -> FLOATING_LITERAL_REDUCED_POINT -->
+<!-- Rule 328   Literal -> BOOLEAN_LITERAL -->
+<!-- Rule 329   Literal -> CHARACTER_LITERAL -->
+<!-- Rule 330   Literal -> STRING_LITERAL -->
+<!-- Rule 331   Literal -> TEXT_BLOCK -->
+<!-- Rule 332   Literal -> NULL_LITERAL -->
 
 Terminals, with rules where they appear
 

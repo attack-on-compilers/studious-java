@@ -15,9 +15,29 @@ class TAC:
 
     def add(self, op, arg1, arg2, result):
         self.table.append([op, arg1, arg2, result])
-    
+
     def add3(self, op, arg1, result):
         self.table.append([op, arg1, result])
+
+    def add_call(self, func, result):
+        self.table.append(["ProcCall", func, result])
+
+    def add_param(self, param):
+        self.table.append(["PopFromStack", param])
+
+    def add_return(self, result):
+        self.table.append(["Return", result])
+
+    def cond_jump(self, cond, label):
+        self.table.append(["CondJump", cond, label])
+
+    def jump(self, label):
+        self.table.append(["Jump", label])
+
+    def gen_label(self):
+        label = "L" + str(len(self.labels))
+        self.labels.append(label)
+        return label
 
     def add_label(self, label=""):
         if not label:
@@ -25,9 +45,6 @@ class TAC:
         self.table.append([label + ":"])
         self.labels.append(label)
         return label
-
-    def add_param(self, param):
-        self.table.append(["PopFromStack", param])
 
     def tprint(self):
         for i in range(len(self.table)):

@@ -34,7 +34,9 @@ def get_Name(tree):
                 return tree[1]
             else:
                 return get_Name(tree[1])
-
+        case _:
+            for i in range(1, len(tree)):
+                get_Name(tree[i])
 
 def get_Type(tree):
     match tree[0]:
