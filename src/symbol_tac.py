@@ -579,7 +579,7 @@ def constructor_check(expression):
 
 
 def get_expression_Type(expression):
-    print("YYYYYYYYYYYY", expression[0])
+    # print("YYYYYYYYYYYY", expression[0])
     match expression[0]:
         case "LeftHandSide":
             return get_expression_Type(expression[1])
