@@ -1,473 +1,479 @@
 Grammar
 
-Rule 2     CompilationUnit -> BetaPackageDeclaration BetaAlphaImportDeclaration BetaAlphaTypeDeclaration
-Rule 3     BetaPackageDeclaration -> PackageDeclaration
-Rule 4     BetaPackageDeclaration -> empty
-Rule 5     AlphaImportDeclaration -> ImportDeclaration
-Rule 6     AlphaImportDeclaration -> AlphaImportDeclaration ImportDeclaration
+Rule 0     S' -> Start
+Rule 1     Start -> CompilationUnit
+Rule 2     CompilationUnit -> BetaAlphaTypeDeclaration
+
+Rule 20    BetaAlphaTypeDeclaration -> AlphaTypeDeclaration
+Rule 21    BetaAlphaTypeDeclaration -> empty
+
 Rule 7     AlphaTypeDeclaration -> TypeDeclaration
 Rule 8     AlphaTypeDeclaration -> AlphaTypeDeclaration TypeDeclaration
-Rule 9     PackageDeclaration -> PACKAGE Name SEMICOLON
-Rule 10    ImportDeclaration -> SingleTypeImportDeclaration
-Rule 11    ImportDeclaration -> TypeImportOnDemandDeclaration
-Rule 12    SingleTypeImportDeclaration -> IMPORT Name SEMICOLON
-Rule 13    TypeImportOnDemandDeclaration -> IMPORT Name DOT STAR SEMICOLON
+
+Rule 22    TypeDeclaration -> ClassDeclaration
+Rule 23    TypeDeclaration -> InterfaceDeclaration
+Rule 24    TypeDeclaration -> SEMICOLON
+
 Rule 14    Name -> IdentifierId
 Rule 15    Name -> NameDotIdentifierId
 Rule 16    IdentifierId -> IDENTIFIER
 Rule 17    NameDotIdentifierId -> Name DOT IDENTIFIER
-Rule 18    BetaAlphaImportDeclaration -> AlphaImportDeclaration
-Rule 19    BetaAlphaImportDeclaration -> empty
 
-
-Rule 20    BetaAlphaTypeDeclaration -> AlphaTypeDeclaration
-Rule 21    BetaAlphaTypeDeclaration -> empty
-Rule 22    TypeDeclaration -> ClassDeclaration
-Rule 23    TypeDeclaration -> InterfaceDeclaration
-Rule 24    TypeDeclaration -> SEMICOLON
+Rule 40    BetaAlphaModifier -> AlphaModifier
+Rule 41    BetaAlphaModifier -> empty
 Rule 25    AlphaModifier -> Modifier
 Rule 26    AlphaModifier -> AlphaModifier Modifier
 Rule 27    Modifier -> PUBLIC
-Rule 28    Modifier -> PROTECTED
 Rule 29    Modifier -> PRIVATE
 Rule 30    Modifier -> STATIC
-Rule 31    Modifier -> ABSTRACT
 Rule 32    Modifier -> FINAL
-Rule 33    Modifier -> NATIVE
-Rule 34    Modifier -> SYNCHRONIZED
-Rule 35    Modifier -> TRANSIENT
-Rule 36    Modifier -> VOLATILE
-Rule 37    Modifier -> STRICTFP
-Rule 38    ClassDeclaration -> BetaAlphaModifier CLASS IDENTIFIER BetaSuper BetaAlphaInterface ClassBody
-Rule 39    BetaAlphaInterface -> AlphaInterface
-Rule 40    BetaAlphaInterface -> empty
-Rule 41    BetaAlphaModifier -> AlphaModifier
-Rule 42    BetaAlphaModifier -> empty
-Rule 43    BetaSuper -> Super
-Rule 44    BetaSuper -> empty
-Rule 45    Super -> EXTENDS ClassType
-Rule 46    AlphaInterface -> IMPLEMENTS InterfaceTypeList
-Rule 47    InterfaceTypeList -> InterfaceType
-Rule 48    InterfaceTypeList -> InterfaceTypeList COMMA InterfaceType
-Rule 49    ClassBody -> LEFT_BRACE BetaAlphaClassBodyDeclaration RIGHT_BRACE
-Rule 50    BetaAlphaClassBodyDeclaration -> AlphaClassBodyDeclaration
-Rule 51    BetaAlphaClassBodyDeclaration -> empty
-Rule 52    AlphaClassBodyDeclaration -> ClassBodyDeclaration
-Rule 53    AlphaClassBodyDeclaration -> AlphaClassBodyDeclaration ClassBodyDeclaration
-Rule 54    ClassBodyDeclaration -> ClassMemberDeclaration
-Rule 55    ClassBodyDeclaration -> StaticInitializer
-Rule 56    ClassBodyDeclaration -> ConstructorDeclaration
-Rule 57    ClassMemberDeclaration -> FieldDeclaration
-Rule 58    ClassMemberDeclaration -> MethodDeclaration
-Rule 59    Type -> PrimitiveType
-Rule 60    Type -> ReferenceType
-Rule 61    PrimitiveType -> NumericType
-Rule 62    PrimitiveType -> BOOLEAN
-Rule 63    NumericType -> IntegralType
-Rule 64    NumericType -> FloatingPointType
-Rule 65    IntegralType -> BYTE
-Rule 66    IntegralType -> SHORT
-Rule 67    IntegralType -> INT
-Rule 68    IntegralType -> LONG
-Rule 69    IntegralType -> CHAR
-Rule 70    FloatingPointType -> FLOAT
-Rule 71    FloatingPointType -> DOUBLE
-Rule 72    ReferenceType -> ClassOrInterfaceType
-Rule 73    ReferenceType -> ArrayType
-Rule 74    ClassOrInterfaceType -> Name
-Rule 75    ClassType -> ClassOrInterfaceType
-Rule 76    InterfaceType -> ClassOrInterfaceType
-Rule 77    InterfaceDeclaration -> BetaAlphaModifier INTERFACE IDENTIFIER BetaExtendsAlphaInterface InterfaceBody
-Rule 78    BetaExtendsAlphaInterface -> ExtendsAlphaInterface
-Rule 79    BetaExtendsAlphaInterface -> empty
-Rule 80    ExtendsAlphaInterface -> EXTENDS InterfaceType
-Rule 81    ExtendsAlphaInterface -> ExtendsAlphaInterface COMMA InterfaceType
-Rule 82    InterfaceBody -> LEFT_BRACE BetaAlphaInterfaceMemberDeclaration RIGHT_BRACE
-Rule 83    BetaAlphaInterfaceMemberDeclaration -> AlphaInterfaceMemberDeclaration
-Rule 84    BetaAlphaInterfaceMemberDeclaration -> empty
-Rule 85    AlphaInterfaceMemberDeclaration -> InterfaceMemberDeclaration
-Rule 86    AlphaInterfaceMemberDeclaration -> AlphaInterfaceMemberDeclaration InterfaceMemberDeclaration
-Rule 87    InterfaceMemberDeclaration -> ConstantDeclaration
-Rule 88    InterfaceMemberDeclaration -> AbstractMethodDeclaration
-Rule 89    ConstantDeclaration -> FieldDeclaration
-Rule 90    ArrayType -> PrimitiveType LEFT_BRACKET RIGHT_BRACKET
-Rule 91    ArrayType -> Name LEFT_BRACKET RIGHT_BRACKET
-Rule 92    ArrayType -> ArrayType LEFT_BRACKET RIGHT_BRACKET
-Rule 93    AlphaVariableDeclarator -> VariableDeclarator
-Rule 94    AlphaVariableDeclarator -> AlphaVariableDeclarator COMMA VariableDeclarator
-Rule 95    VariableDeclarator -> VariableDeclaratorId
-Rule 96    VariableDeclarator -> VariableDeclaratorId ASSIGN VariableInitializer
-Rule 97    VariableDeclaratorId -> IDENTIFIER
-Rule 98    VariableDeclaratorId -> VariableDeclaratorId LEFT_BRACKET RIGHT_BRACKET
-Rule 99    VariableInitializer -> Expression
-Rule 100   VariableInitializer -> ArrayInitializer
-Rule 101   FieldDeclaration -> BetaAlphaModifier Type AlphaVariableDeclarator SEMICOLON
-Rule 102   MethodDeclaration -> MethodHeader MethodBody
-Rule 103   MethodHeader -> BetaAlphaModifier Type MethodDeclarator BetaAlphaThrow
-Rule 104   MethodHeader -> BetaAlphaModifier VOID MethodDeclarator BetaAlphaThrow
-Rule 105   BetaAlphaThrow -> AlphaThrow
-Rule 106   BetaAlphaThrow -> empty
-Rule 107   MethodDeclarator -> IDENTIFIER LEFT_PAREN BetaFormalParameterList RIGHT_PAREN
-Rule 108   MethodDeclarator -> MethodDeclarator LEFT_BRACKET RIGHT_BRACKET
-Rule 109   BetaFormalParameterList -> FormalParameterList
-Rule 110   BetaFormalParameterList -> empty
-Rule 111   FormalParameterList -> FormalParameter
-Rule 112   FormalParameterList -> FormalParameterList COMMA FormalParameter
-Rule 113   FormalParameter -> Type VariableDeclaratorId
-Rule 114   AlphaThrow -> THROWS ClassTypeList
-Rule 115   ClassTypeList -> ClassType
-Rule 116   ClassTypeList -> ClassTypeList COMMA ClassType
-Rule 117   MethodBody -> Block
-Rule 118   MethodBody -> SEMICOLON
-Rule 119   StaticInitializer -> STATIC Block
-Rule 120   ConstructorDeclaration -> BetaAlphaModifier ConstructorDeclarator BetaAlphaThrow ConstructorBody
-Rule 121   ConstructorDeclarator -> IdentifierId LEFT_PAREN BetaFormalParameterList RIGHT_PAREN
-Rule 122   ConstructorBody -> LEFT_BRACE BetaExplicitConstructorInvocation BetaAlphaBlockStatement RIGHT_BRACE
-Rule 123   BetaAlphaBlockStatement -> AlphaBlockStatement
-Rule 124   BetaAlphaBlockStatement -> empty
-Rule 125   BetaExplicitConstructorInvocation -> ExplicitConstructorInvocation
-Rule 126   BetaExplicitConstructorInvocation -> empty
-Rule 127   ExplicitConstructorInvocation -> THIS LEFT_PAREN BetaArgumentList RIGHT_PAREN SEMICOLON
-Rule 128   ExplicitConstructorInvocation -> SUPER LEFT_PAREN BetaArgumentList RIGHT_PAREN SEMICOLON
-Rule 129   BetaArgumentList -> ArgumentList
-Rule 130   BetaArgumentList -> empty
-Rule 131   AbstractMethodDeclaration -> MethodHeader SEMICOLON
-Rule 132   ArrayInitializer -> LEFT_BRACE BetaAlphaVariableInitializer COMMA RIGHT_BRACE
-Rule 133   ArrayInitializer -> LEFT_BRACE BetaAlphaVariableInitializer RIGHT_BRACE
-Rule 134   BetaAlphaVariableInitializer -> AlphaVariableInitializer
-Rule 135   BetaAlphaVariableInitializer -> empty
-Rule 136   AlphaVariableInitializer -> VariableInitializer
-Rule 137   AlphaVariableInitializer -> AlphaVariableInitializer COMMA VariableInitializer
-Rule 138   Block -> LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE
-Rule 139   AlphaBlockStatement -> BlockStatement
-Rule 140   AlphaBlockStatement -> AlphaBlockStatement BlockStatement
-Rule 141   BlockStatement -> LocalVariableDeclarationStatement
-Rule 142   BlockStatement -> Statement
-Rule 143   LocalVariableDeclarationStatement -> LocalVariableDeclaration SEMICOLON
-Rule 144   LocalVariableDeclaration -> Type AlphaVariableDeclarator
-Rule 145   Statement -> StatementWithoutTrailingSubstatement
-Rule 146   Statement -> LabeledStatement
-Rule 147   Statement -> IfThenStatement
-Rule 148   Statement -> IfThenElseStatement
-Rule 149   Statement -> WhileStatement
-Rule 150   Statement -> ForStatement
-Rule 151   StatementNoShortIf -> StatementWithoutTrailingSubstatement
-Rule 152   StatementNoShortIf -> LabeledStatementNoShortIf
-Rule 153   StatementNoShortIf -> IfThenElseStatementNoShortIf
-Rule 154   StatementNoShortIf -> WhileStatementNoShortIf
-Rule 155   StatementNoShortIf -> ForStatementNoShortIf
-Rule 156   StatementWithoutTrailingSubstatement -> Block
-Rule 157   StatementWithoutTrailingSubstatement -> EmptyStatement
-Rule 158   StatementWithoutTrailingSubstatement -> ExpressionStatement
-Rule 159   StatementWithoutTrailingSubstatement -> SwitchStatement
-Rule 160   StatementWithoutTrailingSubstatement -> DoStatement
-Rule 161   StatementWithoutTrailingSubstatement -> BreakStatement
-Rule 162   StatementWithoutTrailingSubstatement -> ContinueStatement
-Rule 163   StatementWithoutTrailingSubstatement -> ReturnStatement
-Rule 164   StatementWithoutTrailingSubstatement -> SynchronizedStatement
-Rule 165   StatementWithoutTrailingSubstatement -> ThrowStatement
-Rule 166   StatementWithoutTrailingSubstatement -> TryStatement
-Rule 167   EmptyStatement -> SEMICOLON
-Rule 168   LabeledStatement -> IDENTIFIER COLON Statement
-Rule 169   LabeledStatementNoShortIf -> IDENTIFIER COLON StatementNoShortIf
-Rule 170   ExpressionStatement -> StatementExpression SEMICOLON
-Rule 171   StatementExpression -> Assignment
-Rule 172   StatementExpression -> PreIncrementExpression
-Rule 173   StatementExpression -> PreDecrementExpression
-Rule 174   StatementExpression -> PostIncrementExpression
-Rule 175   StatementExpression -> PostDecrementExpression
-Rule 176   StatementExpression -> MethodInvocation
-Rule 177   StatementExpression -> ClassInstanceCreationExpression
-Rule 178   IfThenStatement -> IF LEFT_PAREN Expression RIGHT_PAREN Statement
-Rule 179   IfThenElseStatement -> IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE Statement
-Rule 180   IfThenElseStatementNoShortIf -> IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE StatementNoShortIf
-Rule 181   SwitchStatement -> SWITCH LEFT_PAREN Expression RIGHT_PAREN SwitchBlock
-Rule 182   SwitchBlock -> LEFT_BRACE BetaAlphaSwitchBlockStatementGroup BetaAlphaSwitchLabel RIGHT_BRACE
-Rule 183   BetaAlphaSwitchBlockStatementGroup -> AlphaSwitchBlockStatementGroup
-Rule 184   BetaAlphaSwitchBlockStatementGroup -> empty
-Rule 185   BetaAlphaSwitchLabel -> AlphaSwitchLabel
-Rule 186   BetaAlphaSwitchLabel -> empty
-Rule 187   AlphaSwitchBlockStatementGroup -> SwitchBlockStatementGroup
-Rule 188   AlphaSwitchBlockStatementGroup -> AlphaSwitchBlockStatementGroup SwitchBlockStatementGroup
-Rule 189   SwitchBlockStatementGroup -> AlphaSwitchLabel AlphaBlockStatement
-Rule 190   AlphaSwitchLabel -> SwitchLabel
-Rule 191   AlphaSwitchLabel -> AlphaSwitchLabel SwitchLabel
-Rule 192   SwitchLabel -> CASE ConstantExpression COLON
-Rule 193   SwitchLabel -> DEFAULT COLON
-Rule 194   ForStatement -> FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN Statement
-Rule 195   BetaForInit -> ForInit
-Rule 196   BetaForInit -> empty
-Rule 197   BetaExpression -> Expression
-Rule 198   BetaExpression -> empty
-Rule 199   BetaForUpdate -> ForUpdate
-Rule 200   BetaForUpdate -> empty
-Rule 201   ForStatementNoShortIf -> FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN StatementNoShortIf
-Rule 202   ForInit -> StatementExpressionList
-Rule 203   ForInit -> LocalVariableDeclaration
-Rule 204   ForUpdate -> StatementExpressionList
-Rule 205   StatementExpressionList -> StatementExpression
-Rule 206   StatementExpressionList -> StatementExpressionList COMMA StatementExpression
-Rule 207   BreakStatement -> BREAK BetaIdentifier SEMICOLON
-Rule 208   BetaIdentifier -> IDENTIFIER
-Rule 209   BetaIdentifier -> empty
-Rule 210   ContinueStatement -> CONTINUE BetaIdentifier SEMICOLON
-Rule 211   ReturnStatement -> RETURN BetaExpression SEMICOLON
-Rule 212   ThrowStatement -> THROW Expression SEMICOLON
-Rule 213   SynchronizedStatement -> SYNCHRONIZED LEFT_PAREN Expression RIGHT_PAREN Block
-Rule 214   TryStatement -> TRY Block Catches
-Rule 215   TryStatement -> TRY Block BetaCatches Finally
-Rule 216   BetaCatches -> Catches
-Rule 217   BetaCatches -> empty
-Rule 218   Catches -> CatchClause
-Rule 219   Catches -> Catches CatchClause
-Rule 220   CatchClause -> CATCH LEFT_PAREN FormalParameter RIGHT_PAREN Block
-Rule 221   Finally -> FINALLY Block
-Rule 222   Primary -> PrimaryNoNewArray
-Rule 223   Primary -> ArrayCreationExpression
-Rule 224   PrimaryNoNewArray -> Literal
-Rule 225   PrimaryNoNewArray -> THIS
-Rule 226   PrimaryNoNewArray -> LEFT_PAREN Expression RIGHT_PAREN
-Rule 227   PrimaryNoNewArray -> ClassInstanceCreationExpression
-Rule 228   PrimaryNoNewArray -> FieldAccess
-Rule 229   PrimaryNoNewArray -> MethodInvocation
-Rule 230   PrimaryNoNewArray -> ArrayAccess
-Rule 231   ClassInstanceCreationExpression -> NEW ClassType LEFT_PAREN BetaArgumentList RIGHT_PAREN
-Rule 232   ArgumentList -> Expression
-Rule 233   ArgumentList -> ArgumentList COMMA Expression
-Rule 234   ArrayCreationExpression -> NEW PrimitiveType BetaAlphaDimExpr AlphaDim
-Rule 235   ArrayCreationExpression -> NEW ClassOrInterfaceType BetaAlphaDimExpr AlphaDim
-Rule 236   BetaAlphaDimExpr -> AlphaDimExpr
-Rule 237   BetaAlphaDimExpr -> empty
-Rule 238   AlphaDimExpr -> DimExpr
-Rule 239   AlphaDimExpr -> AlphaDimExpr DimExpr
-Rule 240   DimExpr -> LEFT_BRACKET Expression RIGHT_BRACKET
-Rule 241   AlphaDim -> LEFT_BRACKET RIGHT_BRACKET
-Rule 242   AlphaDim -> AlphaDim LEFT_BRACKET RIGHT_BRACKET
-Rule 243   FieldAccess -> Primary DOT IDENTIFIER
-Rule 244   FieldAccess -> SUPER DOT IDENTIFIER
-Rule 245   MethodInvocation -> Name LEFT_PAREN BetaArgumentList RIGHT_PAREN
-Rule 246   MethodInvocation -> Primary DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
-Rule 247   MethodInvocation -> SUPER DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
-Rule 248   ArrayAccess -> Name LEFT_BRACKET Expression RIGHT_BRACKET
-Rule 249   ArrayAccess -> PrimaryNoNewArray LEFT_BRACKET Expression RIGHT_BRACKET
-Rule 250   PostfixExpression -> Primary
-Rule 251   PostfixExpression -> Name
-Rule 252   PostfixExpression -> PostIncrementExpression
-Rule 253   PostfixExpression -> PostDecrementExpression
-Rule 254   PostIncrementExpression -> PostfixExpression PLUS_PLUS
-Rule 255   PostDecrementExpression -> PostfixExpression MINUS_MINUS
-Rule 256   UnaryExpression -> PreIncrementExpression
-Rule 257   UnaryExpression -> PreDecrementExpression
-Rule 258   UnaryExpression -> PLUS UnaryExpression
-Rule 259   UnaryExpression -> MINUS UnaryExpression
-Rule 260   UnaryExpression -> UnaryExpressionNotPlusMinus
-Rule 261   PreIncrementExpression -> PLUS_PLUS UnaryExpression
-Rule 262   PreDecrementExpression -> MINUS_MINUS UnaryExpression
-Rule 263   UnaryExpressionNotPlusMinus -> PostfixExpression
-Rule 264   UnaryExpressionNotPlusMinus -> TILDE UnaryExpression
-Rule 265   UnaryExpressionNotPlusMinus -> EXCLAMATION UnaryExpression
-Rule 266   UnaryExpressionNotPlusMinus -> CastExpression
-Rule 267   CastExpression -> LEFT_PAREN PrimitiveType BetaAlphaDim RIGHT_PAREN UnaryExpression
-Rule 268   CastExpression -> LEFT_PAREN Expression RIGHT_PAREN UnaryExpressionNotPlusMinus
-Rule 269   CastExpression -> LEFT_PAREN Name AlphaDim RIGHT_PAREN UnaryExpressionNotPlusMinus
-Rule 270   BetaAlphaDim -> AlphaDim
-Rule 271   BetaAlphaDim -> empty
-Rule 272   MultiplicativeExpression -> UnaryExpression
-Rule 273   MultiplicativeExpression -> MultiplicativeExpression STAR UnaryExpression
-Rule 274   MultiplicativeExpression -> MultiplicativeExpression SLASH UnaryExpression
-Rule 275   MultiplicativeExpression -> MultiplicativeExpression PERCENT UnaryExpression
-Rule 276   AdditiveExpression -> MultiplicativeExpression
-Rule 277   AdditiveExpression -> AdditiveExpression PLUS MultiplicativeExpression
-Rule 278   AdditiveExpression -> AdditiveExpression MINUS MultiplicativeExpression
-Rule 279   ShiftExpression -> AdditiveExpression
-Rule 280   ShiftExpression -> ShiftExpression LEFT_SHIFT AdditiveExpression
-Rule 281   ShiftExpression -> ShiftExpression RIGHT_SHIFT AdditiveExpression
-Rule 282   ShiftExpression -> ShiftExpression UNSIGNED_RIGHT_SHIFT AdditiveExpression
-Rule 283   RelationalExpression -> ShiftExpression
-Rule 284   RelationalExpression -> RelationalExpression LESS ShiftExpression
-Rule 285   RelationalExpression -> RelationalExpression GREATER ShiftExpression
-Rule 286   RelationalExpression -> RelationalExpression LESS_EQUAL ShiftExpression
-Rule 287   RelationalExpression -> RelationalExpression GREATER_EQUAL ShiftExpression
-Rule 288   RelationalExpression -> RelationalExpression INSTANCEOF ReferenceType
-Rule 289   EqualityExpression -> RelationalExpression
-Rule 290   EqualityExpression -> EqualityExpression EQUAL_EQUAL RelationalExpression
-Rule 291   EqualityExpression -> EqualityExpression EXCLAMATION_EQUAL RelationalExpression
-Rule 292   AndExpression -> EqualityExpression
-Rule 293   AndExpression -> AndExpression AMPERSAND EqualityExpression
-Rule 294   ExclusiveOrExpression -> AndExpression
-Rule 295   ExclusiveOrExpression -> ExclusiveOrExpression CARET AndExpression
-Rule 296   InclusiveOrExpression -> ExclusiveOrExpression
-Rule 297   InclusiveOrExpression -> InclusiveOrExpression BAR ExclusiveOrExpression
-Rule 298   ConditionalAndExpression -> InclusiveOrExpression
-Rule 299   ConditionalAndExpression -> ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression
-Rule 300   ConditionalOrExpression -> ConditionalAndExpression
-Rule 301   ConditionalOrExpression -> ConditionalOrExpression BAR_BAR ConditionalAndExpression
-Rule 302   ConditionalExpression -> ConditionalOrExpression
-Rule 303   ConditionalExpression -> ConditionalOrExpression QUESTION Expression COLON ConditionalExpression
-Rule 304   AssignmentExpression -> ConditionalExpression
-Rule 305   AssignmentExpression -> Assignment
-Rule 306   Assignment -> LeftHandSide AssignmentOperator AssignmentExpression
-Rule 307   LeftHandSide -> Name
-Rule 308   LeftHandSide -> FieldAccess
-Rule 309   LeftHandSide -> ArrayAccess
-Rule 310   AssignmentOperator -> ASSIGN
-Rule 311   AssignmentOperator -> STAR_ASSIGN
-Rule 312   AssignmentOperator -> SLASH_ASSIGN
-Rule 313   AssignmentOperator -> PERCENT_ASSIGN
-Rule 314   AssignmentOperator -> PLUS_ASSIGN
-Rule 315   AssignmentOperator -> MINUS_ASSIGN
-Rule 316   AssignmentOperator -> LEFT_SHIFT_ASSIGN
-Rule 317   AssignmentOperator -> RIGHT_SHIFT_ASSIGN
-Rule 318   AssignmentOperator -> UNSIGNED_RIGHT_SHIFT_ASSIGN
-Rule 319   AssignmentOperator -> AMPERSAND_ASSIGN
-Rule 320   AssignmentOperator -> CARET_ASSIGN
-Rule 321   AssignmentOperator -> BAR_ASSIGN
-Rule 322   Expression -> AssignmentExpression
-Rule 323   ConstantExpression -> Expression
-Rule 324   WhileStatement -> WHILE LEFT_PAREN Expression RIGHT_PAREN Statement
-Rule 325   WhileStatementNoShortIf -> WHILE LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf
-Rule 326   DoStatement -> DO Statement WHILE LEFT_PAREN Expression RIGHT_PAREN SEMICOLON
-Rule 327   Literal -> INTEGER_LITERAL_OCTAL
-Rule 328   Literal -> INTEGER_LITERAL_HEXADEC
-Rule 329   Literal -> INTEGER_LITERAL_DEC
-Rule 330   Literal -> INTEGER_LITERAL_BINAR
-Rule 331   Literal -> FLOATING_LITERAL_REDUCED_POINT
-Rule 332   Literal -> BOOLEAN_LITERAL
-Rule 333   Literal -> CHARACTER_LITERAL
-Rule 334   Literal -> STRING_LITERAL
-Rule 335   Literal -> TEXT_BLOCK
-Rule 336   Literal -> NULL_LITERAL
-Rule 337   empty -> <empty>
+
+Rule 37    ClassDeclaration -> BetaAlphaModifier CLASS IDENTIFIER ClassBody
+
+Rule 48    ClassBody -> LEFT_BRACE BetaAlphaClassBodyDeclaration RIGHT_BRACE
+
+Rule 49    BetaAlphaClassBodyDeclaration -> AlphaClassBodyDeclaration
+Rule 50    BetaAlphaClassBodyDeclaration -> empty
+Rule 51    AlphaClassBodyDeclaration -> ClassBodyDeclaration
+Rule 52    AlphaClassBodyDeclaration -> AlphaClassBodyDeclaration ClassBodyDeclaration
+
+Rule 53    ClassBodyDeclaration -> ClassMemberDeclaration
+Rule 54    ClassBodyDeclaration -> StaticInitializer
+Rule 55    ClassBodyDeclaration -> ConstructorDeclaration
+
+Rule 56    ClassMemberDeclaration -> FieldDeclaration
+Rule 57    ClassMemberDeclaration -> MethodDeclaration
+
+Rule 58    Type -> PrimitiveType
+Rule 59    Type -> ReferenceType
+
+Rule 60    PrimitiveType -> NumericType
+Rule 61    PrimitiveType -> BOOLEAN
+Rule 62    NumericType -> IntegralType
+Rule 63    NumericType -> FloatingPointType
+Rule 64    IntegralType -> BYTE
+Rule 65    IntegralType -> SHORT
+Rule 66    IntegralType -> INT
+Rule 67    IntegralType -> LONG
+Rule 68    IntegralType -> CHAR
+Rule 69    FloatingPointType -> FLOAT
+Rule 70    FloatingPointType -> DOUBLE
+
+Rule 71    ReferenceType -> ClassOrInterfaceType
+Rule 72    ReferenceType -> ArrayType
+Rule 73    ClassOrInterfaceType -> Name
+
+Rule 74    ClassType -> ClassOrInterfaceType
+
+Rule 89    ArrayType -> PrimitiveType LEFT_BRACKET RIGHT_BRACKET
+Rule 90    ArrayType -> Name LEFT_BRACKET RIGHT_BRACKET
+Rule 91    ArrayType -> ArrayType LEFT_BRACKET RIGHT_BRACKET
+
+Rule 100   FieldDeclaration -> BetaAlphaModifier Type AlphaVariableDeclarator SEMICOLON
+
+Rule 92    AlphaVariableDeclarator -> VariableDeclarator
+Rule 93    AlphaVariableDeclarator -> AlphaVariableDeclarator COMMA VariableDeclarator
+
+Rule 94    VariableDeclarator -> VariableDeclaratorId
+Rule 95    VariableDeclarator -> VariableDeclaratorId ASSIGN VariableInitializer
+
+Rule 96    VariableDeclaratorId -> IDENTIFIER
+Rule 97    VariableDeclaratorId -> VariableDeclaratorId LEFT_BRACKET RIGHT_BRACKET
+
+Rule 98    VariableInitializer -> Expression
+Rule 99    VariableInitializer -> ArrayInitializer
+
+Rule 101   MethodDeclaration -> MethodHeader MethodBody
+
+Rule 102   MethodHeader -> BetaAlphaModifier Type MethodDeclarator
+Rule 103   MethodHeader -> BetaAlphaModifier VOID MethodDeclarator
+
+Rule 106   MethodDeclarator -> IDENTIFIER LEFT_PAREN BetaFormalParameterList RIGHT_PAREN
+Rule 107   MethodDeclarator -> MethodDeclarator LEFT_BRACKET RIGHT_BRACKET
+
+Rule 108   BetaFormalParameterList -> FormalParameterList
+Rule 109   BetaFormalParameterList -> empty
+Rule 110   FormalParameterList -> FormalParameter
+Rule 111   FormalParameterList -> FormalParameterList COMMA FormalParameter
+Rule 112   FormalParameter -> Type VariableDeclaratorId
+
+Rule 116   MethodBody -> Block
+Rule 117   MethodBody -> SEMICOLON
+
+Rule 118   StaticInitializer -> STATIC Block
+
+Rule 119   ConstructorDeclaration -> BetaAlphaModifier ConstructorDeclarator ConstructorBody
+Rule 120   ConstructorDeclarator -> IdentifierId LEFT_PAREN BetaFormalParameterList RIGHT_PAREN
+Rule 121   ConstructorBody -> LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE
+
+Rule 134   Block -> LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE
+Rule 122   BetaAlphaBlockStatement -> AlphaBlockStatement
+Rule 123   BetaAlphaBlockStatement -> empty
+Rule 135   AlphaBlockStatement -> BlockStatement
+Rule 136   AlphaBlockStatement -> AlphaBlockStatement BlockStatement
+
+Rule 137   BlockStatement -> LocalVariableDeclarationStatement
+Rule 138   BlockStatement -> Statement
+Rule 139   LocalVariableDeclarationStatement -> LocalVariableDeclaration SEMICOLON
+Rule 140   LocalVariableDeclaration -> Type AlphaVariableDeclarator
+
+Rule 124   BetaArgumentList -> ArgumentList
+Rule 125   BetaArgumentList -> empty
+
+Rule 127   ArrayInitializer -> LEFT_BRACE BetaAlphaVariableInitializer BetaComma RIGHT_BRACE
+
+Rule 128   BetaComma -> COMMA
+Rule 129   BetaComma -> empty
+
+Rule 130   BetaAlphaVariableInitializer -> AlphaVariableInitializer
+Rule 131   BetaAlphaVariableInitializer -> empty
+Rule 132   AlphaVariableInitializer -> VariableInitializer
+Rule 133   AlphaVariableInitializer -> AlphaVariableInitializer COMMA VariableInitializer
+
+Rule 141   Statement -> StatementWithoutTrailingSubstatement
+Rule 142   Statement -> LabeledStatement
+Rule 143   Statement -> IfThenStatement
+Rule 144   Statement -> IfThenElseStatement
+Rule 145   Statement -> WhileStatement
+Rule 146   Statement -> 
+
+Rule 152   StatementWithoutTrailingSubstatement -> Block
+Rule 153   StatementWithoutTrailingSubstatement -> EmptyStatement
+Rule 154   StatementWithoutTrailingSubstatement -> ExpressionStatement
+Rule 155   StatementWithoutTrailingSubstatement -> SwitchStatement
+Rule 156   StatementWithoutTrailingSubstatement -> DoStatement
+Rule 157   StatementWithoutTrailingSubstatement -> BreakStatement
+Rule 158   StatementWithoutTrailingSubstatement -> ContinueStatement
+Rule 159   StatementWithoutTrailingSubstatement -> ReturnStatement
+
+Rule 163   EmptyStatement -> SEMICOLON
+Rule 147   StatementNoShortIf -> StatementWithoutTrailingSubstatement
+Rule 148   StatementNoShortIf -> LabeledStatementNoShortIf
+Rule 149   StatementNoShortIf -> IfThenElseStatementNoShortIf
+Rule 150   StatementNoShortIf -> WhileStatementNoShortIf
+Rule 151   StatementNoShortIf -> ForStatementNoShortIf
+Rule 164   LabeledStatement -> IDENTIFIER COLON Statement
+Rule 165   LabeledStatementNoShortIf -> IDENTIFIER COLON StatementNoShortIf
+
+Rule 166   ExpressionStatement -> StatementExpression SEMICOLON
+Rule 167   StatementExpression -> Assignment
+Rule 168   StatementExpression -> PreIncrementExpression
+Rule 169   StatementExpression -> PreDecrementExpression
+Rule 170   StatementExpression -> PostIncrementExpression
+Rule 171   StatementExpression -> PostDecrementExpression
+Rule 172   StatementExpression -> MethodInvocation
+Rule 173   StatementExpression -> ClassInstanceCreationExpression
+
+Rule 174   IfThenStatement -> IF LEFT_PAREN Expression RIGHT_PAREN Statement
+Rule 175   IfThenElseStatement -> IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE Statement
+
+Rule 176   IfThenElseStatementNoShortIf -> IF LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf ELSE StatementNoShortIf
+
+Rule 177   SwitchStatement -> SWITCH LEFT_PAREN Expression RIGHT_PAREN SwitchBlock
+Rule 178   SwitchBlock -> LEFT_BRACE BetaAlphaSwitchBlockStatementGroup BetaAlphaSwitchLabel RIGHT_BRACE
+Rule 179   BetaAlphaSwitchBlockStatementGroup -> AlphaSwitchBlockStatementGroup
+Rule 180   BetaAlphaSwitchBlockStatementGroup -> empty
+Rule 181   BetaAlphaSwitchLabel -> AlphaSwitchLabel
+Rule 182   BetaAlphaSwitchLabel -> empty
+Rule 183   AlphaSwitchBlockStatementGroup -> SwitchBlockStatementGroup
+Rule 184   AlphaSwitchBlockStatementGroup -> AlphaSwitchBlockStatementGroup SwitchBlockStatementGroup
+Rule 185   SwitchBlockStatementGroup -> AlphaSwitchLabel AlphaBlockStatement
+Rule 186   AlphaSwitchLabel -> SwitchLabel
+Rule 187   AlphaSwitchLabel -> AlphaSwitchLabel SwitchLabel
+Rule 188   SwitchLabel -> CASE ConstantExpression COLON
+Rule 189   SwitchLabel -> DEFAULT COLON
+
+Rule 203   BreakStatement -> BREAK BetaIdentifier SEMICOLON
+Rule 206   ContinueStatement -> CONTINUE BetaIdentifier SEMICOLON
+Rule 204   BetaIdentifier -> IDENTIFIER
+Rule 205   BetaIdentifier -> empty
+
+Rule 190   ForStatement -> FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN Statement
+Rule 191   BetaForInit -> ForInit
+Rule 192   BetaForInit -> empty
+Rule 198   ForInit -> StatementExpressionList
+Rule 199   ForInit -> LocalVariableDeclaration
+Rule 193   BetaExpression -> Expression
+Rule 194   BetaExpression -> empty
+Rule 195   BetaForUpdate -> ForUpdate
+Rule 196   BetaForUpdate -> empty
+Rule 200   ForUpdate -> StatementExpressionList
+Rule 201   StatementExpressionList -> StatementExpression
+Rule 202   StatementExpressionList -> StatementExpressionList COMMA StatementExpression
+
+Rule 320   WhileStatement -> WHILE LEFT_PAREN Expression RIGHT_PAREN Statement
+Rule 321   WhileStatementNoShortIf -> WHILE LEFT_PAREN Expression RIGHT_PAREN StatementNoShortIf
+Rule 322   DoStatement -> DO Statement WHILE LEFT_PAREN Expression RIGHT_PAREN SEMICOLON
+
+Rule 197   ForStatementNoShortIf -> FOR LEFT_PAREN BetaForInit SEMICOLON BetaExpression SEMICOLON BetaForUpdate RIGHT_PAREN StatementNoShortIf
+Rule 207   ReturnStatement -> RETURN BetaExpression SEMICOLON
+
+Rule 218   Primary -> PrimaryNoNewArray
+Rule 219   Primary -> ArrayCreationExpression
+Rule 220   PrimaryNoNewArray -> Literal
+Rule 221   PrimaryNoNewArray -> THIS
+Rule 222   PrimaryNoNewArray -> LEFT_PAREN Expression RIGHT_PAREN
+Rule 223   PrimaryNoNewArray -> ClassInstanceCreationExpression
+Rule 224   PrimaryNoNewArray -> FieldAccess
+Rule 225   PrimaryNoNewArray -> MethodInvocation
+Rule 226   PrimaryNoNewArray -> ArrayAccess
+Rule 230   ArrayCreationExpression -> NEW PrimitiveType BetaAlphaDimExpr BetaAlphaDim
+Rule 231   ArrayCreationExpression -> NEW ClassOrInterfaceType BetaAlphaDimExpr BetaAlphaDim
+
+Rule 227   ClassInstanceCreationExpression -> NEW ClassType LEFT_PAREN BetaArgumentList RIGHT_PAREN
+
+Rule 234   BetaAlphaDimExpr -> AlphaDimExpr
+Rule 235   BetaAlphaDimExpr -> empty
+Rule 236   AlphaDimExpr -> DimExpr
+Rule 237   AlphaDimExpr -> AlphaDimExpr DimExpr
+Rule 238   DimExpr -> LEFT_BRACKET Expression RIGHT_BRACKET
+
+Rule 232   BetaAlphaDim -> AlphaDim
+Rule 233   BetaAlphaDim -> empty
+Rule 239   AlphaDim -> LEFT_BRACKET RIGHT_BRACKET
+Rule 240   AlphaDim -> AlphaDim LEFT_BRACKET RIGHT_BRACKET
+
+Rule 228   ArgumentList -> Expression
+Rule 229   ArgumentList -> ArgumentList COMMA Expression
+
+Rule 241   FieldAccess -> Primary DOT IDENTIFIER
+Rule 242   FieldAccess -> SUPER DOT IDENTIFIER
+
+Rule 246   ArrayAccess -> Name LEFT_BRACKET Expression RIGHT_BRACKET
+Rule 247   ArrayAccess -> PrimaryNoNewArray LEFT_BRACKET Expression RIGHT_BRACKET
+
+Rule 243   MethodInvocation -> Name LEFT_PAREN BetaArgumentList RIGHT_PAREN
+Rule 244   MethodInvocation -> Primary DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+Rule 245   MethodInvocation -> SUPER DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
+
+Rule 248   PostfixExpression -> Primary
+Rule 249   PostfixExpression -> Name
+Rule 250   PostfixExpression -> PostIncrementExpression
+Rule 251   PostfixExpression -> PostDecrementExpression
+Rule 252   PostIncrementExpression -> PostfixExpression PLUS_PLUS
+Rule 253   PostDecrementExpression -> PostfixExpression MINUS_MINUS
+
+Rule 254   UnaryExpression -> PreIncrementExpression
+Rule 255   UnaryExpression -> PreDecrementExpression
+Rule 256   UnaryExpression -> PLUS UnaryExpression
+Rule 257   UnaryExpression -> MINUS UnaryExpression
+Rule 258   UnaryExpression -> UnaryExpressionNotPlusMinus
+Rule 259   PreIncrementExpression -> PLUS_PLUS UnaryExpression
+Rule 260   PreDecrementExpression -> MINUS_MINUS UnaryExpression
+
+Rule 261   UnaryExpressionNotPlusMinus -> PostfixExpression
+Rule 262   UnaryExpressionNotPlusMinus -> TILDE UnaryExpression
+Rule 263   UnaryExpressionNotPlusMinus -> EXCLAMATION UnaryExpression
+Rule 264   UnaryExpressionNotPlusMinus -> CastExpression
+
+Rule 265   CastExpression -> LEFT_PAREN PrimitiveType BetaAlphaDim RIGHT_PAREN UnaryExpression
+Rule 266   CastExpression -> LEFT_PAREN Expression RIGHT_PAREN UnaryExpressionNotPlusMinus
+Rule 267   CastExpression -> LEFT_PAREN Name AlphaDim RIGHT_PAREN UnaryExpressionNotPlusMinus
+
+Rule 268   MultiplicativeExpression -> UnaryExpression
+Rule 269   MultiplicativeExpression -> MultiplicativeExpression STAR UnaryExpression
+Rule 270   MultiplicativeExpression -> MultiplicativeExpression SLASH UnaryExpression
+Rule 271   MultiplicativeExpression -> MultiplicativeExpression PERCENT UnaryExpression
+
+Rule 272   AdditiveExpression -> MultiplicativeExpression
+Rule 273   AdditiveExpression -> AdditiveExpression PLUS MultiplicativeExpression
+Rule 274   AdditiveExpression -> AdditiveExpression MINUS MultiplicativeExpressio
+n
+Rule 275   ShiftExpression -> AdditiveExpression
+Rule 276   ShiftExpression -> ShiftExpression LEFT_SHIFT AdditiveExpression
+Rule 277   ShiftExpression -> ShiftExpression RIGHT_SHIFT AdditiveExpression
+Rule 278   ShiftExpression -> ShiftExpression UNSIGNED_RIGHT_SHIFT AdditiveExpression
+
+Rule 279   RelationalExpression -> ShiftExpression
+Rule 280   RelationalExpression -> RelationalExpression LESS ShiftExpression
+Rule 281   RelationalExpression -> RelationalExpression GREATER ShiftExpression
+Rule 282   RelationalExpression -> RelationalExpression LESS_EQUAL ShiftExpression
+Rule 283   RelationalExpression -> RelationalExpression GREATER_EQUAL ShiftExpression
+Rule 284   RelationalExpression -> RelationalExpression INSTANCEOF ReferenceType
+
+Rule 285   EqualityExpression -> RelationalExpression
+Rule 286   EqualityExpression -> EqualityExpression EQUAL_EQUAL RelationalExpression
+Rule 287   EqualityExpression -> EqualityExpression EXCLAMATION_EQUAL RelationalExpression
+
+Rule 288   AndExpression -> EqualityExpression
+Rule 289   AndExpression -> AndExpression AMPERSAND EqualityExpression
+
+Rule 290   ExclusiveOrExpression -> AndExpression
+Rule 291   ExclusiveOrExpression -> ExclusiveOrExpression CARET AndExpression
+Rule 292   InclusiveOrExpression -> ExclusiveOrExpression
+Rule 293   InclusiveOrExpression -> InclusiveOrExpression BAR ExclusiveOrExpression
+
+Rule 294   ConditionalAndExpression -> InclusiveOrExpression
+Rule 295   ConditionalAndExpression -> ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression
+Rule 296   ConditionalOrExpression -> ConditionalAndExpression
+Rule 297   ConditionalOrExpression -> ConditionalOrExpression BAR_BAR ConditionalAndExpression
+Rule 298   ConditionalExpression -> ConditionalOrExpression
+Rule 299   ConditionalExpression -> ConditionalOrExpression QUESTION Expression COLON ConditionalExpression
+
+Rule 300   AssignmentExpression -> ConditionalExpression
+Rule 301   AssignmentExpression -> Assignment
+Rule 302   Assignment -> LeftHandSide AssignmentOperator AssignmentExpression
+
+Rule 303   LeftHandSide -> Name
+Rule 304   LeftHandSide -> FieldAccess
+Rule 305   LeftHandSide -> ArrayAccess
+
+Rule 306   AssignmentOperator -> ASSIGN
+Rule 307   AssignmentOperator -> STAR_ASSIGN
+Rule 308   AssignmentOperator -> SLASH_ASSIGN
+Rule 309   AssignmentOperator -> PERCENT_ASSIGN
+Rule 310   AssignmentOperator -> PLUS_ASSIGN
+Rule 311   AssignmentOperator -> MINUS_ASSIGN
+Rule 312   AssignmentOperator -> LEFT_SHIFT_ASSIGN
+Rule 313   AssignmentOperator -> RIGHT_SHIFT_ASSIGN
+Rule 314   AssignmentOperator -> UNSIGNED_RIGHT_SHIFT_ASSIGN
+Rule 315   AssignmentOperator -> AMPERSAND_ASSIGN
+Rule 316   AssignmentOperator -> CARET_ASSIGN
+Rule 317   AssignmentOperator -> BAR_ASSIGN
+
+Rule 318   Expression -> AssignmentExpression
+Rule 319   ConstantExpression -> Expression
+
+Rule 323   Literal -> INTEGER_LITERAL_OCTAL
+Rule 324   Literal -> INTEGER_LITERAL_HEXADEC
+Rule 325   Literal -> INTEGER_LITERAL_DEC
+Rule 326   Literal -> INTEGER_LITERAL_BINAR
+Rule 327   Literal -> FLOATING_LITERAL_REDUCED_POINT
+Rule 328   Literal -> BOOLEAN_LITERAL
+Rule 329   Literal -> CHARACTER_LITERAL
+Rule 330   Literal -> STRING_LITERAL
+Rule 331   Literal -> TEXT_BLOCK
+Rule 332   Literal -> NULL_LITERAL
 
 Terminals, with rules where they appear
 
 ABSTRACT             : 31
-AMPERSAND            : 293
-AMPERSAND_AMPERSAND  : 299
-AMPERSAND_ASSIGN     : 319
+AMPERSAND            : 289
+AMPERSAND_AMPERSAND  : 295
+AMPERSAND_ASSIGN     : 315
 ARROW                : 
 ASSERT               : 
-ASSIGN               : 96 310
+ASSIGN               : 95 306
 AT                   : 
-BAR                  : 297
-BAR_ASSIGN           : 321
-BAR_BAR              : 301
-BOOLEAN              : 62
-BOOLEAN_LITERAL      : 332
-BREAK                : 207
-BYTE                 : 65
-CARET                : 295
-CARET_ASSIGN         : 320
-CASE                 : 192
-CATCH                : 220
-CHAR                 : 69
-CHARACTER_LITERAL    : 333
-CLASS                : 38
-COLON                : 168 169 192 193 303
+BAR                  : 293
+BAR_ASSIGN           : 317
+BAR_BAR              : 297
+BOOLEAN              : 61
+BOOLEAN_LITERAL      : 328
+BREAK                : 203
+BYTE                 : 64
+CARET                : 291
+CARET_ASSIGN         : 316
+CASE                 : 188
+CATCH                : 216
+CHAR                 : 68
+CHARACTER_LITERAL    : 329
+CLASS                : 37
+COLON                : 164 165 188 189 299
 COLON_COLON          : 
-COMMA                : 48 81 94 112 116 132 137 206 233
+COMMA                : 47 80 93 111 115 128 133 202 229
 CONST                : 
-CONTINUE             : 210
-DEFAULT              : 193
-DO                   : 326
-DOT                  : 13 17 243 244 246 247
-DOUBLE               : 71
+CONTINUE             : 206
+DEFAULT              : 189
+DO                   : 322
+DOT                  : 13 17 241 242 244 245
+DOUBLE               : 70
 ELLIPSIS             : 
-ELSE                 : 179 180
+ELSE                 : 175 176
 ENUM                 : 
-EQUAL_EQUAL          : 290
-EXCLAMATION          : 265
-EXCLAMATION_EQUAL    : 291
+EQUAL_EQUAL          : 286
+EXCLAMATION          : 263
+EXCLAMATION_EQUAL    : 287
 EXPORTS              : 
-EXTENDS              : 45 80
+EXTENDS              : 44 79
 FINAL                : 32
-FINALLY              : 221
-FLOAT                : 70
-FLOATING_LITERAL_REDUCED_POINT : 331
+FINALLY              : 217
+FLOAT                : 69
+FLOATING_LITERAL_REDUCED_POINT : 327
 FLOATING_POINT_LITERAL : 
-FOR                  : 194 201
+FOR                  : 190 197
 GOTO                 : 
-GREATER              : 285
-GREATER_EQUAL        : 287
-IDENTIFIER           : 16 17 38 77 97 107 168 169 208 243 244 246 247
-IF                   : 178 179 180
-IMPLEMENTS           : 46
+GREATER              : 281
+GREATER_EQUAL        : 283
+IDENTIFIER           : 16 17 37 76 96 106 164 165 204 241 242 244 245
+IF                   : 174 175 176
+IMPLEMENTS           : 45
 IMPORT               : 12 13
-INSTANCEOF           : 288
-INT                  : 67
-INTEGER_LITERAL_BINAR : 330
-INTEGER_LITERAL_DEC  : 329
-INTEGER_LITERAL_HEXADEC : 328
-INTEGER_LITERAL_OCTAL : 327
-INTERFACE            : 77
-LEFT_BRACE           : 49 82 122 132 133 138 182
-LEFT_BRACKET         : 90 91 92 98 108 240 241 242 248 249
-LEFT_PAREN           : 107 121 127 128 178 179 180 181 194 201 213 220 226 231 245 246 247 267 268 269 324 325 326
-LEFT_SHIFT           : 280
-LEFT_SHIFT_ASSIGN    : 316
-LESS                 : 284
-LESS_EQUAL           : 286
-LONG                 : 68
-MINUS                : 259 278
-MINUS_ASSIGN         : 315
-MINUS_MINUS          : 255 262
+INSTANCEOF           : 284
+INT                  : 66
+INTEGER_LITERAL_BINAR : 326
+INTEGER_LITERAL_DEC  : 325
+INTEGER_LITERAL_HEXADEC : 324
+INTEGER_LITERAL_OCTAL : 323
+INTERFACE            : 76
+LEFT_BRACE           : 48 81 121 127 134 178
+LEFT_BRACKET         : 89 90 91 97 107 238 239 240 246 247
+LEFT_PAREN           : 106 120 174 175 176 177 190 197 209 216 222 227 243 244 245 265 266 267 320 321 322
+LEFT_SHIFT           : 276
+LEFT_SHIFT_ASSIGN    : 312
+LESS                 : 280
+LESS_EQUAL           : 282
+LONG                 : 67
+MINUS                : 257 274
+MINUS_ASSIGN         : 311
+MINUS_MINUS          : 253 260
 MODULE               : 
 NATIVE               : 33
-NEW                  : 231 234 235
+NEW                  : 227 230 231
 NEWLINE              : 
 NON_SEALED           : 
-NULL_LITERAL         : 336
+NULL_LITERAL         : 332
 OPEN                 : 
 OPENS                : 
 PACKAGE              : 9
-PERCENT              : 275
-PERCENT_ASSIGN       : 313
+PERCENT              : 271
+PERCENT_ASSIGN       : 309
 PERMITS              : 
-PLUS                 : 258 277
-PLUS_ASSIGN          : 314
-PLUS_PLUS            : 254 261
+PLUS                 : 256 273
+PLUS_ASSIGN          : 310
+PLUS_PLUS            : 252 259
 PRIVATE              : 29
 PROTECTED            : 28
 PROVIDES             : 
 PUBLIC               : 27
-QUESTION             : 303
+QUESTION             : 299
 RECORD               : 
 REQUIRES             : 
-RETURN               : 211
-RIGHT_BRACE          : 49 82 122 132 133 138 182
-RIGHT_BRACKET        : 90 91 92 98 108 240 241 242 248 249
-RIGHT_PAREN          : 107 121 127 128 178 179 180 181 194 201 213 220 226 231 245 246 247 267 268 269 324 325 326
-RIGHT_SHIFT          : 281
-RIGHT_SHIFT_ASSIGN   : 317
+RETURN               : 207
+RIGHT_BRACE          : 48 81 121 127 134 178
+RIGHT_BRACKET        : 89 90 91 97 107 238 239 240 246 247
+RIGHT_PAREN          : 106 120 174 175 176 177 190 197 209 216 222 227 243 244 245 265 266 267 320 321 322
+RIGHT_SHIFT          : 277
+RIGHT_SHIFT_ASSIGN   : 313
 SEALED               : 
-SEMICOLON            : 9 12 13 24 101 118 127 128 131 143 167 170 194 194 201 201 207 210 211 212 326
-SHORT                : 66
-SLASH                : 274
-SLASH_ASSIGN         : 312
-STAR                 : 13 273
-STAR_ASSIGN          : 311
-STATIC               : 30 119
-STRICTFP             : 37
-STRING_LITERAL       : 334
-SUPER                : 128 244 247
-SWITCH               : 181
-SYNCHRONIZED         : 34 213
-TEXT_BLOCK           : 335
-THIS                 : 127 225
-THROW                : 212
-THROWS               : 114
-TILDE                : 264
+SEMICOLON            : 9 12 13 24 100 117 126 139 163 166 190 190 197 197 203 206 207 208 322
+SHORT                : 65
+SLASH                : 270
+SLASH_ASSIGN         : 308
+STAR                 : 13 269
+STAR_ASSIGN          : 307
+STATIC               : 30 118
+STRICTFP             : 
+STRING_LITERAL       : 330
+SUPER                : 242 245
+SWITCH               : 177
+SYNCHRONIZED         : 34 209
+TEXT_BLOCK           : 331
+THIS                 : 221
+THROW                : 208
+THROWS               : 113
+TILDE                : 262
 TO                   : 
 TRANSIENT            : 35
 TRANSITIVE           : 
-TRY                  : 214 215
-UNSIGNED_RIGHT_SHIFT : 282
-UNSIGNED_RIGHT_SHIFT_ASSIGN : 318
+TRY                  : 210 211
+UNSIGNED_RIGHT_SHIFT : 278
+UNSIGNED_RIGHT_SHIFT_ASSIGN : 314
 USES                 : 
 VAR                  : 
-VOID                 : 104
+VOID                 : 103
 VOLATILE             : 36
-WHILE                : 324 325 326
+WHILE                : 320 321 322
 WITH                 : 
 YIELD                : 
 _                    : 
@@ -475,163 +481,162 @@ error                :
 
 Nonterminals, with rules where they appear
 
-AbstractMethodDeclaration : 88
-AdditiveExpression   : 277 278 279 280 281 282
-AlphaBlockStatement  : 123 140 189
-AlphaClassBodyDeclaration : 50 53
-AlphaDim             : 234 235 242 269 270
-AlphaDimExpr         : 236 239
+AbstractMethodDeclaration : 87
+AdditiveExpression   : 273 274 275 276 277 278
+AlphaBlockStatement  : 122 136 185
+AlphaClassBodyDeclaration : 49 52
+AlphaDim             : 232 240 267
+AlphaDimExpr         : 234 237
 AlphaImportDeclaration : 6 18
-AlphaInterface       : 39
-AlphaInterfaceMemberDeclaration : 83 86
-AlphaModifier        : 26 41
-AlphaSwitchBlockStatementGroup : 183 188
-AlphaSwitchLabel     : 185 189 191
-AlphaThrow           : 105
+AlphaInterface       : 38
+AlphaInterfaceMemberDeclaration : 82 85
+AlphaModifier        : 26 40
+AlphaSwitchBlockStatementGroup : 179 184
+AlphaSwitchLabel     : 181 185 187
+AlphaThrow           : 104
 AlphaTypeDeclaration : 8 20
-AlphaVariableDeclarator : 94 101 144
-AlphaVariableInitializer : 134 137
-AndExpression        : 293 294 295
-ArgumentList         : 129 233
-ArrayAccess          : 230 309
-ArrayCreationExpression : 223
-ArrayInitializer     : 100
-ArrayType            : 73 92
-Assignment           : 171 305
-AssignmentExpression : 306 322
-AssignmentOperator   : 306
-BetaAlphaBlockStatement : 122 138
-BetaAlphaClassBodyDeclaration : 49
-BetaAlphaDim         : 267
-BetaAlphaDimExpr     : 234 235
+AlphaVariableDeclarator : 93 100 140
+AlphaVariableInitializer : 130 133
+AndExpression        : 289 290 291
+ArgumentList         : 124 229
+ArrayAccess          : 226 305
+ArrayCreationExpression : 219
+ArrayInitializer     : 99
+ArrayType            : 72 91
+Assignment           : 167 301
+AssignmentExpression : 302 318
+AssignmentOperator   : 302
+BetaAlphaBlockStatement : 121 134
+BetaAlphaClassBodyDeclaration : 48
+BetaAlphaDim         : 230 231 265
+BetaAlphaDimExpr     : 230 231
 BetaAlphaImportDeclaration : 2
-BetaAlphaInterface   : 38
-BetaAlphaInterfaceMemberDeclaration : 82
-BetaAlphaModifier    : 38 77 101 103 104 120
-BetaAlphaSwitchBlockStatementGroup : 182
-BetaAlphaSwitchLabel : 182
-BetaAlphaThrow       : 103 104 120
+BetaAlphaInterface   : 37
+BetaAlphaInterfaceMemberDeclaration : 81
+BetaAlphaModifier    : 37 76 100 102 103 119
+BetaAlphaSwitchBlockStatementGroup : 178
+BetaAlphaSwitchLabel : 178
+BetaAlphaThrow       : 102 103 119
 BetaAlphaTypeDeclaration : 2
-BetaAlphaVariableInitializer : 132 133
-BetaArgumentList     : 127 128 231 245 246 247
-BetaCatches          : 215
-BetaExplicitConstructorInvocation : 122
-BetaExpression       : 194 201 211
-BetaExtendsAlphaInterface : 77
-BetaForInit          : 194 201
-BetaForUpdate        : 194 201
-BetaFormalParameterList : 107 121
-BetaIdentifier       : 207 210
+BetaAlphaVariableInitializer : 127
+BetaArgumentList     : 227 243 244 245
+BetaCatches          : 211
+BetaComma            : 127
+BetaExpression       : 190 197 207
+BetaExtendsAlphaInterface : 76
+BetaForInit          : 190 197
+BetaForUpdate        : 190 197
+BetaFormalParameterList : 106 120
+BetaIdentifier       : 203 206
 BetaPackageDeclaration : 2
-BetaSuper            : 38
-Block                : 117 119 156 213 214 215 220 221
-BlockStatement       : 139 140
-BreakStatement       : 161
-CastExpression       : 266
-CatchClause          : 218 219
-Catches              : 214 216 219
-ClassBody            : 38
-ClassBodyDeclaration : 52 53
+BetaSuper            : 37
+Block                : 116 118 152 209 210 211 216 217
+BlockStatement       : 135 136
+BreakStatement       : 157
+CastExpression       : 264
+CatchClause          : 214 215
+Catches              : 210 212 215
+ClassBody            : 37
+ClassBodyDeclaration : 51 52
 ClassDeclaration     : 22
-ClassInstanceCreationExpression : 177 227
-ClassMemberDeclaration : 54
-ClassOrInterfaceType : 72 75 76 235
-ClassType            : 45 115 116 231
-ClassTypeList        : 114 116
+ClassInstanceCreationExpression : 173 223
+ClassMemberDeclaration : 53
+ClassOrInterfaceType : 71 74 75 231
+ClassType            : 44 114 115 227
+ClassTypeList        : 113 115
 CompilationUnit      : 1
-ConditionalAndExpression : 299 300 301
-ConditionalExpression : 303 304
-ConditionalOrExpression : 301 302 303
-ConstantDeclaration  : 87
-ConstantExpression   : 192
-ConstructorBody      : 120
-ConstructorDeclaration : 56
-ConstructorDeclarator : 120
-ContinueStatement    : 162
-DimExpr              : 238 239
-DoStatement          : 160
-EmptyStatement       : 157
-EqualityExpression   : 290 291 292 293
-ExclusiveOrExpression : 295 296 297
-ExplicitConstructorInvocation : 125
-Expression           : 99 178 179 180 181 197 212 213 226 232 233 240 248 249 268 303 323 324 325 326
-ExpressionStatement  : 158
-ExtendsAlphaInterface : 78 81
-FieldAccess          : 228 308
-FieldDeclaration     : 57 89
-Finally              : 215
-FloatingPointType    : 64
-ForInit              : 195
-ForStatement         : 150
-ForStatementNoShortIf : 155
-ForUpdate            : 199
-FormalParameter      : 111 112 220
-FormalParameterList  : 109 112
-IdentifierId         : 14 121
-IfThenElseStatement  : 148
-IfThenElseStatementNoShortIf : 153
-IfThenStatement      : 147
+ConditionalAndExpression : 295 296 297
+ConditionalExpression : 299 300
+ConditionalOrExpression : 297 298 299
+ConstantDeclaration  : 86
+ConstantExpression   : 188
+ConstructorBody      : 119
+ConstructorDeclaration : 55
+ConstructorDeclarator : 119
+ContinueStatement    : 158
+DimExpr              : 236 237
+DoStatement          : 156
+EmptyStatement       : 153
+EqualityExpression   : 286 287 288 289
+ExclusiveOrExpression : 291 292 293
+Expression           : 98 174 175 176 177 193 208 209 222 228 229 238 246 247 266 299 319 320 321 322
+ExpressionStatement  : 154
+ExtendsAlphaInterface : 77 80
+FieldAccess          : 224 304
+FieldDeclaration     : 56 88
+Finally              : 211
+FloatingPointType    : 63
+ForInit              : 191
+ForStatement         : 146
+ForStatementNoShortIf : 151
+ForUpdate            : 195
+FormalParameter      : 110 111 216
+FormalParameterList  : 108 111
+IdentifierId         : 14 120
+IfThenElseStatement  : 144
+IfThenElseStatementNoShortIf : 149
+IfThenStatement      : 143
 ImportDeclaration    : 5 6
-InclusiveOrExpression : 297 298 299
-IntegralType         : 63
-InterfaceBody        : 77
+InclusiveOrExpression : 293 294 295
+IntegralType         : 62
+InterfaceBody        : 76
 InterfaceDeclaration : 23
-InterfaceMemberDeclaration : 85 86
-InterfaceType        : 47 48 80 81
-InterfaceTypeList    : 46 48
-LabeledStatement     : 146
-LabeledStatementNoShortIf : 152
-LeftHandSide         : 306
-Literal              : 224
-LocalVariableDeclaration : 143 203
-LocalVariableDeclarationStatement : 141
-MethodBody           : 102
-MethodDeclaration    : 58
-MethodDeclarator     : 103 104 108
-MethodHeader         : 102 131
-MethodInvocation     : 176 229
+InterfaceMemberDeclaration : 84 85
+InterfaceType        : 46 47 79 80
+InterfaceTypeList    : 45 47
+LabeledStatement     : 142
+LabeledStatementNoShortIf : 148
+LeftHandSide         : 302
+Literal              : 220
+LocalVariableDeclaration : 139 199
+LocalVariableDeclarationStatement : 137
+MethodBody           : 101
+MethodDeclaration    : 57
+MethodDeclarator     : 102 103 107
+MethodHeader         : 101 126
+MethodInvocation     : 172 225
 Modifier             : 25 26
-MultiplicativeExpression : 273 274 275 276 277 278
-Name                 : 9 12 13 17 74 91 245 248 251 269 307
+MultiplicativeExpression : 269 270 271 272 273 274
+Name                 : 9 12 13 17 73 90 243 246 249 267 303
 NameDotIdentifierId  : 15
-NumericType          : 61
+NumericType          : 60
 PackageDeclaration   : 3
-PostDecrementExpression : 175 253
-PostIncrementExpression : 174 252
-PostfixExpression    : 254 255 263
-PreDecrementExpression : 173 257
-PreIncrementExpression : 172 256
-Primary              : 243 246 250
-PrimaryNoNewArray    : 222 249
-PrimitiveType        : 59 90 234 267
-ReferenceType        : 60 288
-RelationalExpression : 284 285 286 287 288 289 290 291
-ReturnStatement      : 163
-ShiftExpression      : 280 281 282 283 284 285 286 287
+PostDecrementExpression : 171 251
+PostIncrementExpression : 170 250
+PostfixExpression    : 252 253 261
+PreDecrementExpression : 169 255
+PreIncrementExpression : 168 254
+Primary              : 241 244 248
+PrimaryNoNewArray    : 218 247
+PrimitiveType        : 58 89 230 265
+ReferenceType        : 59 284
+RelationalExpression : 280 281 282 283 284 285 286 287
+ReturnStatement      : 159
+ShiftExpression      : 276 277 278 279 280 281 282 283
 SingleTypeImportDeclaration : 10
 Start                : 0
-Statement            : 142 168 178 179 194 324 326
-StatementExpression  : 170 205 206
-StatementExpressionList : 202 204 206
-StatementNoShortIf   : 169 179 180 180 201 325
-StatementWithoutTrailingSubstatement : 145 151
-StaticInitializer    : 55
-Super                : 43
-SwitchBlock          : 181
-SwitchBlockStatementGroup : 187 188
-SwitchLabel          : 190 191
-SwitchStatement      : 159
-SynchronizedStatement : 164
-ThrowStatement       : 165
-TryStatement         : 166
-Type                 : 101 103 113 144
+Statement            : 138 164 174 175 190 320 322
+StatementExpression  : 166 201 202
+StatementExpressionList : 198 200 202
+StatementNoShortIf   : 165 175 176 176 197 321
+StatementWithoutTrailingSubstatement : 141 147
+StaticInitializer    : 54
+Super                : 42
+SwitchBlock          : 177
+SwitchBlockStatementGroup : 183 184
+SwitchLabel          : 186 187
+SwitchStatement      : 155
+SynchronizedStatement : 160
+ThrowStatement       : 161
+TryStatement         : 162
+Type                 : 100 102 112 140
 TypeDeclaration      : 7 8
 TypeImportOnDemandDeclaration : 11
-UnaryExpression      : 258 259 261 262 264 265 267 272 273 274 275
-UnaryExpressionNotPlusMinus : 260 268 269
-VariableDeclarator   : 93 94
-VariableDeclaratorId : 95 96 98 113
-VariableInitializer  : 96 136 137
-WhileStatement       : 149
-WhileStatementNoShortIf : 154
-
+UnaryExpression      : 256 257 259 260 262 263 265 268 269 270 271
+UnaryExpressionNotPlusMinus : 258 266 267
+VariableDeclarator   : 92 93
+VariableDeclaratorId : 94 95 97 112
+VariableInitializer  : 95 132 133
+WhileStatement       : 145
+WhileStatementNoShortIf : 150
+empty                : 4 19 21 39 41 43 50 78 83 105 109 123 125 129 131 180 182 192 194 196 205 213 233 235

@@ -1,8 +1,6 @@
-package test;
 
-import java.util.Scanner;
 
-public class LinkedList {
+class LinkedList {
     private Node head;
     int x =4+5;
 
@@ -12,7 +10,7 @@ public class LinkedList {
 
     public void add(int value) {
         Node newNode = new Node(value);
-        if("fsdd")
+        if(true)
         {
             System.out.println("Hello World!");
         }
@@ -61,8 +59,8 @@ class Node {
     private Node next;
 
     public Node(int value) {
-        value = value;
-        next = 36.33f;
+        this.value = value;
+        // next = 36.33f;
     }
 
     public int getValue() {
@@ -70,7 +68,7 @@ class Node {
     }
 
     public void setNext(Node next) {
-        next = next;
+        this.next = next;
     }
 
     public Node getNext() {
