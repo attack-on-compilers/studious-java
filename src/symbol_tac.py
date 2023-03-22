@@ -360,8 +360,8 @@ def initial_Traverse(tree):
                     newi = i[: i.find("[")]
                 symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count], offset[-1], fieldModifiers, dims))
                 offset[-1] = offset[-1] + typeSize*variablesizes[count]
-                post_type_check(tree)
                 count+=1
+            post_type_check(tree)
 
         case "MethodDeclaration":
             methodModifiers = get_Modifiers(tree[1][1])
@@ -522,8 +522,10 @@ def method_check(expression):
             methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
             methodInvocationParams = []
             newtree = expression[3]
-            if newtree[1] == "":
+            # print("AAAAAAAAAAAAA", newtree[1])
+            if newtree[1][0] == '':
                 methodInvocationParams = []
+                # print("BBBBBBBAAAAAAAAAAAAA", methodInvocationName)
             else:
                 newtree = newtree[1]
                 while len(newtree) == 4:
@@ -533,7 +535,7 @@ def method_check(expression):
                 methodInvocationParams.reverse()
             arr = methodcalledtype.params
             if len(methodInvocationParams) != len(arr):
-                raise Exception("Error: Method Invocation Parameters don't match the method declaration")
+                raise Exception("Error: Method Invocation Parameters of {} don't match the method declaration".format(methodInvocationName))
             else:
                 for i in range(len(methodInvocationParams)):
                     big_method(methodInvocationParams[i], arr[i])
@@ -575,7 +577,7 @@ def get_expression_Type(expression):
         case "ArrayAccess":
             t = get_expression_Type(expression[3])
             if t != "int":
-                raise Exception("Array index must be of type int")
+                raise Exception("Array index must be of type int instead recieved {}".format(t))
             if expression[1][0] == "Name":
                 return symbol_table.get_symbol(get_Name(expression[1])).data_type
             else:
@@ -907,7 +909,7 @@ def generate_tac(tree):
             return generate_tac(tree[1])
         case "CastExpression":
             if tree[2][0] != "PrimitiveType":
-                raise Exception("CastExpression only supported with PrimitiveType")
+                raise Exception("CastExpression only supported with PrimitiveType, recieved {}".format(tree[2][0]))
             ctype = get_Type(tree[2])
             out = tac.new_temp()
             right = generate_tac(tree[5])

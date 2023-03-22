@@ -167,7 +167,7 @@ class SymbolTable:
         elif self.parent is not None:
             return self.parent.get_symbol(name, symbol_type)
         else:
-            raise Exception("Symbol not found")
+            raise Exception("Symbol {} not found" .format(name))
         
     def get_symbol_name(self, name, symbol_type=None):
         symbol = self.symbols.get(name)
