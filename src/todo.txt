@@ -25,3 +25,4 @@ Array Initializer -Akshan int[] a = {1,2,3};  ----Done!
 Offset -Arpit
 Static - In some future dreams
 This - "
+Empty {}
