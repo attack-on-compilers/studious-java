@@ -1,8 +1,10 @@
-from symbol_table import *
 from pprint import pprint as pprint
-from tac import TAC
+
+from symbol_table import *
 from lexer import *
 from utils import *
+from tac import *
+
 import csv
 import os
 
@@ -102,16 +104,14 @@ def traverse_tree(tree):
         method_type_check(methodreturn_type, methodheader_type)
 
     if tree[0] == "MethodInvocation":
-
         method_check(tree)
-    
+
     # if tree[0] == "ClassInstanceCreationExpression":
-        
+
     #     print("kokki")
     #     methodInvocationName = get_expression_Type(tree[2])
 
     #     print("gyggy", methodInvocationName)
-
 
     if tree[0] == "ShiftExpression" and len(tree) == 4:
         operator = tree[2]
@@ -460,7 +460,7 @@ def post_type_check(expression):
                 pass
             else:
                 left = get_expression_Type(expression[1])
-                
+
                 right = get_expression_Type(expression[3])
 
                 binop_type_check(left, "=", right, expression)
@@ -478,36 +478,37 @@ def post_type_check(expression):
         case _:
             pass
 
+
 def method_check(expression):
     if len(expression) == 5:
-            methodInvocationName = get_Name(expression[1])
+        methodInvocationName = get_Name(expression[1])
 
-            if methodInvocationName == "System.out.println":
-                pass
-            else:
-                methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
+        if methodInvocationName == "System.out.println":
+            pass
+        else:
+            methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
+            methodInvocationParams = []
+            newtree = expression[3]
+            if newtree[1] == "":
                 methodInvocationParams = []
-                newtree = expression[3]
-                if newtree[1] == "":
-                    methodInvocationParams = []
-                else:
+            else:
+                newtree = newtree[1]
+                while len(newtree) == 4:
+                    methodInvocationParams.append(get_expression_Type(newtree[3]))
                     newtree = newtree[1]
-                    while len(newtree) == 4:
-                        methodInvocationParams.append(get_expression_Type(newtree[3]))
-                        newtree = newtree[1]
-                    methodInvocationParams.append(get_expression_Type(newtree[1]))
-                    methodInvocationParams.reverse()
-                arr = methodcalledtype.params
-                if len(methodInvocationParams) != len(arr):
-                    raise Exception("Error: Method Invocation Parameters don't match the method declaration")
-                else:
-                    for i in range(len(methodInvocationParams)):
-                        big_method(methodInvocationParams[i], arr[i])
+                methodInvocationParams.append(get_expression_Type(newtree[1]))
+                methodInvocationParams.reverse()
+            arr = methodcalledtype.params
+            if len(methodInvocationParams) != len(arr):
+                raise Exception("Error: Method Invocation Parameters don't match the method declaration")
+            else:
+                for i in range(len(methodInvocationParams)):
+                    big_method(methodInvocationParams[i], arr[i])
 
     elif len(expression) == 7:
         pass
 
-###yet to complete
+
 def get_expression_Type(expression):
     match expression[0]:
         case "LeftHandSide":
@@ -555,7 +556,7 @@ def get_expression_Type(expression):
         case "RelationalExpression":
             return get_expression_Type(expression[1])
         case "ShiftExpression":
-            if len(expression) ==4:
+            if len(expression) == 4:
                 operator = expression[2]
                 left = get_expression_Type(expression[1])
                 right = get_expression_Type(expression[3])
@@ -684,22 +685,191 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[2])
         case "BetaAlphaBlockStatement":
             return get_expression_Type(expression[1])
-        # case "AlphaBlockStatement":
-        #     return get_expression_Type(expression[1])
-        # case "BlockStatement":
-        #     return get_expression_Type(expression[1])
         case "ArrayInitializer":
             return get_expression_Type(expression[2])
         case "BetaAlphaVariableInitializer":
             return get_expression_Type(expression[1])
         case "AlphaVariableInitializer":
             if len(expression) == 2:
-
                 return get_expression_Type(expression[1])
             else:
                 t1 = get_expression_Type(expression[1])
                 t2 = get_expression_Type(expression[3])
                 return big(t1, t2)
-        
+
         case _:
             pass
+
+
+def TOIMPLEMENT():
+    raise Exception("TO IMPLEMENT")
+
+
+def generate_tac(tree):
+    match tree[0]:
+        case "AlphaVariableDeclarator":
+            if len(tree) == 4:
+                right = generate_tac(tree[3])
+                left = symbol_table.get_symbol_name(get_Name(tree[1]))
+                tac.add3("=", right, left)
+                return
+        case "VariableInitializer":
+            return generate_tac(tree[1])
+        case "Expression":
+            return generate_tac(tree[1])
+        case "ArrayInitializer":
+            TOIMPLEMENT()
+        case "AssignmentExpression":
+            return generate_tac(tree[1])
+        case "Assignment":
+            left = get_Name(tree[1])
+            right = generate_tac(tree[3])
+            tac.add3(tree[2][1], right, left)
+            return left
+        case "ConditionalExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                raise Exception("Conditional Expression not supported")
+        case "ConditionalOrExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add("||", left, right, out)
+                return out
+        case "ConditionalAndExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add("&&", left, right, out)
+                return out
+        case "InclusiveOrExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add("|", left, right, out)
+                return out
+        case "ExclusiveOrExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add("^", left, right, out)
+                return out
+        case "AndExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add("&", left, right, out)
+                return out
+        case "EqualityExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add(tree[2][1], left, right, out)
+                return out
+        case "RelationalExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add(tree[2][1], left, right, out)
+                if tree[2][1] == "instanceof":
+                    raise Exception("instanceof not supported")
+                return out
+        case "ShiftExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add(tree[2][1], left, right, out)
+                return out
+        case "AdditiveExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add(tree[2][1], left, right, out)
+                return out
+        case "MultiplicativeExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                left = generate_tac(tree[1])
+                right = generate_tac(tree[3])
+                tac.add(tree[2][1], left, right, out)
+                return out
+        case "UnaryExpression":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                right = generate_tac(tree[2])
+                tac.add3(tree[1][1], right, out)
+                return out
+        case "PreIncrementExpression":
+            out = tac.new_temp()
+            right = generate_tac(tree[2])
+            tac.add("+", right, "1", out)
+            return out
+        case "PreDecrementExpression":
+            out = tac.new_temp()
+            right = generate_tac(tree[2])
+            tac.add("-", right, "1", out)
+            return out
+        case "UnaryExpressionNotPlusMinus":
+            if len(tree) == 2:
+                return generate_tac(tree[1])
+            else:
+                out = tac.new_temp()
+                right = generate_tac(tree[2])
+                tac.add3(tree[1][1], right, out)
+                return out
+        case "PostfixExpression":
+            return generate_tac(tree[1])
+        case "CastExpression":
+            if tree[2][0] != "PrimitiveType":
+                raise Exception("CastExpression only supported with PrimitiveType")
+            ctype = get_Type(tree[2])
+            out = tac.new_temp()
+            right = generate_tac(tree[5])
+            tac.add3("cast_to_" + ctype, right, out)
+        case "Primary":
+            raise Exception("Primary not implement")
+        case "Name":
+            return symbol_table.get_symbol_name(get_Name(tree[1]))
+        case "PostIncrementExpression":
+            out = tac.new_temp()
+            right = generate_tac(tree[1])
+            tac.add("+", right, "1", out)
+            return out
+        case "PostDecrementExpression":
+            out = tac.new_temp()
+            right = generate_tac(tree[1])
+            tac.add("-", right, "1", out)
+            return out
+        

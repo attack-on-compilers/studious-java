@@ -17,6 +17,12 @@ def get_Name(tree):
             return get_Name(tree[1])
         case "ClassType":
             return get_Name(tree[1])
+        case "LeftHandSide":
+            return get_Name(tree[1])
+        case "ArrayAccess":
+            raise Exception("ArrayAccess not supported")
+        case "FieldAccess":
+            raise Exception("FieldAccess not supported")
         case "VariableDeclaratorId":
             match len(tree):
                 case 2:

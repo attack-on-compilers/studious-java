@@ -15,6 +15,9 @@ class TAC:
 
     def add(self, op, arg1, arg2, result):
         self.table.append([op, arg1, arg2, result])
+    
+    def add3(self, op, arg1, result):
+        self.table.append([op, arg1, result])
 
     def add_label(self, label=""):
         if not label:

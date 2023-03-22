@@ -1,47 +1,47 @@
 Grammar
 
-Rule 0     S' -> Start
-Rule 1     Start -> CompilationUnit
-Rule 2     CompilationUnit -> BetaAlphaTypeDeclaration
+<!-- Rule 0     S' -> Start -->
+<!-- Rule 1     Start -> CompilationUnit -->
+<!-- Rule 2     CompilationUnit -> BetaAlphaTypeDeclaration -->
 
-Rule 20    BetaAlphaTypeDeclaration -> AlphaTypeDeclaration
-Rule 21    BetaAlphaTypeDeclaration -> empty
+<!-- Rule 20    BetaAlphaTypeDeclaration -> AlphaTypeDeclaration -->
+<!-- Rule 21    BetaAlphaTypeDeclaration -> empty -->
 
-Rule 7     AlphaTypeDeclaration -> TypeDeclaration
-Rule 8     AlphaTypeDeclaration -> AlphaTypeDeclaration TypeDeclaration
+<!-- Rule 7     AlphaTypeDeclaration -> TypeDeclaration -->
+<!-- Rule 8     AlphaTypeDeclaration -> AlphaTypeDeclaration TypeDeclaration -->
 
 Rule 22    TypeDeclaration -> ClassDeclaration
-Rule 23    TypeDeclaration -> InterfaceDeclaration
-Rule 24    TypeDeclaration -> SEMICOLON
+<!-- Rule 23    TypeDeclaration -> InterfaceDeclaration ##-->
+<!-- Rule 24    TypeDeclaration -> SEMICOLON -->
 
-Rule 14    Name -> IdentifierId
-Rule 15    Name -> NameDotIdentifierId
-Rule 16    IdentifierId -> IDENTIFIER
-Rule 17    NameDotIdentifierId -> Name DOT IDENTIFIER
+<!-- Rule 14    Name -> IdentifierId -->
+<!-- Rule 15    Name -> NameDotIdentifierId -->
+<!-- Rule 16    IdentifierId -> IDENTIFIER -->
+<!-- Rule 17    NameDotIdentifierId -> Name DOT IDENTIFIER -->
 
-Rule 40    BetaAlphaModifier -> AlphaModifier
-Rule 41    BetaAlphaModifier -> empty
-Rule 25    AlphaModifier -> Modifier
-Rule 26    AlphaModifier -> AlphaModifier Modifier
-Rule 27    Modifier -> PUBLIC
-Rule 29    Modifier -> PRIVATE
-Rule 30    Modifier -> STATIC
-Rule 32    Modifier -> FINAL
+<!-- Rule 40    BetaAlphaModifier -> AlphaModifier -->
+<!-- Rule 41    BetaAlphaModifier -> empty -->
+<!-- Rule 25    AlphaModifier -> Modifier -->
+<!-- Rule 26    AlphaModifier -> AlphaModifier Modifier -->
+<!-- Rule 27    Modifier -> PUBLIC -->
+<!-- Rule 29    Modifier -> PRIVATE -->
+<!-- Rule 30    Modifier -> STATIC -->
+<!-- Rule 32    Modifier -> FINAL -->
 
-Rule 37    ClassDeclaration -> BetaAlphaModifier CLASS IDENTIFIER ClassBody
+<!-- Rule 37    ClassDeclaration -> BetaAlphaModifier CLASS IDENTIFIER ClassBody -->
 
-Rule 48    ClassBody -> LEFT_BRACE BetaAlphaClassBodyDeclaration RIGHT_BRACE
+<!-- Rule 48    ClassBody -> LEFT_BRACE BetaAlphaClassBodyDeclaration RIGHT_BRACE -->
 
-Rule 49    BetaAlphaClassBodyDeclaration -> AlphaClassBodyDeclaration
-Rule 50    BetaAlphaClassBodyDeclaration -> empty
-Rule 51    AlphaClassBodyDeclaration -> ClassBodyDeclaration
-Rule 52    AlphaClassBodyDeclaration -> AlphaClassBodyDeclaration ClassBodyDeclaration
+<!-- Rule 49    BetaAlphaClassBodyDeclaration -> AlphaClassBodyDeclaration -->
+<!-- Rule 50    BetaAlphaClassBodyDeclaration -> empty -->
+<!-- Rule 51    AlphaClassBodyDeclaration -> ClassBodyDeclaration -->
+<!-- Rule 52    AlphaClassBodyDeclaration -> AlphaClassBodyDeclaration ClassBodyDeclaration -->
 
 Rule 53    ClassBodyDeclaration -> ClassMemberDeclaration
 Rule 54    ClassBodyDeclaration -> StaticInitializer
 Rule 55    ClassBodyDeclaration -> ConstructorDeclaration
 
-Rule 56    ClassMemberDeclaration -> FieldDeclaration
+<!-- Rule 56    ClassMemberDeclaration -> FieldDeclaration -->
 Rule 57    ClassMemberDeclaration -> MethodDeclaration
 
 Rule 58    Type -> PrimitiveType
@@ -69,19 +69,19 @@ Rule 89    ArrayType -> PrimitiveType LEFT_BRACKET RIGHT_BRACKET
 Rule 90    ArrayType -> Name LEFT_BRACKET RIGHT_BRACKET
 Rule 91    ArrayType -> ArrayType LEFT_BRACKET RIGHT_BRACKET
 
-Rule 100   FieldDeclaration -> BetaAlphaModifier Type AlphaVariableDeclarator SEMICOLON
+<!-- Rule 100   FieldDeclaration -> BetaAlphaModifier Type AlphaVariableDeclarator SEMICOLON -->
 
-Rule 92    AlphaVariableDeclarator -> VariableDeclarator
-Rule 93    AlphaVariableDeclarator -> AlphaVariableDeclarator COMMA VariableDeclarator
+<!-- Rule 92    AlphaVariableDeclarator -> VariableDeclarator -->
+<!-- Rule 93    AlphaVariableDeclarator -> AlphaVariableDeclarator COMMA VariableDeclarator -->
 
-Rule 94    VariableDeclarator -> VariableDeclaratorId
-Rule 95    VariableDeclarator -> VariableDeclaratorId ASSIGN VariableInitializer
+<!-- Rule 94    VariableDeclarator -> VariableDeclaratorId -->
+<!-- Rule 95    VariableDeclarator -> VariableDeclaratorId ASSIGN VariableInitializer -->
 
-Rule 96    VariableDeclaratorId -> IDENTIFIER
-Rule 97    VariableDeclaratorId -> VariableDeclaratorId LEFT_BRACKET RIGHT_BRACKET
+<!-- Rule 96    VariableDeclaratorId -> IDENTIFIER -->
+<!-- Rule 97    VariableDeclaratorId -> VariableDeclaratorId LEFT_BRACKET RIGHT_BRACKET -->
 
-Rule 98    VariableInitializer -> Expression
-Rule 99    VariableInitializer -> ArrayInitializer
+<!-- Rule 98    VariableInitializer -> Expression -->
+<!-- Rule 99    VariableInitializer -> ArrayInitializer -->
 
 Rule 101   MethodDeclaration -> MethodHeader MethodBody
 
@@ -246,92 +246,92 @@ Rule 243   MethodInvocation -> Name LEFT_PAREN BetaArgumentList RIGHT_PAREN
 Rule 244   MethodInvocation -> Primary DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
 Rule 245   MethodInvocation -> SUPER DOT IDENTIFIER LEFT_PAREN BetaArgumentList RIGHT_PAREN
 
-Rule 248   PostfixExpression -> Primary
-Rule 249   PostfixExpression -> Name
-Rule 250   PostfixExpression -> PostIncrementExpression
-Rule 251   PostfixExpression -> PostDecrementExpression
-Rule 252   PostIncrementExpression -> PostfixExpression PLUS_PLUS
-Rule 253   PostDecrementExpression -> PostfixExpression MINUS_MINUS
+Rule 248   PostfixExpression -> Primary !TODO: Get_name
+<!-- Rule 249   PostfixExpression -> Name  -->
+<!-- Rule 250   PostfixExpression -> PostIncrementExpression -->
+<!-- Rule 251   PostfixExpression -> PostDecrementExpression -->
+<!-- Rule 252   PostIncrementExpression -> PostfixExpression PLUS_PLUS -->
+<!-- Rule 253   PostDecrementExpression -> PostfixExpression MINUS_MINUS -->
 
-Rule 254   UnaryExpression -> PreIncrementExpression
-Rule 255   UnaryExpression -> PreDecrementExpression
-Rule 256   UnaryExpression -> PLUS UnaryExpression
-Rule 257   UnaryExpression -> MINUS UnaryExpression
-Rule 258   UnaryExpression -> UnaryExpressionNotPlusMinus
-Rule 259   PreIncrementExpression -> PLUS_PLUS UnaryExpression
-Rule 260   PreDecrementExpression -> MINUS_MINUS UnaryExpression
+<!-- Rule 254   UnaryExpression -> PreIncrementExpression -->
+<!-- Rule 255   UnaryExpression -> PreDecrementExpression -->
+<!-- Rule 256   UnaryExpression -> PLUS UnaryExpression -->
+<!-- Rule 257   UnaryExpression -> MINUS UnaryExpression -->
+<!-- Rule 258   UnaryExpression -> UnaryExpressionNotPlusMinus -->
+<!-- Rule 259   PreIncrementExpression -> PLUS_PLUS UnaryExpression -->
+<!-- Rule 260   PreDecrementExpression -> MINUS_MINUS UnaryExpression -->
 
-Rule 261   UnaryExpressionNotPlusMinus -> PostfixExpression
-Rule 262   UnaryExpressionNotPlusMinus -> TILDE UnaryExpression
-Rule 263   UnaryExpressionNotPlusMinus -> EXCLAMATION UnaryExpression
-Rule 264   UnaryExpressionNotPlusMinus -> CastExpression
+<!-- Rule 261   UnaryExpressionNotPlusMinus -> PostfixExpression -->
+<!-- Rule 262   UnaryExpressionNotPlusMinus -> TILDE UnaryExpression -->
+<!-- Rule 263   UnaryExpressionNotPlusMinus -> EXCLAMATION UnaryExpression -->
+<!-- Rule 264   UnaryExpressionNotPlusMinus -> CastExpression -->
 
-Rule 265   CastExpression -> LEFT_PAREN PrimitiveType BetaAlphaDim RIGHT_PAREN UnaryExpression
-Rule 266   CastExpression -> LEFT_PAREN Expression RIGHT_PAREN UnaryExpressionNotPlusMinus
-Rule 267   CastExpression -> LEFT_PAREN Name AlphaDim RIGHT_PAREN UnaryExpressionNotPlusMinus
+<!-- Rule 265   CastExpression -> LEFT_PAREN PrimitiveType BetaAlphaDim RIGHT_PAREN UnaryExpression -->
+<!-- Rule 266   CastExpression -> LEFT_PAREN Expression RIGHT_PAREN UnaryExpressionNotPlusMinus !NOT ##-->
+<!-- Rule 267   CastExpression -> LEFT_PAREN Name AlphaDim RIGHT_PAREN UnaryExpressionNotPlusMinus !NOT ##-->
 
-Rule 268   MultiplicativeExpression -> UnaryExpression
-Rule 269   MultiplicativeExpression -> MultiplicativeExpression STAR UnaryExpression
-Rule 270   MultiplicativeExpression -> MultiplicativeExpression SLASH UnaryExpression
-Rule 271   MultiplicativeExpression -> MultiplicativeExpression PERCENT UnaryExpression
+<!-- Rule 268   MultiplicativeExpression -> UnaryExpression -->
+<!-- Rule 269   MultiplicativeExpression -> MultiplicativeExpression STAR UnaryExpression -->
+<!-- Rule 270   MultiplicativeExpression -> MultiplicativeExpression SLASH UnaryExpression -->
+<!-- Rule 271   MultiplicativeExpression -> MultiplicativeExpression PERCENT UnaryExpression -->
 
-Rule 272   AdditiveExpression -> MultiplicativeExpression
-Rule 273   AdditiveExpression -> AdditiveExpression PLUS MultiplicativeExpression
-Rule 274   AdditiveExpression -> AdditiveExpression MINUS MultiplicativeExpressio
-n
-Rule 275   ShiftExpression -> AdditiveExpression
-Rule 276   ShiftExpression -> ShiftExpression LEFT_SHIFT AdditiveExpression
-Rule 277   ShiftExpression -> ShiftExpression RIGHT_SHIFT AdditiveExpression
-Rule 278   ShiftExpression -> ShiftExpression UNSIGNED_RIGHT_SHIFT AdditiveExpression
+<!-- Rule 272   AdditiveExpression -> MultiplicativeExpression -->
+<!-- Rule 273   AdditiveExpression -> AdditiveExpression PLUS MultiplicativeExpression -->
+<!-- Rule 274   AdditiveExpression -> AdditiveExpression MINUS MultiplicativeExpression -->
 
-Rule 279   RelationalExpression -> ShiftExpression
-Rule 280   RelationalExpression -> RelationalExpression LESS ShiftExpression
-Rule 281   RelationalExpression -> RelationalExpression GREATER ShiftExpression
-Rule 282   RelationalExpression -> RelationalExpression LESS_EQUAL ShiftExpression
-Rule 283   RelationalExpression -> RelationalExpression GREATER_EQUAL ShiftExpression
-Rule 284   RelationalExpression -> RelationalExpression INSTANCEOF ReferenceType
+<!-- Rule 275   ShiftExpression -> AdditiveExpression -->
+<!-- Rule 276   ShiftExpression -> ShiftExpression LEFT_SHIFT AdditiveExpression -->
+<!-- Rule 277   ShiftExpression -> ShiftExpression RIGHT_SHIFT AdditiveExpression -->
+<!-- Rule 278   ShiftExpression -> ShiftExpression UNSIGNED_RIGHT_SHIFT AdditiveExpression -->
 
-Rule 285   EqualityExpression -> RelationalExpression
-Rule 286   EqualityExpression -> EqualityExpression EQUAL_EQUAL RelationalExpression
-Rule 287   EqualityExpression -> EqualityExpression EXCLAMATION_EQUAL RelationalExpression
+<!-- Rule 279   RelationalExpression -> ShiftExpression -->
+<!-- Rule 280   RelationalExpression -> RelationalExpression LESS ShiftExpression -->
+<!-- Rule 281   RelationalExpression -> RelationalExpression GREATER ShiftExpression -->
+<!-- Rule 282   RelationalExpression -> RelationalExpression LESS_EQUAL ShiftExpression -->
+<!-- Rule 283   RelationalExpression -> RelationalExpression GREATER_EQUAL ShiftExpression -->
+<!-- Rule 284   RelationalExpression -> RelationalExpression INSTANCEOF ReferenceType -->
 
-Rule 288   AndExpression -> EqualityExpression
-Rule 289   AndExpression -> AndExpression AMPERSAND EqualityExpression
+<!-- Rule 285   EqualityExpression -> RelationalExpression -->
+<!-- Rule 286   EqualityExpression -> EqualityExpression EQUAL_EQUAL RelationalExpression -->
+<!-- Rule 287   EqualityExpression -> EqualityExpression EXCLAMATION_EQUAL RelationalExpression -->
 
-Rule 290   ExclusiveOrExpression -> AndExpression
-Rule 291   ExclusiveOrExpression -> ExclusiveOrExpression CARET AndExpression
-Rule 292   InclusiveOrExpression -> ExclusiveOrExpression
-Rule 293   InclusiveOrExpression -> InclusiveOrExpression BAR ExclusiveOrExpression
+<!-- Rule 288   AndExpression -> EqualityExpression -->
+<!-- Rule 289   AndExpression -> AndExpression AMPERSAND EqualityExpression -->
 
-Rule 294   ConditionalAndExpression -> InclusiveOrExpression
-Rule 295   ConditionalAndExpression -> ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression
-Rule 296   ConditionalOrExpression -> ConditionalAndExpression
-Rule 297   ConditionalOrExpression -> ConditionalOrExpression BAR_BAR ConditionalAndExpression
-Rule 298   ConditionalExpression -> ConditionalOrExpression
-Rule 299   ConditionalExpression -> ConditionalOrExpression QUESTION Expression COLON ConditionalExpression
+<!-- Rule 290   ExclusiveOrExpression -> AndExpression -->
+<!-- Rule 291   ExclusiveOrExpression -> ExclusiveOrExpression CARET AndExpression -->
+<!-- Rule 292   InclusiveOrExpression -> ExclusiveOrExpression -->
+<!-- Rule 293   InclusiveOrExpression -> InclusiveOrExpression BAR ExclusiveOrExpression -->
 
-Rule 300   AssignmentExpression -> ConditionalExpression
-Rule 301   AssignmentExpression -> Assignment
-Rule 302   Assignment -> LeftHandSide AssignmentOperator AssignmentExpression
+<!-- Rule 294   ConditionalAndExpression -> InclusiveOrExpression -->
+<!-- Rule 295   ConditionalAndExpression -> ConditionalAndExpression AMPERSAND_AMPERSAND InclusiveOrExpression -->
+<!-- Rule 296   ConditionalOrExpression -> ConditionalAndExpression -->
+<!-- Rule 297   ConditionalOrExpression -> ConditionalOrExpression BAR_BAR ConditionalAndExpression -->
+<!-- Rule 298   ConditionalExpression -> ConditionalOrExpression -->
+<!-- Rule 299   ConditionalExpression -> ConditionalOrExpression QUESTION Expression COLON ConditionalExpression -->
 
-Rule 303   LeftHandSide -> Name
-Rule 304   LeftHandSide -> FieldAccess
-Rule 305   LeftHandSide -> ArrayAccess
+<!-- Rule 300   AssignmentExpression -> ConditionalExpression -->
+<!-- Rule 301   AssignmentExpression -> Assignment -->
+<!-- Rule 302   Assignment -> LeftHandSide AssignmentOperator AssignmentExpression -->
 
-Rule 306   AssignmentOperator -> ASSIGN
-Rule 307   AssignmentOperator -> STAR_ASSIGN
-Rule 308   AssignmentOperator -> SLASH_ASSIGN
-Rule 309   AssignmentOperator -> PERCENT_ASSIGN
-Rule 310   AssignmentOperator -> PLUS_ASSIGN
-Rule 311   AssignmentOperator -> MINUS_ASSIGN
-Rule 312   AssignmentOperator -> LEFT_SHIFT_ASSIGN
-Rule 313   AssignmentOperator -> RIGHT_SHIFT_ASSIGN
-Rule 314   AssignmentOperator -> UNSIGNED_RIGHT_SHIFT_ASSIGN
-Rule 315   AssignmentOperator -> AMPERSAND_ASSIGN
-Rule 316   AssignmentOperator -> CARET_ASSIGN
-Rule 317   AssignmentOperator -> BAR_ASSIGN
+<!-- Rule 303   LeftHandSide -> Name -->
+Rule 304   LeftHandSide -> FieldAccess !TODO: Get_name
+Rule 305   LeftHandSide -> ArrayAccess !TODO: Get_name
 
-Rule 318   Expression -> AssignmentExpression
+<!-- Rule 306   AssignmentOperator -> ASSIGN -->
+<!-- Rule 307   AssignmentOperator -> STAR_ASSIGN -->
+<!-- Rule 308   AssignmentOperator -> SLASH_ASSIGN -->
+<!-- Rule 309   AssignmentOperator -> PERCENT_ASSIGN -->
+<!-- Rule 310   AssignmentOperator -> PLUS_ASSIGN -->
+<!-- Rule 311   AssignmentOperator -> MINUS_ASSIGN -->
+<!-- Rule 312   AssignmentOperator -> LEFT_SHIFT_ASSIGN -->
+<!-- Rule 313   AssignmentOperator -> RIGHT_SHIFT_ASSIGN -->
+<!-- Rule 314   AssignmentOperator -> UNSIGNED_RIGHT_SHIFT_ASSIGN -->
+<!-- Rule 315   AssignmentOperator -> AMPERSAND_ASSIGN -->
+<!-- Rule 316   AssignmentOperator -> CARET_ASSIGN -->
+<!-- Rule 317   AssignmentOperator -> BAR_ASSIGN -->
+
+<!-- Rule 318   Expression -> AssignmentExpression -->
 Rule 319   ConstantExpression -> Expression
 
 Rule 323   Literal -> INTEGER_LITERAL_OCTAL
