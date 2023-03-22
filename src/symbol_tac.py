@@ -198,6 +198,19 @@ def traverse_tree(tree):
         right = get_expression_Type(tree[3])
 
         binop_type_check(left, operator, right, tree[0])
+        
+    if tree[0] == "RelationalExpression" and len(tree) == 4 and tree[2] != "instanceof":
+        operator = tree[2]
+        left = get_expression_Type(tree[1])
+        right = get_expression_Type(tree[3])
+        binop_type_check(left, operator, right, tree[0])   
+
+    if tree[0] == "EqualityExpression" and len(tree) == 4:
+        operator = tree[2]
+        left = get_expression_Type(tree[1])
+        right = get_expression_Type(tree[3])
+
+        binop_type_check(left, operator, right, tree[0])   
 
     match tree[0]:
         case "BetaAlphaTypeDeclaration":
