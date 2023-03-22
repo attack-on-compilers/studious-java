@@ -991,7 +991,8 @@ def generate_tac(tree, begin="", end=""):
                 out = tac.new_temp()
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
-                tac.add(tree[2][1], left, right, out)
+                print(tree[2])
+                tac.add(tree[2], left, right, out)
                 return out
         case "UnaryExpression":
             if len(tree) == 2:
