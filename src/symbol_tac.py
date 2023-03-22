@@ -551,7 +551,7 @@ def get_expression_Type(expression):
         case "LeftHandSide":
             return get_expression_Type(expression[1])
         case "FieldAccess":
-            pass
+            return (symbol_table.get_symbol(expression[3]).data_type)
 
         case "ArrayAccess":
             t = get_expression_Type(expression[3])
@@ -669,8 +669,6 @@ def get_expression_Type(expression):
                 return get_expression_Type(expression[4])
             else:
                 return get_expression_Type(expression[1])
-        case "FieldAccess":
-            pass
         case "MethodInvocation":
             method_check(expression)
             if len(expression) == 5:

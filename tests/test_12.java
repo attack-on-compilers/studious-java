@@ -1,9 +1,14 @@
-import java.io.*;
+// import java.io.*;
 
 class GoGo {
 	String a;
+	String name;
     
-	GoGo() { System.out.println("Constructor called"); }
+	GoGo(String name, int id)
+	{ 
+		this.name =name;
+		System.out.println("Constructor called");
+	}
 }
 
 class Hii {
@@ -11,9 +16,9 @@ class Hii {
 	{
 		// this would invoke default constructor.
 		GoGo go1;
-        go1 = new GoGo();
+        go1 = new GoGo("Yo");
 
-        GoGo go2 = new GoGo();
+        // GoGo go2 = new GoGo();
 
 	}
 }
