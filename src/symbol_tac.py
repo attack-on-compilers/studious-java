@@ -75,6 +75,7 @@ def traverse_tree(tree):
         method_type_check(methodreturn_type, methodheader_type)
 
     if tree[0] == "MethodInvocation":
+
         method_check(tree)
     
     # if tree[0] == "ClassInstanceCreationExpression":
@@ -523,6 +524,11 @@ def get_expression_Type(expression):
         case "RelationalExpression":
             return get_expression_Type(expression[1])
         case "ShiftExpression":
+            if len(expression) ==4:
+                operator = expression[2]
+                left = get_expression_Type(expression[1])
+                right = get_expression_Type(expression[3])
+                binop_type_check(left, operator, right, expression[0])
             return get_expression_Type(expression[1])
         case "AdditiveExpression":
             if len(expression) == 2:
@@ -544,17 +550,29 @@ def get_expression_Type(expression):
             else:
                 return get_expression_Type(expression[1])
         case "PreIncrementExpression":
+            operator = expression[1]
+            right = get_expression_Type(expression[2])
+            unop_type_check(operator, right, expression[0])
             return get_expression_Type(expression[2])
         case "PreDecrementExpression":
+            operator = expression[1]
+            right = get_expression_Type(expression[2])
+            unop_type_check(operator, right, expression[0])
             return get_expression_Type(expression[2])
         case "UnaryExpressionNotPlusMinus":
             if len(expression) == 3:
+                operator = expression[1]
+                right = get_expression_Type(expression[2])
+                unop_type_check(operator, right, expression[0])
                 return get_expression_Type(expression[2])
             else:
                 return get_expression_Type(expression[1])
         case "PostfixExpression":
             return get_expression_Type(expression[1])
         case "PostIncrementExpression":
+            operator = expression[2]
+            left = get_expression_Type(expression[1])
+            unop_type_check(operator, left, expression[0])
             return get_expression_Type(expression[1])
         case "PostDecrementExpression":
             return get_expression_Type(expression[1])

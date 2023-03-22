@@ -181,10 +181,59 @@ def binop_type_check(left, operator, right, expression):
             else:
                 raise Exception("Type mismatch in binary operation")
                 #pass
+        case "<<":
+            if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
+                pass
+            else:
+                raise Exception("Shift opeartor incompatible")
+            
+        case ">>":
+            if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
+                pass
+            else:
+                raise Exception("Shift opeartor incompatible")
+            
+        case ">>>":     
+            if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
+                pass
+            else:
+                raise Exception("Shift opeartor incompatible")   
 
 
 def unop_type_check(operator, left_or_right, expression):
-    pass
+    
+    match operator:
+
+        case "++":
+            if left_or_right == "int" or left_or_right == "float" or left_or_right == "long" or left_or_right == "double" or left_or_right == "char" or left_or_right == "short" or left_or_right == "byte":
+                pass
+            else:
+                raise Exception("Unary operator incompatible")
+
+        case "--":
+            if left_or_right == "int" or left_or_right == "float" or left_or_right == "long" or left_or_right == "double" or left_or_right == "char" or left_or_right == "short" or left_or_right == "byte":
+                pass
+            else:
+                raise Exception("Unary operator incompatible")   
+
+        case "~":
+            if left_or_right == "String" or left_or_right == "boolean" or left_or_right == "float" or left_or_right == "double":
+                raise Exception("Unary operator incompatible") 
+            elif left_or_right ==  "char":
+                print("WARNING: THREAT USE OF UNARY OPERATOR FOR CHAR")
+                pass
+            elif left_or_right == "int" or left_or_right == "long" or left_or_right == "byte" or left_or_right == "short":
+                pass
+            else:
+                raise Exception("Unary operator incompatible") 
+            
+        case "!":
+            if left_or_right == "boolean":
+                pass
+            else:
+                raise Exception("Unary operator incompatible")     
+
+        
 
 
 def method_type_check(methodreturn_type, methodheader_type):

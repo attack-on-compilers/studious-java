@@ -11,8 +11,8 @@ class TestIfElse {
         int a, b=10, c=intArray[0];
         System.out.println("Hello World");
 
-        double[]g = {1,2,3};  
-        int[][]g2= {{1,2,3},{1,2,3}};
+        double[]g = {2};  
+        int[][]g2= {{1,2,3},{3,5}};
         // foo();
     }
 

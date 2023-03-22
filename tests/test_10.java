@@ -14,8 +14,27 @@ public class test10 {
     public float assignmnet(int a, int b, int c, int d) {
         double x = 10.5 + 20.5;
         x += 1.6;
+        int z;
+        
+        
 
+        
 
-        return 'a';
+        int y =0;
+
+        float rd= 2;
+
+        int zewr = y>>(2);
+        
+        float s =0;
+        
+        int za = ~4;
+
+        boolean k;
+        k = !false;
+
+        int zqw = 6;
+        
+        return 5;
     }
 }
