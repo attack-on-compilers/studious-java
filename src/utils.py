@@ -255,7 +255,7 @@ def binop_type_check(left, operator, right, expression):
             ):
                 pass
             elif left == "float" and right == "double":
-                raise Exception("Type mismatch in binary operation")
+                raise Exception("Type mismatch in binary operation, cannot convert double to float")
             elif left == "double" and right == "float":
                 pass
             elif left == "float" and (
@@ -267,25 +267,25 @@ def binop_type_check(left, operator, right, expression):
             ):
                 pass
             else:
-                raise Exception("Type mismatch in binary operation")
+                raise Exception("Type mismatch in binary operation, cannot convert {} to {}".format(right, left))
                 #pass
         case "<<":
             if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
                 pass
             else:
-                raise Exception("Shift opeartor incompatible")
+                raise Exception("Shift opeartor incompatible with types {} and {}".format(left, right))
             
         case ">>":
             if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
                 pass
             else:
-                raise Exception("Shift opeartor incompatible")
+                raise Exception("Shift opeartor incompatible with types {} and {}".format(left, right))
             
         case ">>>":     
             if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
                 pass
             else:
-                raise Exception("Shift opeartor incompatible")   
+                raise Exception("Shift opeartor incompatible with types {} and {}".format(left, right))
 
 
 def unop_type_check(operator, left_or_right, expression):
@@ -296,30 +296,30 @@ def unop_type_check(operator, left_or_right, expression):
             if left_or_right == "int" or left_or_right == "float" or left_or_right == "long" or left_or_right == "double" or left_or_right == "char" or left_or_right == "short" or left_or_right == "byte":
                 pass
             else:
-                raise Exception("Unary operator incompatible")
+                raise Exception("Unary operator {} incompatible with type {}".format("++", left_or_right))
 
         case "--":
             if left_or_right == "int" or left_or_right == "float" or left_or_right == "long" or left_or_right == "double" or left_or_right == "char" or left_or_right == "short" or left_or_right == "byte":
                 pass
             else:
-                raise Exception("Unary operator incompatible")   
+                raise Exception("Unary operator {} incompatible with type {}".format("--", left_or_right))
 
         case "~":
             if left_or_right == "String" or left_or_right == "boolean" or left_or_right == "float" or left_or_right == "double":
-                raise Exception("Unary operator incompatible") 
+                raise Exception("Unary operator {} incompatible with type {}".format("~", left_or_right))
             elif left_or_right ==  "char":
                 print("WARNING: THREAT USE OF UNARY OPERATOR FOR CHAR")
                 pass
             elif left_or_right == "int" or left_or_right == "long" or left_or_right == "byte" or left_or_right == "short":
                 pass
             else:
-                raise Exception("Unary operator incompatible") 
+                raise Exception("Unary operator ~ incompatible with type {}".format(left_or_right))
             
         case "!":
             if left_or_right == "boolean":
                 pass
             else:
-                raise Exception("Unary operator incompatible")     
+                raise Exception("Unary operator ! incompatible with type {}".format(left_or_right))  
 
         
 
@@ -346,7 +346,7 @@ def method_type_check(methodreturn_type, methodheader_type):
     elif methodreturn_type == "float" and methodheader_type == "double":
         pass
     elif methodreturn_type == "double" and methodheader_type == "float":
-        raise Exception("Type mismatch in method return type and method header type")
+        raise Exception("Type mismatch in method return type and method header type, expected float, found double")
     elif methodheader_type == "float" and (
         methodreturn_type == "int"
         or methodreturn_type == "long"
@@ -364,7 +364,7 @@ def method_type_check(methodreturn_type, methodheader_type):
     ):
         pass
     else:
-        raise Exception("Type mismatch in method return type and method header type")
+        raise Exception("Type mismatch in method return type and method header type, expected {}, found {}".format(methodheader_type, methodreturn_type))
 
 
 def string_to_type(expression):
@@ -433,7 +433,7 @@ def big(t1, t2):
     if (t2 == "char" or t2 == "String") and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "long" or t1 == "char"):
         return t2
     else:
-        raise Exception("Type mismatch in binary operation")
+        raise Exception("Type mismatch in binary operation, cannot convert {} to {} or vice versa".format(t1, t2))
     # pass
 
 
@@ -467,4 +467,4 @@ def big_method(t1, t2):
     # if (t2 == "char" or t2 == "String") and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "long" or t1 == "char"):
     #     pass
     else:
-        raise Exception("Method invocation type mismatch")
+        raise Exception("Method invocation type mismatch, cannot convert {} to {} or vice versa".format(t1, t2))
