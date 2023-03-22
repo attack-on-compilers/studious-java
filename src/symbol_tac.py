@@ -18,6 +18,7 @@ symbol_table = RootSymbolTable()
 global tac
 tac = TAC()
 
+offsets = [0]
 
 def generate_symbol_table(tree):
     # pprint(tree)
@@ -167,7 +168,7 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, VariableScope.PARAMETER, dims))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), VariableScope.PARAMETER, dims))
                 tac.add_param(symbol_table.get_symbol_name(i[1]))
             traverse_tree(tree[2][1][2])
             symbol_table.exit_scope()
@@ -195,7 +196,7 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), [], dims))
             traverse_tree(tree[4])
             symbol_table.exit_scope()
 
@@ -222,7 +223,7 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, [], dims))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), [], dims))
             symbol_table.exit_scope()
 
         case "LocalVariableDeclaration":
@@ -231,16 +232,19 @@ def traverse_tree(tree):
             if fieldType[-1] == "]":
                 dims = fieldType.count("[")
                 fieldType = fieldType[: fieldType.find("[")]
+            typeSize = get_TypeSize(fieldType)
             fieldVariables = get_Variables(tree[2])
             variablesizes = get_NumberOfElements(tree[2])
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
+            count=0
+            # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
             for i in fieldVariables:
                 newi = i
                 if i[-1] == "]":
                     if dims == 0:
                         dims = i.count("[")
                     newi = i[: i.find("[")]
-                symbol_table.add_symbol(VariableSymbol(newi, fieldType, [], dims))
+                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count] ,[], dims))
+                count+=1
             post_type_check(tree)
 
         case "Block":
@@ -323,14 +327,19 @@ def initial_Traverse(tree):
             if fieldType[-1] == "]":
                 dims = fieldType.count("[")
                 fieldType = fieldType[: fieldType.find("[")]
+            typeSize = get_TypeSize(fieldType)
             fieldVariables = get_Variables(tree[3])
+            variablesizes = get_NumberOfElements(tree[3])
+            print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
+            count = 0
             for i in fieldVariables:
                 newi = i
                 if i[-1] == "]":
                     if dims == 0:
                         dims = i.count("[")
                     newi = i[: i.find("[")]
-                symbol_table.add_symbol(VariableSymbol(newi, fieldType, fieldModifiers, dims))
+                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count], fieldModifiers, dims))
+                count+=1
 
         case "MethodDeclaration":
             methodModifiers = get_Modifiers(tree[1][1])

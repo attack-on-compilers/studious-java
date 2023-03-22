@@ -62,21 +62,21 @@ def get_Type(tree):
             return get_Type(tree[1]) + "[]"
 
 def get_NumberOfElements(tree):
-    print("YOOOOOOOOO",tree[0])
+    # print("YOOOOOOOOO",tree[0])
     match tree[0]:
         case "AlphaVariableDeclarator":
             if len(tree) == 2:
-                return get_NumberOfElements(tree[1])
+                return [get_NumberOfElements(tree[1])]
             else:
-                return get_NumberOfElements(tree[1]) + get_NumberOfElements(tree[3])
+                return get_NumberOfElements(tree[1]) + [get_NumberOfElements(tree[3])]
         case "VariableDeclarator":
             if len(tree) == 2:
                 if len(tree[1]) == 2:
-                    return [1]
+                    return 1
                 else:
-                    return [0]
+                    return 0
             else:
-                return [get_NumberOfElements(tree[3])]
+                return get_NumberOfElements(tree[3])
         case "VariableInitializer":
             return get_NumberOfElements(tree[1])
         case "Expression":
@@ -84,14 +84,15 @@ def get_NumberOfElements(tree):
         case "ArrayCreationExpression":
             return get_NumberOfElements(tree[3])
         case "AlphaDimExpr":
+            # print("BLABLABLA",tree)
             if len(tree) == 3:
-                return get_NumberOfElements(tree[1])*get_NumberOfElements(tree[2])
+                return get_NumberOfElements(tree[1])*get_LiteralValue(tree[2])
             else:
-                return get_NumberOfElements(tree[1])
+                return get_LiteralValue(tree[1])
         case "DimExpr":
             return get_NumberOfElements(tree[2])
         case "Literal":
-            return int(tree[1])
+            return 1
         case "ArrayInitializer":
             return get_NumberOfElements(tree[2])
         case "BetaAlphaVariableInitializer":
@@ -108,8 +109,40 @@ def get_NumberOfElements(tree):
             if len(tree)==2:
                 return get_NumberOfElements(tree[1])
             else:
-                return 0
+                return 1
             
+def get_LiteralValue(tree):
+    # print("NOOOOOOOOO",tree[0])
+    match tree[0]:
+        case "DimExpr":
+            return get_LiteralValue(tree[2])
+        case "Literal":
+            return int(tree[1])
+        case _:
+            if len(tree)==2:
+                return get_LiteralValue(tree[1])
+            else:
+                return 1
+
+def get_TypeSize(type):
+    if type == "int":
+        return 4
+    elif type == "boolean":
+        return 1
+    elif type == "char":
+        return 1
+    elif type == "byte":
+        return 1
+    elif type == "short":
+        return 2
+    elif type == "long":
+        return 8
+    elif type == "float":
+        return 4
+    elif type == "double":
+        return 8
+    else:
+        return 0
 
 def get_Modifiers(tree):
     match tree[0]:

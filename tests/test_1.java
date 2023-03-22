@@ -2,7 +2,9 @@
  * test10
  */
 public class test1{
-    int a[][][][][];
+    double a[][][][][] = {1.555,2,3};
+    int[] y = 5;
+    int x =5;
     int[][][][][][][][][][][] f[];
     static {}
     static {}
