@@ -108,12 +108,8 @@ def traverse_tree(tree):
     if tree[0] == "MethodInvocation":
         method_check(tree)
 
-    # if tree[0] == "ClassInstanceCreationExpression":
-
-    #     print("kokki")
-    #     methodInvocationName = get_expression_Type(tree[2])
-
-    #     print("gyggy", methodInvocationName)
+    if tree[0] == "ClassInstanceCreationExpression":
+        constructor_check(tree)
 
     if tree[0] == "ShiftExpression" and len(tree) == 4:
         operator = tree[2]
@@ -546,6 +542,29 @@ def method_check(expression):
         pass
 
 
+def constructor_check(expression):
+
+    methodInvocationName = get_expression_Type(expression[2])
+    methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
+    methodInvocationParams = []
+    newtree = expression[4]
+    if newtree[1] == "":
+        methodInvocationParams = []
+    else:
+        newtree = newtree[1]
+        while len(newtree) == 4:
+            methodInvocationParams.append(get_expression_Type(newtree[3]))
+            newtree = newtree[1]
+            methodInvocationParams.append(get_expression_Type(newtree[1]))
+            methodInvocationParams.reverse()
+        arr = methodcalledtype.params
+        if len(methodInvocationParams) != len(arr):
+            raise Exception("Error: Invocation parameters don't match the declaration")
+        else:
+            for i in range(len(methodInvocationParams)):
+                big_method(methodInvocationParams[i], arr[i])
+
+
 def get_expression_Type(expression):
     match expression[0]:
         case "LeftHandSide":
@@ -566,6 +585,7 @@ def get_expression_Type(expression):
             return get_Type(expression[2])
 
         case "ClassInstanceCreationExpression":
+            constructor_check(expression)
             return get_expression_Type(expression[2])
         case "Name":
             return get_expression_Type(expression[1])

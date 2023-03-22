@@ -9,16 +9,25 @@ class GoGo {
 		this.name =name;
 		System.out.println("Constructor called");
 	}
-}
 
-class Hii {
 	public static void main(String[] args)
 	{
-		// this would invoke default constructor.
-		GoGo go1;
-        go1 = new GoGo("Yo");
+		// this would invoke constructor.
+		GoGo go1 = new GoGo("Yo", 3);
 
-        // GoGo go2 = new GoGo();
 
 	}
 }
+
+// class Hii {
+// 	public static void main(String[] args)
+// 	{
+// 		// this would invoke default constructor.
+// 		GoGo go1;
+//         go1 = new GoGo("Yo");
+
+//         // GoGo go2 = new GoGo();
+
+// 	}
+// }
+
