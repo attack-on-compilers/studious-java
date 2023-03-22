@@ -18,7 +18,7 @@ symbol_table = RootSymbolTable()
 global tac
 tac = TAC()
 
-offsets = [0]
+offset = [0]
 
 def generate_symbol_table(tree):
     # pprint(tree)
@@ -58,6 +58,7 @@ def traverse_tree(tree):
     global static_init_count
     global previous_block_count
     global block_count
+    global offset
 
     if tree[0] == "Assignment":
         left = get_expression_Type(tree[1])
@@ -161,6 +162,7 @@ def traverse_tree(tree):
             method_sym_name = symbol_table.get_symbol_name(methodName)
             tac.add_label(method_sym_name)
             symbol_table.enter_scope(methodName)
+            offset = offset +[0]
             for i in methodParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -168,18 +170,22 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), VariableScope.PARAMETER, dims))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], VariableScope.PARAMETER, dims))
+                offset[-1] = offset[-1] + get_TypeSize(fieldType)
                 tac.add_param(symbol_table.get_symbol_name(i[1]))
             traverse_tree(tree[2][1][2])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "StaticInitializer":
             static_init_count += 1
             static_init_name = "<static_init_" + str(static_init_count) + ">"
             symbol_table.add_symbol(MethodSymbol(static_init_name, static_init_name, [], "void", symbol_table.current, [], []))
             symbol_table.enter_scope(static_init_name)
+            offset = offset +[0]
             traverse_tree(tree[2][2])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "ConstructorDeclaration":
             constructorName = get_Name(tree[2][1])
@@ -189,6 +195,7 @@ def traverse_tree(tree):
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.enter_scope(constructorName)
+            offset = offset +[0]
             for i in constructorParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -196,15 +203,19 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), [], dims))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims))
+                offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[4])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "InterfaceDeclaration":
             interfaceName = tree[3]
             symbol_table.enter_scope(interfaceName)
+            offset = offset +[0]
             traverse_tree(tree[5])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "AbstractMethodDeclaration":
             methodName = get_Name(tree[1][3])
@@ -216,6 +227,7 @@ def traverse_tree(tree):
                 methodSignature += i[0] + ","
             methodSignature += ")"
             symbol_table.enter_scope(methodSignature)
+            offset = offset +[0]
             for i in methodParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -223,8 +235,10 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), [], dims))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims))
+                offset[-1] = offset[-1] + get_TypeSize(fieldType)
             symbol_table.exit_scope()
+            offset.pop()
 
         case "LocalVariableDeclaration":
             fieldType = get_Type(tree[1])
@@ -243,7 +257,8 @@ def traverse_tree(tree):
                     if dims == 0:
                         dims = i.count("[")
                     newi = i[: i.find("[")]
-                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count] ,[], dims))
+                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count], offset[-1], [], dims))
+                offset[-1] = offset[-1] + typeSize*variablesizes[count]
                 count+=1
             post_type_check(tree)
 
@@ -252,14 +267,17 @@ def traverse_tree(tree):
             previous_block_count = block_count
             symbol_table.add_symbol(BlockSymbol("block" + str(block_count), symbol_table.current))
             symbol_table.enter_scope("block" + str(block_count))
+            offset = offset +[0]
             traverse_tree(tree[2])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "ForStatement":
             block_count += 1
             previous_block_count = block_count
             symbol_table.add_symbol(BlockSymbol("block" + str(block_count), symbol_table.current))
             symbol_table.enter_scope("block" + str(block_count))
+            offset = offset +[0]
             traverse_tree(tree[3])
             traverse_tree(tree[5])
             traverse_tree(tree[7])
@@ -268,12 +286,14 @@ def traverse_tree(tree):
             else:
                 traverse_tree(tree[9])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "ForStatementNoShortIf":
             block_count += 1
             previous_block_count = block_count
             symbol_table.add_symbol(BlockSymbol("block" + str(block_count), symbol_table.current))
             symbol_table.enter_scope("block" + str(block_count))
+            offset = offset +[0]
             traverse_tree(tree[3])
             traverse_tree(tree[5])
             traverse_tree(tree[7])
@@ -282,15 +302,18 @@ def traverse_tree(tree):
             else:
                 traverse_tree(tree[9])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "SwitchBlock":
             block_count += 1
             previous_block_count = block_count
             symbol_table.add_symbol(BlockSymbol("switch_block" + str(block_count), symbol_table.current))
             symbol_table.enter_scope("switch_block" + str(block_count))
+            offset = offset +[0]
             traverse_tree(tree[2])
             traverse_tree(tree[3])
             symbol_table.exit_scope()
+            offset.pop()
         case _:
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
@@ -298,6 +321,7 @@ def traverse_tree(tree):
 
 
 def initial_Traverse(tree):
+    global offset
     # A separate traversal to get the class body declarations and interface body declarations
 
     match tree[0]:
@@ -338,7 +362,9 @@ def initial_Traverse(tree):
                     if dims == 0:
                         dims = i.count("[")
                     newi = i[: i.find("[")]
-                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count], fieldModifiers, dims))
+                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize*variablesizes[count], offset[-1], fieldModifiers, dims))
+                offset[-1] = offset[-1] + typeSize*variablesizes[count]
+                post_type_check(tree)
                 count+=1
 
         case "MethodDeclaration":
@@ -457,6 +483,8 @@ def initial_initial_Traverse(tree):
 
 def post_type_check(expression):
     match expression[0]:
+        case "FieldDeclaration":
+            post_type_check(expression[3])
         case "LocalVariableDeclaration":
             temp = expression[2]
             if len(temp) == 4:
