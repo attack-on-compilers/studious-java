@@ -875,8 +875,6 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "Block":
             return get_expression_Type(expression[2])
-        case "BetaAlphaBlockStatement":
-            return get_expression_Type(expression[1])
         case "ArrayInitializer":
             return get_expression_Type(expression[2])
         case "BetaAlphaVariableInitializer":
@@ -1231,6 +1229,8 @@ def generate_tac(tree, begin="", end=""):
             if len(tree) == 3:
                 out = generate_tac(tree[2])
                 tac.add_return(out)
+        case "BetaExpression":
+            return generate_tac(tree[1])
         case _:
             if tree[0] in [
                 "ClassDeclaration",
@@ -1243,12 +1243,12 @@ def generate_tac(tree, begin="", end=""):
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
                     try:
-                        print(tree[i][0])
                         if tree[i][0] in ["ForStatement", "Block", "ForStatementNoShortIf"]:
-                            return
+                            return False
                     except:
                         pass
-                    generate_tac(tree[i])
+                    if not generate_tac(tree[i]):
+                        return False
 
 
 def get_Argument_list(tree):
