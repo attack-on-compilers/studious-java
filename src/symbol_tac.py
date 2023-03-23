@@ -808,10 +808,10 @@ def TOIMPLEMENT():
 
 def generate_tac(tree, begin="", end=""):
     global block_count
-    print("tac: ", tree[0])
     match tree[0]:
         case "VariableDeclarator":
             if len(tree) == 4:
+                # print("#"*100, symbol_table.current.name)
                 right = generate_tac(tree[3])
                 left = symbol_table.get_symbol_name(get_Name(tree[1]).split("[")[0])
                 tac.add3("=", right, left)
@@ -1132,13 +1132,13 @@ def generate_tac(tree, begin="", end=""):
             tac.add3("!", cond, out)
             tac.cond_jump(out, end_label)
             generate_tac(tree[7], begin=begin_label, end=end_label)
-            generate_tac(tree[9])
+            print(symbol_table.current.name)
+            try:
+                generate_tac(tree[9][1][1][1])
+            except:
+                pass
             tac.jump(begin_label)
             tac.add_label(end_label)
-            if tree[9][1][0] == "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
-                generate_tac(tree[9][1][1][2])
-            else:
-                generate_tac(tree[9])
             symbol_table.exit_scope()
         case "ForStatementNoShortIf":
             block_count += 1
@@ -1152,7 +1152,10 @@ def generate_tac(tree, begin="", end=""):
             tac.add3("!", cond, out)
             tac.cond_jump(out, end_label)
             generate_tac(tree[7], begin=begin_label, end=end_label)
-            generate_tac(tree[9])
+            try:
+                generate_tac(tree[9][1][1][1])
+            except:
+                pass
             tac.jump(begin_label)
             tac.add_label(end_label)
             if tree[9][1][0] == "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
@@ -1206,8 +1209,9 @@ def generate_tac(tree, begin="", end=""):
             generate_tac(tree[2])
             symbol_table.exit_scope()
         case _:
-            for i in range(1, len(tree)):
-                generate_tac(tree[i])
+            if type(tree) == tuple:
+                for i in range(1, len(tree)):
+                    generate_tac(tree[i])
 
 
 def get_Argument_list(tree):
