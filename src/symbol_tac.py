@@ -105,7 +105,7 @@ def traverse_tree_tac(tree):
             block_count += 1
             previous_block_count = block_count
             symbol_table.enter_scope("block" + str(block_count))
-            print(symbol_table.current.name)
+            # print(symbol_table.current.name)
             generate_tac(tree)
             traverse_tree_tac(tree[3])
             traverse_tree_tac(tree[5])
@@ -247,7 +247,6 @@ def traverse_tree(tree):
                 methodParams = get_Parameters(tree[1][3][3])
             methodSignature = methodName + "("
             for i in methodParams:
-                # print("NONONONO",i[0].split("[")[0])
                 methodSignature += i[0].split("[")[0] + ","
             methodSignature += ")"
             method_sym_name = symbol_table.get_symbol_name(methodName)
@@ -361,12 +360,10 @@ def traverse_tree(tree):
             post_type_check(tree)
             normalTypes = ["int", "char", "boolean", "float", "double", "long", "short", "byte", "String"]
             if fieldType not in normalTypes:
-                # print("TTTTTTTTTTTTTTTTTTTtemp", fieldType)
-                # print("RRRRRRRRRRRRRRRRRtemp", symbol_table.root.get_symbol(fieldType).symbol_table.symbols)
                 for i in symbol_table.root.get_symbol(fieldType).symbol_table.symbols.values() :
                     if not i.name.startswith("this."):
                         if i.symbol_type == "variable" and "private" not in i.scope:
-                            print("YOYOYOYO",symbol_table.current)
+                            # print("YOYOYOYO",symbol_table.current)
                             for j in fieldVariables:
                                 newj = j
                                 if j[-1] == "]":
@@ -710,7 +707,7 @@ def get_expression_Type(expression):
             return get_expression_Type(expression[1])
         case "FieldAccess":
 
-            print("AAAAAAAAAAAAAAAAAA",expression)
+            # print("AAAAAAAAAAAAAAAAAA",expression)
             return symbol_table.get_symbol(get_Name(expression)).data_type
         case "NameDotIdentifierId":
             return symbol_table.get_symbol(get_Name(expression)).data_type
@@ -1209,7 +1206,7 @@ def generate_tac(tree, begin="", end=""):
             tac.jump(begin_label)
             tac.add_label(end_label)
         case "ForStatement":
-            print(symbol_table.current.name)
+            # print(symbol_table.current.name)
             generate_tac(tree[3])
             begin_label = tac.gen_label()
             end_label = tac.gen_label()

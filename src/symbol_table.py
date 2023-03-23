@@ -209,7 +209,6 @@ class RootSymbolTable:
         self.current = self.root
 
     def add_symbol(self, symbol):
-        # print("Adding symbol: " + symbol.name)
         self.current.add_symbol(symbol)
 
     def get_symbol(self, name, symbol_type=None):
@@ -219,14 +218,10 @@ class RootSymbolTable:
         return self.current.get_symbol_name(name, symbol_type)
 
     def enter_scope(self, name):
-        # print("Entering scope: " + name)
         self.current = self.current.get_symbol(name).symbol_table
-        # What if there are two scopes with same name???????????
 
     def exit_scope(self):
-        # print("Exiting scope: " + self.current.name)
         self.current = self.current.parent
-        # print("Parent scope: " + self.current.name)
 
     def get_method_symbol(self):
         current_sym = self.current
