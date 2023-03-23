@@ -10,6 +10,7 @@ public class test_5 {
         }
         int i; //Not an error as j and i are declared in the for loop
         i = 0;
+        int j = 0;
         while (i < 10) {
             System.out.println(j);
             i+=1;

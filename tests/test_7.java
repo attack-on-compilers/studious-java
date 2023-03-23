@@ -33,7 +33,7 @@ class Hii {
         go1.a = "555";
 
         System.out.println(go1.a);
-        System.out.println(go1.ab); //Why this works?
+        System.out.println(go1.a); //Why this works?
 
 
     }

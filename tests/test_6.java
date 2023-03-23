@@ -1,7 +1,7 @@
 // Bubble Sort in Java using Arrays and Functions 
 public class test_6 {
     public static void main(String[] args) {
-        int[] arr = { 5, 2, 9, 1, 5, 6 };
+        int[] arr = new int[10];
 
         // Displaying the original array
         System.out.println("Original Array: ");
