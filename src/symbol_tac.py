@@ -76,7 +76,6 @@ def traverse_tree_tac(tree):
             method_sym_name = symbol_table.get_symbol_name(methodName)
             tac.add_label(method_sym_name)
             symbol_table.enter_scope(methodName)
-            print("#"*100, methodName)
             for i in methodParams:
                 tac.pop_param(symbol_table.get_symbol_name(i[1].split('[')[0]))
             generate_tac(tree[2][1][2])
@@ -106,6 +105,7 @@ def traverse_tree_tac(tree):
             block_count += 1
             previous_block_count = block_count
             symbol_table.enter_scope("block" + str(block_count))
+            print(symbol_table.current.name)
             generate_tac(tree)
             traverse_tree_tac(tree[3])
             traverse_tree_tac(tree[5])
@@ -917,7 +917,6 @@ def generate_tac(tree, begin="", end=""):
         case "AssignmentExpression":
             return generate_tac(tree[1])
         case "Assignment":
-            print(tree[1])
             left = symbol_table.get_symbol_name(get_Name(tree[1]))
             right = generate_tac(tree[3])
             tac.add3(tree[2][1], right, left)
@@ -1077,7 +1076,7 @@ def generate_tac(tree, begin="", end=""):
             var = generate_tac(tree[1])
             index = generate_tac(tree[3])
             out = tac.new_temp()
-            tac.add3("[]", var, index, out)
+            tac.add("[]", var, index, out)
             return out
         case "MethodInvocation":
             if len(tree) == 5:
@@ -1125,9 +1124,9 @@ def generate_tac(tree, begin="", end=""):
             tac.add3("=", right, out)
             tac.add("-", right, "1", right)
             return out
-        case "Statement":
-            if len(tree) == 2:
-                return generate_tac(tree[1])
+        # case "Statement":
+        #     if len(tree) == 2:
+        #         return generate_tac(tree[1])
         case "ExpressionStatement":
             return generate_tac(tree[1][1])
         case "SwitchStatement":
@@ -1210,6 +1209,7 @@ def generate_tac(tree, begin="", end=""):
             tac.jump(begin_label)
             tac.add_label(end_label)
         case "ForStatement":
+            print(symbol_table.current.name)
             generate_tac(tree[3])
             begin_label = tac.gen_label()
             end_label = tac.gen_label()
@@ -1239,10 +1239,16 @@ def generate_tac(tree, begin="", end=""):
                 "MethodDeclaration",
                 "ConstructorDeclaration",
                 "SwitchBlock",
+                "Statement"
             ]:
                 return
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
+                    try:
+                        if tree[i][0] in ["ForStatement"]:
+                            return
+                    except:
+                        pass
                     generate_tac(tree[i])
 
 

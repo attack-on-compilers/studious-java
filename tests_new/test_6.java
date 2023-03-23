@@ -31,7 +31,7 @@ public class test_6 {
     }
 
     public static void display(int arr[]) {
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < 6; i++) {
             System.out.print(arr[i] + " ");
         }
         System.out.println();
