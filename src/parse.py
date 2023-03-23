@@ -997,10 +997,11 @@ def getArgs():
 if __name__ == "__main__":
     # lex.lex(debug=True)
     # yacc.yacc(debug=True)
+    global args
     args = getArgs().parse_args()
     if args.verbose:
         print("Input file: {}".format(args.input))
-        print("Output file: {}".format(args.output))
+        print("Output dot file: {}".format(args.output))
     if args.input == None:
         print("No input file specified")
         print("Use -h or --help for help")
@@ -1020,7 +1021,6 @@ if __name__ == "__main__":
                 tree_gen(tree_reduce(tree), args.output)
         if args.verbose:
             print("Dot file generated: {}.dot".format(args.output))
-            print("Generating Symbol Table")
-        global_symbol_table = generate_symbol_table(tree)
+        global_symbol_table = generate_symbol_table(tree,args)
         if args.verbose:
             print("Symbol Table and TAC generated")

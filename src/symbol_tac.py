@@ -21,15 +21,33 @@ tac = TAC()
 offset = [0]
 
 
-def generate_symbol_table(tree):
-    # pprint(tree)
+def generate_symbol_table(tree,args):
+
+    if args.verbose:
+        print("Generating Symbol Table")
 
     traverse_tree(tree)
-    symbol_table.tprint()
+    if args.verbose:
+        print("Symbol Table:")
+        symbol_table.tprint()
+    print("Symbol Table generated: {}.csv".format(args.output))
+    with open("{}.csv".format(args.output), mode="w") as sys.stdout:
+        symbol_table.tprint()
+    sys.stdout = sys.__stdout__
+    
     global block_count
     block_count = 0
+    print("Generating TAC")
     traverse_tree_tac(tree)
-    tac.tprint()
+    if args.verbose:
+        print("TAC:")
+        tac.tprint()
+
+    with open("{}.txt".format(args.output), mode="w") as sys.stdout:
+        tac.tprint()
+    sys.stdout = sys.__stdout__
+    print("TAC generated: {}.txt".format(args.output))
+
 
     store_output_buffer = io.StringIO()
     sys.stdout = store_output_buffer
@@ -49,7 +67,7 @@ def generate_symbol_table(tree):
             csv_file.truncate(0)
 
         # create a CSV writer object
-        writer = csv.writer(csv_file, delimiter=",")
+        writer = csv.writer(csv_file, delimiter=" ")
 
         # write the instance to the CSV file
         writer.writerow(csv_output)
@@ -1244,6 +1262,7 @@ def generate_tac(tree, begin="", end=""):
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
                     try:
+                        # print(tree[i][0])
                         if tree[i][0] in ["ForStatement", "Block", "ForStatementNoShortIf"]:
                             return False
                     except:

@@ -1,6 +1,20 @@
 // If else statements
 private class TestIfElse {
     public void calculateGrade(int score) {
+        int x=10;
+        // z =x; Need to sort
+        {
+            {
+                {
+                    int y=10;
+                }
+                int z=10;
+            }
+        }
+        if (score >= 90)
+        {
+            int j=100;
+        }
         char grade;
         if ('b' >= 'a' ) {
             grade = 'A';
