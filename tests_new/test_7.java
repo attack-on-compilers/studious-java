@@ -5,6 +5,7 @@ class GoGo {
     
 	GoGo(String name, int id)
 	{ 
+        float x = (float) id;
 		this.name =name;
 		System.out.println("Constructor called");
         GoGo go1 = new GoGo("Yo", 3);
