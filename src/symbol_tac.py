@@ -823,7 +823,7 @@ def get_expression_Type(expression):
         case "PostDecrementExpression":
             return get_expression_Type(expression[1])
         case "CastExpression":
-            return get_expression_Type(expression[1])
+            return get_Type(expression[2])
         case "Primary":
             return get_expression_Type(expression[1])
         case "PrimaryNoNewArray":

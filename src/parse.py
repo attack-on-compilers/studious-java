@@ -982,7 +982,7 @@ def p_error(p):
     raise Exception("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
 
 
-yacc.yacc(debug=True, debugfile="parser.out")
+yacc.yacc(debug=False, debugfile="parser.out")
 
 
 def getArgs():
