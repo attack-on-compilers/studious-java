@@ -7,7 +7,7 @@ all:
 	
 dev:
 	clear
-	python ./src/parse.py -i ./tests_new/test_$(ARG).java -o src/javao -v -a
+	python ./src/parse.py -i ./tests/test_$(ARG).java -o src/javao -v -a
 
 dev-g: dev
 	dot -Tsvg src/ast.dot -o src/ast.svg
