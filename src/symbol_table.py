@@ -236,8 +236,8 @@ class SymbolTable:
         with open(file_name, "w") as f:
             for symbol in self.symbols.values():
                 f.write(str(symbol))
-            if symbol.symbol_type in symbols_with_symbol_tables:
-                symbol_tables.append(symbol.symbol_table)
+                if symbol.symbol_type in symbols_with_symbol_tables:
+                    symbol_tables.append(symbol.symbol_table)
         if file_name.endswith(".csv"):
             file_name = file_name[:-4]
         if file_name.endswith("_symbol_table"):
