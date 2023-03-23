@@ -1023,4 +1023,4 @@ if __name__ == "__main__":
             print("Generating Symbol Table")
         global_symbol_table = generate_symbol_table(tree)
         if args.verbose:
-            print("Symbol Table generated")
+            print("Symbol Table and TAC generated")

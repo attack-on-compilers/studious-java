@@ -49,7 +49,7 @@ def generate_symbol_table(tree):
             csv_file.truncate(0)
 
         # create a CSV writer object
-        writer = csv.writer(csv_file, delimiter=" ")
+        writer = csv.writer(csv_file, delimiter=",")
 
         # write the instance to the CSV file
         writer.writerow(csv_output)
@@ -451,7 +451,7 @@ def initial_Traverse(tree):
             typeSize = get_TypeSize(fieldType)
             fieldVariables = get_Variables(tree[3])
             variablesizes = get_NumberOfElements(tree[3])
-            print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
+            # print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
             count = 0
             for i in fieldVariables:
                 newi = i
@@ -627,7 +627,7 @@ def method_check(expression):
         ):
             pass
         else:
-            methodcalledtype = symbol_table.get_symbol_name(methodInvocationName)
+            methodcalledtype = symbol_table.get_symbol(methodInvocationName)
             methodInvocationParams = []
             newtree = expression[3]
             # print("AAAAAAAAAAAAA", newtree[1])
@@ -812,7 +812,7 @@ def get_expression_Type(expression):
                 if methodInvocationName == "System.out.println":
                     pass
                 else:
-                    return symbol_table.get_symbol_name(methodInvocationName).return_type
+                    return symbol_table.get_symbol(methodInvocationName).return_type
             elif len(expression) == 7:
                 pass
         case "Type":
@@ -952,7 +952,7 @@ def generate_tac(tree, begin="", end=""):
                 out = tac.new_temp()
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
-                tac.add(tree[2][1], left, right, out)
+                tac.add(tree[2], left, right, out)
                 return out
         case "RelationalExpression":
             if len(tree) == 2:
@@ -972,7 +972,7 @@ def generate_tac(tree, begin="", end=""):
                 out = tac.new_temp()
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
-                tac.add(tree[2][1], left, right, out)
+                tac.add(tree[2], left, right, out)
                 return out
         case "AdditiveExpression":
             if len(tree) == 2:
@@ -981,7 +981,6 @@ def generate_tac(tree, begin="", end=""):
                 out = tac.new_temp()
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
-                print(tree[2])
                 tac.add(tree[2], left, right, out)
                 return out
         case "MultiplicativeExpression":
@@ -991,7 +990,6 @@ def generate_tac(tree, begin="", end=""):
                 out = tac.new_temp()
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
-                print(tree[2])
                 tac.add(tree[2], left, right, out)
                 return out
         case "UnaryExpression":
@@ -1000,7 +998,7 @@ def generate_tac(tree, begin="", end=""):
             else:
                 out = tac.new_temp()
                 right = generate_tac(tree[2])
-                tac.add3(tree[1][1], right, out)
+                tac.add3(tree[1], right, out)
                 return out
         case "PreIncrementExpression":
             out = tac.new_temp()
@@ -1020,7 +1018,7 @@ def generate_tac(tree, begin="", end=""):
             else:
                 out = tac.new_temp()
                 right = generate_tac(tree[2])
-                tac.add3(tree[1][1], right, out)
+                tac.add3(tree[1], right, out)
                 return out
         case "PostfixExpression":
             return generate_tac(tree[1])
