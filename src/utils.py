@@ -4,6 +4,8 @@ from lexer import *
 
 
 def get_Name(tree):
+    if type(tree) == str:
+        return tree
     match tree[0]:
         case "Name":
             return get_Name(tree[1])
@@ -22,7 +24,14 @@ def get_Name(tree):
         case "ArrayAccess":
             raise Exception("ArrayAccess not supported")
         case "FieldAccess":
-            raise Exception("FieldAccess not supported")
+            return get_Name(tree[1]) + "." + get_Name(tree[3])
+        case "Primary":
+            return get_Name(tree[1])
+        case "PrimaryNoNewArray":
+            # print("TYYYY",tree, len(tree), tree[1])
+            if len(tree) == 2:
+                return tree[1]
+            return get_Name(tree[1])
         case "VariableDeclaratorId":
             match len(tree):
                 case 2:
@@ -290,25 +299,25 @@ def binop_type_check(left, operator, right, expression):
                 raise Exception("Shift opeartor incompatible with types {} and {}".format(left, right))
 
         case ">":
-            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double"):
+            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
         
         case "<":
-            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double"):
+            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
         
         case ">=":
-            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double"):
+            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
         
         case "<=":
-            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double"):
+            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
@@ -316,7 +325,7 @@ def binop_type_check(left, operator, right, expression):
         case "==":
             if left==right:
                 pass
-            elif (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double"):
+            elif (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
                 pass
             else :
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
@@ -324,7 +333,7 @@ def binop_type_check(left, operator, right, expression):
         case "!=":
             if left==right:
                 pass
-            elif (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double"):
+            elif (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
                 pass
             else :
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
@@ -470,10 +479,14 @@ def big(t1, t2):
         return t1
     if t2 == "short" and t1 == "byte":
         return t2
-    if (t1 == "char" or t1 == "String") and (t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "long" or t1 == "char"):
+    if (t1 == "String") and (t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "long" or t1 == "char" or t2 == "float" or t2 == "double"):
         return t1
-    if (t2 == "char" or t2 == "String") and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "long" or t1 == "char"):
+    if (t2 == "String") and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "long" or t1 == "char" or t1 == "float" or t1 == "double"):
         return t2
+    if (t1 == "char") and (t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "long" or t1 == "char"):
+        return t2
+    if (t2 == "char") and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "long" or t1 == "char"):
+        return t1
     else:
         raise Exception("Type mismatch in binary operation, cannot convert {} to {} or vice versa".format(t1, t2))
     # pass

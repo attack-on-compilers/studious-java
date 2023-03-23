@@ -158,7 +158,7 @@ class SymbolTable:
 
     def add_symbol(self, symbol):
         if symbol.name in self.symbols:
-            raise Exception("Symbol {} already defined".format(symbol))
+            raise Exception("Symbol {} already defined".format(symbol.name))
         self.symbols[symbol.name] = symbol
 
     def get_symbol(self, name, symbol_type=None):

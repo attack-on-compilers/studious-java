@@ -359,6 +359,27 @@ def traverse_tree(tree):
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
             post_type_check(tree)
+            normalTypes = ["int", "char", "boolean", "float", "double", "long", "short", "byte", "String"]
+            if fieldType not in normalTypes:
+                # print("TTTTTTTTTTTTTTTTTTTtemp", fieldType)
+                # print("RRRRRRRRRRRRRRRRRtemp", symbol_table.root.get_symbol(fieldType).symbol_table.symbols)
+                for i in symbol_table.root.get_symbol(fieldType).symbol_table.symbols.values() :
+                    if not i.name.startswith("this."):
+                        if i.symbol_type == "variable":
+                            print("YOYOYOYO",symbol_table.current)
+                            for j in fieldVariables:
+                                newj = j
+                                if j[-1] == "]":
+                                    newj = j[: j.find("[")]
+                                symbol_table.add_symbol(VariableSymbol(j+"."+i.name, i.data_type, 0, 0, i.scope, i.dims))
+                        # elif i.symbol_type == "method":
+                        #     print("YOYOYOYO",symbol_table.current)
+                        #     for j in fieldVariables:
+                        #         newj = j
+                        #         if j[-1] == "]":
+                        #             newj = j[: j.find("[")]
+                        #         symbol_table.add_symbol(MethodSymbol(j+"."+i.name, i.signature, i.params, i.return_type, "_DUMMY_", i.scope, i.throws))
+                        # print("TTTTTtemp", i)
 
         case "Block":
             block_count += 1
@@ -462,6 +483,9 @@ def initial_Traverse(tree):
                     newi = i[: i.find("[")]
                 symbol_table.add_symbol(
                     VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], fieldModifiers, dims)
+                )
+                symbol_table.add_symbol(
+                    VariableSymbol("this."+newi, fieldType, 0, offset[-1], fieldModifiers, dims)
                 )
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
@@ -685,8 +709,9 @@ def get_expression_Type(expression):
         case "LeftHandSide":
             return get_expression_Type(expression[1])
         case "FieldAccess":
-            # print("AAAAAAAAAAAAAAAAAA",symbol_table.get_symbol(expression[3]))
-            return symbol_table.get_symbol(expression[3]).data_type
+
+            print("AAAAAAAAAAAAAAAAAA",expression)
+            return symbol_table.get_symbol(get_Name(expression)).data_type
         case "NameDotIdentifierId":
             return symbol_table.get_symbol(expression[3]).data_type
 
@@ -892,6 +917,7 @@ def generate_tac(tree, begin="", end=""):
         case "AssignmentExpression":
             return generate_tac(tree[1])
         case "Assignment":
+            print(tree[1])
             left = symbol_table.get_symbol_name(get_Name(tree[1]))
             right = generate_tac(tree[3])
             tac.add3(tree[2][1], right, left)

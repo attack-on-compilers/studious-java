@@ -2,7 +2,7 @@
 private class TestIfElse {
     public void calculateGrade(int score) {
         char grade;
-        if (score >= 90) {
+        if ('b' >= 'a' ) {
             grade = 'A';
         } else if (score >= 80) {
             grade = 'B';
