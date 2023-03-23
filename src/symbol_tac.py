@@ -34,7 +34,7 @@ def generate_symbol_table(tree, args):
     sys.stdout = sys.__stdout__
     print("Symbol Table generated: {}.csv".format(args.output))
 
-    symbol_table.fprint(args.output)
+    # symbol_table.fprint(args.output)
 
     global block_count
     block_count = 0
@@ -1234,14 +1234,11 @@ def generate_tac(tree, begin="", end=""):
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
                     try:
-                        # print(tree[i][0])
-                        if tree[i][0] in ["ForStatement", "Block", "ForStatementNoShortIf"]:
-                            return False
+                        if tree[i][0] in ["ForStatement", "ForStatementNoShortIf"]:
+                            return traverse_tree_tac(tree[i])
                     except:
                         pass
-                    if not generate_tac(tree[i]):
-                        return False
-
+                    generate_tac(tree[i])
 
 def get_Argument_list(tree):
     match tree[0]:
