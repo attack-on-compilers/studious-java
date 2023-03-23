@@ -1234,7 +1234,7 @@ def generate_tac(tree, begin="", end=""):
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
                     try:
-                        if tree[i][0] in ["ForStatement", "ForStatementNoShortIf"]:
+                        if tree[i][0] in ["ForStatement", "Block, ""ForStatementNoShortIf"]:
                             return traverse_tree_tac(tree[i])
                     except:
                         pass
