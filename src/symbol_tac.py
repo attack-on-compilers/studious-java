@@ -1116,14 +1116,13 @@ def generate_tac(tree, begin="", end=""):
             tac.cond_jump(cond, begin_label)
             tac.add_label(end_label)
         case "IfThenElseStatementNoShortIf":
-            pass
-            # cond = generate_tac(tree[3])
-            # notcond = tac.new_temp()
-            # tac.add3("!", cond, notcond)
-            # else_label = tac.gen_label()
-            # tac.cond_jump(notcond, else_label)
-            # generate_tac(tree[5])
-            # tac.add_label(else_label)
+            cond = generate_tac(tree[3])
+            notcond = tac.new_temp()
+            tac.add3("!", cond, notcond)
+            else_label = tac.gen_label()
+            tac.cond_jump(notcond, else_label)
+            generate_tac(tree[5])
+            tac.add_label(else_label)
         case "WhileStatementNoShortIf":
             begin_label = tac.gen_label()
             end_label = tac.gen_label()

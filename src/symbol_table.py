@@ -183,7 +183,7 @@ class SymbolTable:
                 current_temp = current_temp.parent
             return sym_name
         elif self.parent is not None:
-            return self.parent.get_symbol(name, symbol_type)
+            return self.parent.get_symbol_name(name, symbol_type)
         else:
             raise Exception("Symbol not found")
 
