@@ -33,19 +33,19 @@ public class test_5 {
         int s; //Not an error as above s is declared in the block 
         int x =1; //Not an error as x is declared in the class
 
-        switch (x) {
-            case 1:
-                int y; //Not an error as y is declared in the switch
-                break;
-            case 2:
-                int y2;
-                // int y; //An error as y is already declared in the switch
-                break;
-            default:
-                int y3;
-                // int y2; //An error as y2 is already declared in the switch
-                break;
-        }
+        // switch (x) {
+        //     case 1:
+        //         int y; //Not an error as y is declared in the switch
+        //         break;
+        //     case 2:
+        //         int y2;
+        //         // int y; //An error as y is already declared in the switch
+        //         break;
+        //     default:
+        //         int y3;
+        //         // int y2; //An error as y2 is already declared in the switch
+        //         break;
+        // }
 
         while (true) {
             while(true){

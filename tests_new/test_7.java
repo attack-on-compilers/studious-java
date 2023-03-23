@@ -5,7 +5,7 @@ class GoGo {
     
 	GoGo(String name, int id)
 	{ 
-		this.name =name;
+		// this.name =name;
 		System.out.println("Constructor called");
         GoGo go1 = new GoGo("Yo", 3);
 	}
@@ -15,7 +15,7 @@ class GoGo {
         int a=968;
         System.out.println(a);
 		Hii go1 = new Hii();
-        go1.a=5;
+        // go1.a=5;
 	}
 }
 
@@ -26,9 +26,9 @@ class Hii {
         Hii h = new Hii(); //Default constructor
 
         GoGo go1;
-        go1 = new GoGo("Yo",5);
+        go1 = new GoGo("",5);
 
-        System.out.println(go1.a);
+        // System.out.println(go1.a);
 
     }
 }

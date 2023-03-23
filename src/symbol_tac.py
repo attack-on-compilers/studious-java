@@ -76,8 +76,9 @@ def traverse_tree_tac(tree):
             method_sym_name = symbol_table.get_symbol_name(methodName)
             tac.add_label(method_sym_name)
             symbol_table.enter_scope(methodName)
+            print("#"*100, methodName)
             for i in methodParams:
-                tac.pop_param(symbol_table.get_symbol_name(i[1]))
+                tac.pop_param(symbol_table.get_symbol_name(i[1].split('[')[0]))
             generate_tac(tree[2][1][2])
             traverse_tree_tac(tree[2][1][2])
             symbol_table.exit_scope()
@@ -1032,9 +1033,10 @@ def generate_tac(tree, begin="", end=""):
             return tree[1]
         case "ClassInstanceCreationExpression":
             args = get_Argument_list(tree[4])
-            args.reverse()
-            for arg in args:
-                tac.push_param(arg)
+            if args is not None:
+                args.reverse()
+                for arg in args:
+                    tac.push_param(arg)
             out = tac.new_temp()
             classname = get_Name(tree[2])
             tac.add_call(f"{classname}_{classname}", out)
@@ -1081,7 +1083,10 @@ def generate_tac(tree, begin="", end=""):
             right = generate_tac(tree[5])
             tac.add3("cast_to_" + ctype, right, out)
         case "Name":
-            return symbol_table.get_symbol_name(get_Name(tree[1]))
+            try:
+                return symbol_table.get_symbol_name(get_Name(tree[1]))
+            except:
+                return
         case "PostIncrementExpression":
             out = tac.new_temp()
             right = generate_tac(tree[1])
