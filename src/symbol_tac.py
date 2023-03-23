@@ -39,7 +39,7 @@ def generate_symbol_table(tree, args):
     global block_count
     block_count = 0
     print("Generating TAC")
-    traverse_tree_tac(tree)
+    generate_tac(tree)
     if args.verbose:
         print("TAC:")
         tac.tprint()
@@ -48,85 +48,6 @@ def generate_symbol_table(tree, args):
         tac.tprint()
     sys.stdout = sys.__stdout__
     print("TAC generated: {}.txt".format(args.output))
-
-
-def traverse_tree_tac(tree):
-    global block_count
-    match tree[0]:
-        case "ClassDeclaration":
-            className = tree[3]
-            symbol_table.enter_scope(className)
-            tac.add_label(className)
-            generate_tac(tree[6])
-            traverse_tree_tac(tree[6])
-            symbol_table.exit_scope()
-
-        case "MethodDeclaration":
-            methodName = get_Name(tree[1][3])
-            methodParams = []
-            if len(tree[1][3]) == 5:
-                methodParams = get_Parameters(tree[1][3][3])
-            method_sym_name = symbol_table.get_symbol_name(methodName)
-            tac.add_label(method_sym_name)
-            symbol_table.enter_scope(methodName)
-            for i in methodParams:
-                tac.pop_param(symbol_table.get_symbol_name(i[1].split("[")[0]))
-            generate_tac(tree[2][1][2])
-            traverse_tree_tac(tree[2][1][2])
-            symbol_table.exit_scope()
-
-        case "ConstructorDeclaration":
-            constructorName = get_Name(tree[2][1])
-            constructorParams = get_Parameters(tree[2][3])
-            tac.add_label(symbol_table.get_symbol_name(constructorName))
-            symbol_table.enter_scope(constructorName)
-            for i in constructorParams:
-                tac.pop_param(symbol_table.get_symbol_name(i[1]))
-            generate_tac(tree[4])
-            traverse_tree_tac(tree[4])
-            symbol_table.exit_scope()
-
-        case "Block":
-            block_count += 1
-            previous_block_count = block_count
-            symbol_table.enter_scope("block" + str(block_count))
-            generate_tac(tree[2])
-            traverse_tree_tac(tree[2])
-            symbol_table.exit_scope()
-
-        case "ForStatement":
-            block_count += 1
-            previous_block_count = block_count
-            symbol_table.enter_scope("block" + str(block_count))
-            # print(symbol_table.current.name)
-            generate_tac(tree)
-            traverse_tree_tac(tree[3])
-            traverse_tree_tac(tree[5])
-            traverse_tree_tac(tree[7])
-            if tree[9][1][0] == "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
-                traverse_tree_tac(tree[9][1][1][2])
-            else:
-                traverse_tree_tac(tree[9])
-            symbol_table.exit_scope()
-
-        case "ForStatementNoShortIf":
-            block_count += 1
-            previous_block_count = block_count
-            symbol_table.enter_scope("block" + str(block_count))
-            generate_tac(tree)
-            traverse_tree_tac(tree[3])
-            traverse_tree_tac(tree[5])
-            traverse_tree_tac(tree[7])
-            if tree[9][1][0] == "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
-                traverse_tree_tac(tree[9][1][1][2])
-            else:
-                traverse_tree_tac(tree[9])
-            symbol_table.exit_scope()
-
-        case _:
-            if type(tree) == tuple:
-                for i in range(1, len(tree)):
-                    traverse_tree_tac(tree[i])
 
 
 def traverse_tree(tree):
@@ -886,6 +807,8 @@ def TOIMPLEMENT():
 
 
 def generate_tac(tree, begin="", end=""):
+    global block_count
+    print("tac: ", tree[0])
     match tree[0]:
         case "VariableDeclarator":
             if len(tree) == 4:
@@ -1119,6 +1042,8 @@ def generate_tac(tree, begin="", end=""):
         case "SwitchStatement":
             raise Exception("SwitchStatement not supported")
         case "StatementWithoutTrailingSubstatement":
+            if tree[1][0] == "Block":
+                return generate_tac(tree[1])
             return generate_tac(tree[1])
         case "ConstantExpression":
             return generate_tac(tree[1])
@@ -1196,7 +1121,8 @@ def generate_tac(tree, begin="", end=""):
             tac.jump(begin_label)
             tac.add_label(end_label)
         case "ForStatement":
-            # print(symbol_table.current.name)
+            block_count += 1
+            symbol_table.enter_scope("block" + str(block_count))
             generate_tac(tree[3])
             begin_label = tac.gen_label()
             end_label = tac.gen_label()
@@ -1209,7 +1135,31 @@ def generate_tac(tree, begin="", end=""):
             generate_tac(tree[9])
             tac.jump(begin_label)
             tac.add_label(end_label)
-            return
+            if tree[9][1][0] == "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
+                generate_tac(tree[9][1][1][2])
+            else:
+                generate_tac(tree[9])
+            symbol_table.exit_scope()
+        case "ForStatementNoShortIf":
+            block_count += 1
+            symbol_table.enter_scope("block" + str(block_count))
+            generate_tac(tree[3])
+            begin_label = tac.gen_label()
+            end_label = tac.gen_label()
+            tac.add_label(begin_label)
+            cond = generate_tac(tree[5])
+            out = tac.new_temp()
+            tac.add3("!", cond, out)
+            tac.cond_jump(out, end_label)
+            generate_tac(tree[7], begin=begin_label, end=end_label)
+            generate_tac(tree[9])
+            tac.jump(begin_label)
+            tac.add_label(end_label)
+            if tree[9][1][0] == "StatementWithoutTrailingSubstatement" and tree[9][1][1][0] == "Block":
+                generate_tac(tree[9][1][1][2])
+            else:
+                generate_tac(tree[9])
+            symbol_table.exit_scope()
         case "StatementNoShortIf":
             return generate_tac(tree[1])
         case "BreakStatement":
@@ -1222,23 +1172,43 @@ def generate_tac(tree, begin="", end=""):
                 tac.add_return(out)
         case "BetaExpression":
             return generate_tac(tree[1])
+        case "ClassDeclaration":
+            className = tree[3]
+            symbol_table.enter_scope(className)
+            tac.add_label(className)
+            generate_tac(tree[6])
+            symbol_table.exit_scope()
+        case "MethodDeclaration":
+            methodName = get_Name(tree[1][3])
+            methodParams = []
+            if len(tree[1][3]) == 5:
+                methodParams = get_Parameters(tree[1][3][3])
+            method_sym_name = symbol_table.get_symbol_name(methodName)
+            tac.add_label(method_sym_name)
+            symbol_table.enter_scope(methodName)
+            for i in methodParams:
+                tac.pop_param(symbol_table.get_symbol_name(i[1].split("[")[0]))
+            generate_tac(tree[2][1][2])
+            symbol_table.exit_scope()
+        case "ConstructorDeclaration":
+            constructorName = get_Name(tree[2][1])
+            constructorParams = get_Parameters(tree[2][3])
+            tac.add_label(symbol_table.get_symbol_name(constructorName))
+            symbol_table.enter_scope(constructorName)
+            for i in constructorParams:
+                tac.pop_param(symbol_table.get_symbol_name(i[1]))
+            generate_tac(tree[4])
+            symbol_table.exit_scope()
+        case "Block":
+            block_count += 1
+            previous_block_count = block_count
+            symbol_table.enter_scope("block" + str(block_count))
+            generate_tac(tree[2])
+            symbol_table.exit_scope()
         case _:
-            if tree[0] in [
-                "ClassDeclaration",
-                "MethodDeclaration",
-                "ConstructorDeclaration",
-                "SwitchBlock",
-                # "Statement"
-            ]:
-                return
-            if type(tree) == tuple:
-                for i in range(1, len(tree)):
-                    try:
-                        if tree[i][0] in ["ForStatement", "Block, ""ForStatementNoShortIf"]:
-                            return traverse_tree_tac(tree[i])
-                    except:
-                        pass
-                    generate_tac(tree[i])
+            for i in range(1, len(tree)):
+                generate_tac(tree[i])
+
 
 def get_Argument_list(tree):
     match tree[0]:
