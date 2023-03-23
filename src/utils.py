@@ -22,7 +22,7 @@ def get_Name(tree):
         case "LeftHandSide":
             return get_Name(tree[1])
         case "ArrayAccess":
-            raise Exception("ArrayAccess not supported")
+            return get_Name(tree[1])
         case "FieldAccess":
             return get_Name(tree[1]) + "." + get_Name(tree[3])
         case "Primary":
@@ -30,7 +30,7 @@ def get_Name(tree):
         case "PrimaryNoNewArray":
             # print("TYYYY",tree, len(tree), tree[1])
             if len(tree) == 2:
-                return tree[1]
+                return get_Name(tree[1])
             return get_Name(tree[1])
         case "VariableDeclaratorId":
             match len(tree):
@@ -45,7 +45,10 @@ def get_Name(tree):
                 return get_Name(tree[1])
         case _:
             for i in range(1, len(tree)):
-                get_Name(tree[i])
+                x = get_Name(tree[i])
+                if x is not None:
+                    return x
+
 
 def get_Type(tree):
     match tree[0]:
@@ -72,6 +75,7 @@ def get_Type(tree):
                     return get_Name(tree[1]) + "[]"
             return get_Type(tree[1]) + "[]"
 
+
 def get_NumberOfElements(tree):
     # print("YOOOOOOOOO",tree[0])
     match tree[0]:
@@ -97,7 +101,7 @@ def get_NumberOfElements(tree):
         case "AlphaDimExpr":
             # print("BLABLABLA",tree)
             if len(tree) == 3:
-                return get_NumberOfElements(tree[1])*get_LiteralValue(tree[2])
+                return get_NumberOfElements(tree[1]) * get_LiteralValue(tree[2])
             else:
                 return get_LiteralValue(tree[1])
         case "DimExpr":
@@ -117,11 +121,12 @@ def get_NumberOfElements(tree):
             else:
                 return get_NumberOfElements(tree[1]) + get_NumberOfElements(tree[3])
         case _:
-            if len(tree)==2:
+            if len(tree) == 2:
                 return get_NumberOfElements(tree[1])
             else:
                 return 1
-            
+
+
 def get_LiteralValue(tree):
     # print("NOOOOOOOOO",tree[0])
     match tree[0]:
@@ -130,10 +135,11 @@ def get_LiteralValue(tree):
         case "Literal":
             return int(tree[1])
         case _:
-            if len(tree)==2:
+            if len(tree) == 2:
                 return get_LiteralValue(tree[1])
             else:
                 return 1
+
 
 def get_TypeSize(type):
     if type == "int":
@@ -154,6 +160,7 @@ def get_TypeSize(type):
         return 8
     else:
         return 0
+
 
 def get_Modifiers(tree):
     match tree[0]:
@@ -279,78 +286,194 @@ def binop_type_check(left, operator, right, expression):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot convert {} to {}".format(right, left))
-                #pass
+                # pass
         case "<<":
-            if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
+            if (left == "int" or left == "long" or left == "byte" or left == "short") and (
+                right == "int" or right == "long" or right == "short" or right == "byte"
+            ):
                 pass
             else:
                 raise Exception("Shift opeartor incompatible with types {} and {}".format(left, right))
-            
+
         case ">>":
-            if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
+            if (left == "int" or left == "long" or left == "byte" or left == "short") and (
+                right == "int" or right == "long" or right == "short" or right == "byte"
+            ):
                 pass
             else:
                 raise Exception("Shift opeartor incompatible with types {} and {}".format(left, right))
-            
-        case ">>>":     
-            if (left == "int" or left == "long" or left == "byte" or left == "short") and (right == "int" or right == "long" or right == "short" or right == "byte"):
+
+        case ">>>":
+            if (left == "int" or left == "long" or left == "byte" or left == "short") and (
+                right == "int" or right == "long" or right == "short" or right == "byte"
+            ):
                 pass
             else:
                 raise Exception("Shift opeartor incompatible with types {} and {}".format(left, right))
 
         case ">":
-            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
+            if (
+                left == "int"
+                or left == "long"
+                or left == "byte"
+                or left == "short"
+                or left == "float"
+                or left == "double"
+                or left == "char"
+            ) and (
+                right == "int"
+                or right == "long"
+                or right == "byte"
+                or right == "short"
+                or right == "float"
+                or right == "double"
+                or right == "char"
+            ):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
-        
+
         case "<":
-            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
+            if (
+                left == "int"
+                or left == "long"
+                or left == "byte"
+                or left == "short"
+                or left == "float"
+                or left == "double"
+                or left == "char"
+            ) and (
+                right == "int"
+                or right == "long"
+                or right == "byte"
+                or right == "short"
+                or right == "float"
+                or right == "double"
+                or right == "char"
+            ):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
-        
+
         case ">=":
-            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
+            if (
+                left == "int"
+                or left == "long"
+                or left == "byte"
+                or left == "short"
+                or left == "float"
+                or left == "double"
+                or left == "char"
+            ) and (
+                right == "int"
+                or right == "long"
+                or right == "byte"
+                or right == "short"
+                or right == "float"
+                or right == "double"
+                or right == "char"
+            ):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
-        
+
         case "<=":
-            if (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
+            if (
+                left == "int"
+                or left == "long"
+                or left == "byte"
+                or left == "short"
+                or left == "float"
+                or left == "double"
+                or left == "char"
+            ) and (
+                right == "int"
+                or right == "long"
+                or right == "byte"
+                or right == "short"
+                or right == "float"
+                or right == "double"
+                or right == "char"
+            ):
                 pass
             else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
 
         case "==":
-            if left==right:
+            if left == right:
                 pass
-            elif (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
+            elif (
+                left == "int"
+                or left == "long"
+                or left == "byte"
+                or left == "short"
+                or left == "float"
+                or left == "double"
+                or left == "char"
+            ) and (
+                right == "int"
+                or right == "long"
+                or right == "byte"
+                or right == "short"
+                or right == "float"
+                or right == "double"
+                or right == "char"
+            ):
                 pass
-            else :
+            else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
 
         case "!=":
-            if left==right:
+            if left == right:
                 pass
-            elif (left == "int" or left == "long" or left == "byte" or left == "short" or left == "float" or left == "double" or left == "char") and (right == "int" or right == "long" or right == "byte" or right == "short" or right == "float" or right == "double" or right == "char"):
+            elif (
+                left == "int"
+                or left == "long"
+                or left == "byte"
+                or left == "short"
+                or left == "float"
+                or left == "double"
+                or left == "char"
+            ) and (
+                right == "int"
+                or right == "long"
+                or right == "byte"
+                or right == "short"
+                or right == "float"
+                or right == "double"
+                or right == "char"
+            ):
                 pass
-            else :
+            else:
                 raise Exception("Type mismatch in binary operation, cannot compare {} with {}".format(left, right))
 
 
 def unop_type_check(operator, left_or_right, expression):
-    
     match operator:
-
         case "++":
-            if left_or_right == "int" or left_or_right == "float" or left_or_right == "long" or left_or_right == "double" or left_or_right == "char" or left_or_right == "short" or left_or_right == "byte":
+            if (
+                left_or_right == "int"
+                or left_or_right == "float"
+                or left_or_right == "long"
+                or left_or_right == "double"
+                or left_or_right == "char"
+                or left_or_right == "short"
+                or left_or_right == "byte"
+            ):
                 pass
             else:
                 raise Exception("Unary operator {} incompatible with type {}".format("++", left_or_right))
 
         case "--":
-            if left_or_right == "int" or left_or_right == "float" or left_or_right == "long" or left_or_right == "double" or left_or_right == "char" or left_or_right == "short" or left_or_right == "byte":
+            if (
+                left_or_right == "int"
+                or left_or_right == "float"
+                or left_or_right == "long"
+                or left_or_right == "double"
+                or left_or_right == "char"
+                or left_or_right == "short"
+                or left_or_right == "byte"
+            ):
                 pass
             else:
                 raise Exception("Unary operator {} incompatible with type {}".format("--", left_or_right))
@@ -358,21 +481,19 @@ def unop_type_check(operator, left_or_right, expression):
         case "~":
             if left_or_right == "String" or left_or_right == "boolean" or left_or_right == "float" or left_or_right == "double":
                 raise Exception("Unary operator {} incompatible with type {}".format("~", left_or_right))
-            elif left_or_right ==  "char":
+            elif left_or_right == "char":
                 print("WARNING: THREAT USE OF UNARY OPERATOR FOR CHAR")
                 pass
             elif left_or_right == "int" or left_or_right == "long" or left_or_right == "byte" or left_or_right == "short":
                 pass
             else:
                 raise Exception("Unary operator ~ incompatible with type {}".format(left_or_right))
-            
+
         case "!":
             if left_or_right == "boolean":
                 pass
             else:
-                raise Exception("Unary operator ! incompatible with type {}".format(left_or_right))  
-
-        
+                raise Exception("Unary operator ! incompatible with type {}".format(left_or_right))
 
 
 def method_type_check(methodreturn_type, methodheader_type):
@@ -415,7 +536,11 @@ def method_type_check(methodreturn_type, methodheader_type):
     ):
         pass
     else:
-        raise Exception("Type mismatch in method return type and method header type, expected {}, found {}".format(methodheader_type, methodreturn_type))
+        raise Exception(
+            "Type mismatch in method return type and method header type, expected {}, found {}".format(
+                methodheader_type, methodreturn_type
+            )
+        )
 
 
 def string_to_type(expression):
@@ -479,9 +604,13 @@ def big(t1, t2):
         return t1
     if t2 == "short" and t1 == "byte":
         return t2
-    if (t1 == "String") and (t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "long" or t1 == "char" or t2 == "float" or t2 == "double"):
+    if (t1 == "String") and (
+        t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "long" or t1 == "char" or t2 == "float" or t2 == "double"
+    ):
         return t1
-    if (t2 == "String") and (t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "long" or t1 == "char" or t1 == "float" or t1 == "double"):
+    if (t2 == "String") and (
+        t1 == "int" or t1 == "short" or t1 == "byte" or t1 == "long" or t1 == "char" or t1 == "float" or t1 == "double"
+    ):
         return t2
     if (t1 == "char") and (t2 == "int" or t2 == "short" or t2 == "byte" or t2 == "long" or t1 == "char"):
         return t2

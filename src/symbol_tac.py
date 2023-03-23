@@ -1124,7 +1124,7 @@ def generate_tac(tree, begin="", end=""):
         #     if len(tree) == 2:
         #         return generate_tac(tree[1])
         case "ExpressionStatement":
-            return generate_tac(tree[1][1])
+            return generate_tac(tree[1])
         case "SwitchStatement":
             raise Exception("SwitchStatement not supported")
         case "StatementWithoutTrailingSubstatement":
