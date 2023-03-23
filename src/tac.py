@@ -1,6 +1,6 @@
 # A Class for three AC (TAC) system stored in quadripole
 class TAC:
-    def __init__(self, temp_prefix="t", temp_suffix=""):
+    def __init__(self, temp_prefix="__t", temp_suffix=""):
         self.temp_var = type("temp_var", (object,), {})()
         self.temp_var.count = 0
         self.temp_var.prefix = temp_prefix + "_"
@@ -22,8 +22,11 @@ class TAC:
     def add_call(self, func, result):
         self.table.append(["ProcCall", func, result])
 
-    def add_param(self, param):
+    def pop_param(self, param):
         self.table.append(["PopFromStack", param])
+    
+    def push_param(self, param):
+        self.table.append(["PushToStack", param])
 
     def add_return(self, result):
         self.table.append(["Return", result])

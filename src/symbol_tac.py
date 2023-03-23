@@ -77,7 +77,7 @@ def traverse_tree_tac(tree):
             tac.add_label(method_sym_name)
             symbol_table.enter_scope(methodName)
             for i in methodParams:
-                tac.add_param(symbol_table.get_symbol_name(i[1]))
+                tac.pop_param(symbol_table.get_symbol_name(i[1]))
             generate_tac(tree[2][1][2])
             traverse_tree_tac(tree[2][1][2])
             symbol_table.exit_scope()
@@ -88,7 +88,7 @@ def traverse_tree_tac(tree):
             tac.add_label(symbol_table.get_symbol_name(constructorName))
             symbol_table.enter_scope(constructorName)
             for i in constructorParams:
-                tac.add_param(symbol_table.get_symbol_name(i[1]))
+                tac.pop_param(symbol_table.get_symbol_name(i[1]))
             generate_tac(tree[4])
             traverse_tree_tac(tree[4])
             symbol_table.exit_scope()
@@ -1036,7 +1036,7 @@ def generate_tac(tree, begin="", end=""):
             args = get_Argument_list(tree[4])
             args.reverse()
             for arg in args:
-                tac.add_param(arg)
+                tac.push_param(arg)
             out = tac.new_temp()
             classname = get_Name(tree[2])
             tac.add_call(f"{classname}_{classname}", out)
@@ -1059,7 +1059,7 @@ def generate_tac(tree, begin="", end=""):
                 args = get_Argument_list(tree[3])
                 args.reverse()
                 for arg in args:
-                    tac.add_param(arg)
+                    tac.push_param(arg)
                 out = tac.new_temp()
                 tac.add_call(funcname, out)
                 return out
@@ -1069,7 +1069,7 @@ def generate_tac(tree, begin="", end=""):
                 args = get_Argument_list(tree[5])
                 args.reverse()
                 for arg in args:
-                    tac.add_param(arg)
+                    tac.push_param(arg)
                 out = tac.new_temp()
                 tac.add_call(funcname, out)
                 return out
