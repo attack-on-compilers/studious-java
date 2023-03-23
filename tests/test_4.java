@@ -1,69 +1,29 @@
-public class SwitchTest {
-    public void handleRequest(Request request) {
-        switch (request.getType()) {
-            case GET:
-                switch (request.getResource()) {
-                    case "users":
-                        // Handle getting user data
-                        break;
-                    case "posts":
-                        // Handle getting post data
-                        break;
-                    case "comments":
-                        // Handle getting comment data
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid resource: " + request.getResource());
-                }
-                break;
-            case POST:
-                switch (request.getResource()) {
-                    case "users":
-                        // Handle creating a new user
-                        break;
-                    case "posts":
-                        // Handle creating a new post
-                        break;
-                    case "comments":
-                        // Handle creating a new comment
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid resource: " + request.getResource());
-                }
-                break;
-            case PUT:
-                switch (request.getResource()) {
-                    case "users":
-                        // Handle updating user data
-                        break;
-                    case "posts":
-                        // Handle updating post data
-                        break;
-                    case "comments":
-                        // Handle updating comment data
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid resource: " + request.getResource());
-                }
-                break;
-            case DELETE:
-                switch (request.getResource()) {
-                    case "users":
-                        // Handle deleting a user
-                        break;
-                    case "posts":
-                        // Handle deleting a post
-                        break;
-                    case "comments":
-                        // Handle deleting a comment
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid resource: " + request.getResource());
-                }
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid request type: " + request.getType());
-        }
+// Single and multi-dimensional arrays, both local and instance variables
+public class test_4 {
+    int a;
+    int b,c,d;
+    int e = 5;
+    int[] f = {1,2,3,4,5};
+    double g[] = {1.0,2,3.0,4.0,5.0};
+    int h[][] = {{1,2,3,4,5},{1,2,3,4,5}};
+    int i[][] = new int[5][5];
+    int j[][] = new int[5][];
+    int[][] k = new int[5][];
+    float l[];
+    char m[] = new char[5], n[] = new char[5], o=6, p[]={1,2,3,4,5};
+    double[][] q = new double[5][10], r = new double[5][], t={{4}};
+    public static void main(String[] args) {
+        int a;
+        int b,c,d;
+        int e = 5;
+        int[] f = {1,2,3,4,5};
+        double g[] = {1.0,2,3.0,4.0,5.0};
+        int h[][][] = {{{1,2,3,4,5},{1,2,3,4,5}},{{1,2,3,4,5},{1,2,3,4,5}}};
+        int i[][] = new int[5][5];
+        int j[][] = new int[5][];
+        int[][] k = new int[5][];
+        float l[];
+        char m[] = new char[5], n[] = new char[5], o=6, p[]={1,2,3,4,5};
+        double[][] q = new double[5][10], r = new double[5][], t={{4}};
     }
-
 }

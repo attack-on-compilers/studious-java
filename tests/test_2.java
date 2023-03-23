@@ -1,74 +1,26 @@
-package test;
-
-import java.util.Scanner;
-
-public class LinkedList {
-    private Node head;
-
-    public LinkedList() {
-        head = null;
-    }
-
-    public void add(int value) {
-        Node newNode = new Node(value);
-        if (head == null) {
-            head = newNode;
-        } else {
-            Node current = head;
-            while (current.getNext() != null) {
-                current = current.getNext();
-            }
-            current.setNext(newNode);
-        }
-    }
-
-    public void remove(int value) {
-        if (head == null) {
-            return;
-        }
-        if (head.getValue() == value) {
-            head = head.getNext();
-        } else {
-            Node current = head;
-            while (current.getNext() != null && current.getNext().getValue() != value) {
-                current = current.getNext();
-            }
-            if (current.getNext() != null) {
-                current.setNext(current.getNext().getNext());
-            }
-        }
-    }
-
-    public boolean contains(int value) {
-        Node current = head;
-        while (current != null) {
-            if (current.getValue() == value) {
-                return true;
-            }
-            current = current.getNext();
-        }
-        return false;
-    }
-}
-
-class Node {
-    private int value;
-    private Node neIxt;
-
-    public Node(int value) {
-        value = value;
-        next = 36.33f;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setNext(Node next) {
-        next = next;
-    }
-
-    public Node getNext() {
-        return next;
+// Simple expressiona and implicit conversion
+public class test_2 {
+    public static void main(String[] args) {
+        int a = 1;
+        // int a = 1; // Is an error because of redeclaration
+        int b = 2;
+        int c = a + b + 7;
+        System.out.println(c);
+        double d = 1.0;
+        double e = 2;       // Implicit conversion from int to double
+        double f = d + e;
+        System.out.println(f);
+        char g = 'a';
+        char h = 'b';
+        int i = (g * h);    // Implicit conversion from char to int
+        System.out.println(i);
+        double j = 'a' + 45 ;
+        double k = 'a' + 45.0 ;
+        // float l = 'a' + 45.0 ; // Is an error because of implicit conversion from double to float
+        float m = 'a' + 45.0f ; // Is not an error
+        // int n =5 + 78l; // Is an error, on hold for now
+        int o =5 << 4;
+        int p =5 << 4; // Is an error
+        System.out.println(j+k+m+o+p);
     }
 }

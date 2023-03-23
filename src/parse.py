@@ -4,6 +4,8 @@ import ply.yacc as yacc
 from lexer import *
 import argparse
 from dot import tree_gen, tree_reduce
+from symbol_tac import generate_symbol_table
+from symbol_table import *
 
 start = "Start"
 
@@ -59,7 +61,7 @@ def p_TypeImportOnDemandDeclaration(p):
 
 def p_Name(p):
     """Name : IdentifierId
-    | IdentifierIdAlphaDotIdentifierId"""
+    | NameDotIdentifierId"""
     p[0] = ("Name",) + tuple(p[-len(p) + 1 :])
 
 
@@ -68,9 +70,9 @@ def p_IdentifierId(p):
     p[0] = ("IdentifierId",) + tuple(p[-len(p) + 1 :])
 
 
-def p_IdentifierIdAlphaDotIdentifierId(p):
-    """IdentifierIdAlphaDotIdentifierId : Name DOT IDENTIFIER"""
-    p[0] = ("IdentifierIdAlphaDotIdentifierId",) + tuple(p[-len(p) + 1 :])
+def p_NameDotIdentifierId(p):
+    """NameDotIdentifierId : Name DOT IDENTIFIER"""
+    p[0] = ("NameDotIdentifierId",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaAlphaImportDeclaration(p):
@@ -108,8 +110,7 @@ def p_Modifier(p):
     | NATIVE
     | SYNCHRONIZED
     | TRANSIENT
-    | VOLATILE
-    | STRICTFP"""
+    | VOLATILE"""
     p[0] = ("Modifier",) + tuple(p[-len(p) + 1 :])
 
 
@@ -390,7 +391,7 @@ def p_ConstructorDeclarator(p):
 
 
 def p_ConstructorBody(p):
-    """ConstructorBody : LEFT_BRACE BetaExplicitConstructorInvocation BetaAlphaBlockStatement RIGHT_BRACE"""
+    """ConstructorBody : LEFT_BRACE BetaAlphaBlockStatement RIGHT_BRACE"""
     p[0] = ("ConstructorBody",) + tuple(p[-len(p) + 1 :])
 
 
@@ -398,18 +399,6 @@ def p_BetaAlphaBlockStatement(p):
     """BetaAlphaBlockStatement : AlphaBlockStatement
     | empty"""
     p[0] = ("BetaAlphaBlockStatement",) + tuple(p[-len(p) + 1 :])
-
-
-def p_BetaExplicitConstructorInvocation(p):
-    """BetaExplicitConstructorInvocation : ExplicitConstructorInvocation
-    | empty"""
-    p[0] = ("BetaExplicitConstructorInvocation",) + tuple(p[-len(p) + 1 :])
-
-
-def p_ExplicitConstructorInvocation(p):
-    """ExplicitConstructorInvocation : THIS LEFT_PAREN BetaArgumentList RIGHT_PAREN SEMICOLON
-    | SUPER LEFT_PAREN BetaArgumentList RIGHT_PAREN SEMICOLON"""
-    p[0] = ("ExplicitConstructorInvocation",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaArgumentList(p):
@@ -424,9 +413,14 @@ def p_AbstractMethodDeclaration(p):
 
 
 def p_ArrayInitializer(p):
-    """ArrayInitializer : LEFT_BRACE BetaAlphaVariableInitializer COMMA RIGHT_BRACE
-    | LEFT_BRACE BetaAlphaVariableInitializer RIGHT_BRACE"""
+    """ArrayInitializer : LEFT_BRACE BetaAlphaVariableInitializer BetaComma RIGHT_BRACE"""
     p[0] = ("ArrayInitializer",) + tuple(p[-len(p) + 1 :])
+
+
+def p_BetaComma(p):
+    """BetaComma : COMMA
+    | empty"""
+    p[0] = ("BetaComma",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaAlphaVariableInitializer(p):
@@ -711,7 +705,6 @@ def p_PrimaryNoNewArray(p):
     | FieldAccess
     | MethodInvocation
     | ArrayAccess"""
-
     p[0] = ("PrimaryNoNewArray",) + tuple(p[-len(p) + 1 :])
 
 
@@ -727,9 +720,14 @@ def p_ArgumentList(p):
 
 
 def p_ArrayCreationExpression(p):
-    """ArrayCreationExpression : NEW PrimitiveType BetaAlphaDimExpr AlphaDim
-    | NEW ClassOrInterfaceType BetaAlphaDimExpr AlphaDim"""
+    """ArrayCreationExpression : NEW PrimitiveType AlphaDimExpr BetaAlphaDim"""
     p[0] = ("ArrayCreationExpression",) + tuple(p[-len(p) + 1 :])
+
+
+def p_BetaAlphaDim(p):
+    """BetaAlphaDim : AlphaDim
+    | empty"""
+    p[0] = ("BetaAlphaDim",) + tuple(p[-len(p) + 1 :])
 
 
 def p_BetaAlphaDimExpr(p):
@@ -824,11 +822,6 @@ def p_CastExpression(p):
     | LEFT_PAREN Expression RIGHT_PAREN UnaryExpressionNotPlusMinus
     | LEFT_PAREN Name AlphaDim RIGHT_PAREN UnaryExpressionNotPlusMinus"""
     p[0] = ("CastExpression",) + tuple(p[-len(p) + 1 :])
-
-def p_BetaAlphaDim(p):
-    """BetaAlphaDim : AlphaDim
-    | empty"""
-    p[0] = ("BetaAlphaDim",) + tuple(p[-len(p) + 1 :])
 
 
 def p_MultiplicativeExpression(p):
@@ -986,7 +979,7 @@ def p_empty(p):
 
 
 def p_error(p):
-    print("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
+    raise Exception("Syntax error in input at line {} at token {}".format(p.lineno, p.value))
 
 
 yacc.yacc(debug=False, debugfile="parser.out")
@@ -995,21 +988,20 @@ yacc.yacc(debug=False, debugfile="parser.out")
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", type=str, default=None, help="Input file")
-    parser.add_argument("-o", "--output", type=str, default="ast", help="Output file")
+    parser.add_argument("-o", "--output", type=str, default="javao", help="Output file")
     parser.add_argument("-a", "--all", action="store_true", help="Show Entire Parse Tree")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose Output")
     return parser
 
 
 if __name__ == "__main__":
+    # lex.lex(debug=True)
+    # yacc.yacc(debug=True)
+    global args
     args = getArgs().parse_args()
     if args.verbose:
         print("Input file: {}".format(args.input))
-        print("Output file: {}".format(args.output))
-        if args.all:
-            print("Generating Complete Parse Tree")
-        else:
-            print("Generating AST")
+        print("Output dot file: {}".format(args.output))
     if args.input == None:
         print("No input file specified")
         print("Use -h or --help for help")
@@ -1020,7 +1012,15 @@ if __name__ == "__main__":
             if args.output[-4:] == ".dot":
                 args.output = args.output[:-4]
             if args.all:
+                if args.verbose:
+                    print("Generating Complete Parse Tree")
                 tree_gen(tree, args.output)
             else:
+                if args.verbose:
+                    print("Generating AST")
                 tree_gen(tree_reduce(tree), args.output)
-        print("Dot file generated: {}.dot".format(args.output))
+        if args.verbose:
+            print("Dot file generated: {}.dot".format(args.output))
+        global_symbol_table = generate_symbol_table(tree,args)
+        if args.verbose:
+            print("Symbol Table and TAC generated")

@@ -1,41 +1,33 @@
-package abc.def;
-
-import java.io.h;
-import System.out;
-import System.out.*;
-
-public class Person {
-    private String name;
-    private int age;
-    private String address;
-
-    public Person(String name, int age, String address) {
-        name = name;
-        age = (int) 55.55;
-        address = address;
+// Basic test case- Hello World!
+public class test_1
+{
+    static int foo(int x, int y)
+    {
+        int z = x+y;
+        return z;
     }
+    public static void main(String[] args)
+    {
+        {
+            int x=100;
+            {
+                x = 555;
+                {
+                    {
+                        {
+                            x=55;
+                        }
+                    }
+                }
+                int y=6555;
+            }
+            // int x = 5;
+        }
 
-    public void setName(String name) {
-        name = name;
-    }
-
-    public void setAge(int age) {
-        age = age;
-    }
-
-    public void setAddress(String address) {
-        address = address;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public String getAddress() {
-        return address;
+        int t = (int) 5.0;
+        // int x = 5;
+        System.out.println(5);
+        foo(4,5);
+        foo(1,2);
     }
 }
