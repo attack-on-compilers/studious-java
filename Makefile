@@ -5,9 +5,9 @@ all:
 	pip install -r requirements.txt
 	python ./src/parse.py
 	
-dev: 
+dev:
 	clear
-	python ./src/parse.py -i ./tests_new/test_$(ARG).java -o src/ast.dot -v -a
+	python ./src/parse.py -i ./tests_new/test_$(ARG).java -o src/javao -v -a
 
 dev-g: dev
 	dot -Tsvg src/ast.dot -o src/ast.svg
@@ -21,5 +21,5 @@ vgraph:
 
 clean:
 	rm -rf src/__pycache__
-	rm -f src/parsetab.py src/parser.out src/parsetab.py src/*.dot src/*.ps ast* src/ast src/*.svg src/*.png
+	rm -f src/parsetab.py src/parser.out src/parsetab.py src/*.dot src/*.ps ast* src/ast src/*.svg src/*.png src/*csv src/*.txt src/javao *.csv
 	

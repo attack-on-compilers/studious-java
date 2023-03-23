@@ -988,7 +988,7 @@ yacc.yacc(debug=True, debugfile="parser.out")
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", type=str, default=None, help="Input file")
-    parser.add_argument("-o", "--output", type=str, default="ast", help="Output file")
+    parser.add_argument("-o", "--output", type=str, default="javao", help="Output file")
     parser.add_argument("-a", "--all", action="store_true", help="Show Entire Parse Tree")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose Output")
     return parser

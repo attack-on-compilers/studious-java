@@ -9,6 +9,7 @@ class VariableScope(Enum):
     PUBLIC = 2
     PARAMETER = 3
 
+
 # TODO: OFFSET AND LINENO
 class VariableType(Enum):
     BYTE = "BYTE"
@@ -68,7 +69,16 @@ class ClassSymbol(Symbol):
         pass
 
     def __str__(self):
-        return DELIMERTER.join([str(self.name), str(self.symbol_type), str(self.symbol_table.name), str(self.scope), str(self.parent_class), str(self.interfaces)])
+        return DELIMERTER.join(
+            [
+                str(self.name),
+                str(self.symbol_type),
+                str(self.symbol_table.name),
+                str(self.scope),
+                str(self.parent_class),
+                str(self.interfaces),
+            ]
+        )
 
 
 class MethodSymbol(Symbol):
@@ -82,7 +92,18 @@ class MethodSymbol(Symbol):
         self.throws = throws
 
     def __str__(self):
-        return DELIMERTER.join([str(self.name), str(self.signature), str(self.symbol_type), str(self.symbol_table.name), str(self.params), str(self.return_type), str(self.scope), str(self.throws)])
+        return DELIMERTER.join(
+            [
+                str(self.name),
+                str(self.signature),
+                str(self.symbol_type),
+                str(self.symbol_table.name),
+                str(self.params),
+                str(self.return_type),
+                str(self.scope),
+                str(self.throws),
+            ]
+        )
 
 
 class BlockSymbol(Symbol):
@@ -113,7 +134,10 @@ class VariableSymbol(Symbol):
         self.offset = offset
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.data_type, str(self.size), str(self.offset), str(self.scope), str(self.dims)])
+        return DELIMERTER.join(
+            [self.name, self.symbol_type, self.data_type, str(self.size), str(self.offset), str(self.scope), str(self.dims)]
+        )
+
 
 ##check once constructor symbol class
 class ConstructorSymbol(Symbol):
@@ -150,6 +174,8 @@ class ImportSymbol(Symbol):
 
 
 printfuncs = ["System.out.println", "println", "System.out.print", "print"]
+
+
 class SymbolTable:
     def __init__(self, parent=None, name=None):
         self.name = name
@@ -171,13 +197,13 @@ class SymbolTable:
             return self.parent.get_symbol(name, symbol_type)
         else:
             raise Exception(f"Symbol {name} not found")
-        
+
     def get_symbol_name(self, name, symbol_type=None):
         if name in printfuncs:
             return name
         symbol = self.symbols.get(name)
         if symbol is not None and (symbol_type is None or symbol.symbol_type == symbol_type):
-            sym_name =  symbol.name
+            sym_name = symbol.name
             current_temp = self
             while current_temp.parent is not None:
                 scope_name = current_temp.name[:-13].replace(" ", "_")
@@ -189,18 +215,35 @@ class SymbolTable:
         else:
             raise Exception(f"Symbol {name} not found")
 
-    def tprint(self,level):
+    def tprint(self, level):
         symbols_with_symbol_tables = ["class", "method", "block", "interface"]
         symbol_tables = []
-        print("\t"*level, "-"*100)
-        print("\t"*level, self.name)
+        print("\t" * level, "-" * 100)
+        print("\t" * level, self.name)
         for symbol in self.symbols.values():
-            print("\t"*level, symbol)
+            print("\t" * level, symbol)
             if symbol.symbol_type in symbols_with_symbol_tables:
                 symbol_tables.append(symbol.symbol_table)
-        print("\t"*level, "-"*100)
+        print("\t" * level, "-" * 100)
         for symbol_table in symbol_tables:
-            symbol_table.tprint(level+1)
+            symbol_table.tprint(level + 1)
+
+    def fprint(self, prefix=""):
+        symbols_with_symbol_tables = ["class", "method", "block", "interface"]
+        symbol_tables = []
+        file_name = prefix + "_" +self.name + ".csv"
+        file_name = file_name.replace(" ", "_")
+        with open(file_name, "w") as f:
+            for symbol in self.symbols.values():
+                f.write(str(symbol))
+            if symbol.symbol_type in symbols_with_symbol_tables:
+                symbol_tables.append(symbol.symbol_table)
+        if file_name.endswith(".csv"):
+            file_name = file_name[:-4]
+        if file_name.endswith("_symbol_table"):
+            file_name = file_name[:-13]
+        for symbol_table in symbol_tables:
+            symbol_table.fprint(file_name)
 
 
 class RootSymbolTable:
@@ -213,7 +256,7 @@ class RootSymbolTable:
 
     def get_symbol(self, name, symbol_type=None):
         return self.current.get_symbol(name, symbol_type)
-    
+
     def get_symbol_name(self, name, symbol_type=None):
         return self.current.get_symbol_name(name, symbol_type)
 
@@ -232,5 +275,9 @@ class RootSymbolTable:
                 return sym.return_type
             current_sym = current_sym.parent
         raise Exception("Method symbol not found")
+
     def tprint(self):
         self.root.tprint(0)
+
+    def fprint(self, prefix):
+        self.root.fprint(prefix)

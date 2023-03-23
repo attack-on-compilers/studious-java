@@ -21,8 +21,7 @@ tac = TAC()
 offset = [0]
 
 
-def generate_symbol_table(tree,args):
-
+def generate_symbol_table(tree, args):
     if args.verbose:
         print("Generating Symbol Table")
 
@@ -30,11 +29,13 @@ def generate_symbol_table(tree,args):
     if args.verbose:
         print("Symbol Table:")
         symbol_table.tprint()
-    print("Symbol Table generated: {}.csv".format(args.output))
     with open("{}.csv".format(args.output), mode="w") as sys.stdout:
         symbol_table.tprint()
     sys.stdout = sys.__stdout__
-    
+    print("Symbol Table generated: {}.csv".format(args.output))
+
+    symbol_table.fprint(args.output)
+
     global block_count
     block_count = 0
     print("Generating TAC")
@@ -47,32 +48,6 @@ def generate_symbol_table(tree,args):
         tac.tprint()
     sys.stdout = sys.__stdout__
     print("TAC generated: {}.txt".format(args.output))
-
-
-    store_output_buffer = io.StringIO()
-    sys.stdout = store_output_buffer
-
-    # store the output
-    symbol_table.tprint()
-    csv_output = store_output_buffer.getvalue()
-    # Reset standard output to its original value
-    sys.stdout = sys.__stdout__
-
-    # open the file in write mode and write the data
-    with open("output_sym.csv", mode="a", newline="") as csv_file:
-        file_size = os.path.getsize("output_sym.csv")
-
-        # if the file is not empty, truncate it
-        if file_size > 0:
-            csv_file.truncate(0)
-
-        # create a CSV writer object
-        writer = csv.writer(csv_file, delimiter=" ")
-
-        # write the instance to the CSV file
-        writer.writerow(csv_output)
-
-    return
 
 
 def traverse_tree_tac(tree):
@@ -95,7 +70,7 @@ def traverse_tree_tac(tree):
             tac.add_label(method_sym_name)
             symbol_table.enter_scope(methodName)
             for i in methodParams:
-                tac.pop_param(symbol_table.get_symbol_name(i[1].split('[')[0]))
+                tac.pop_param(symbol_table.get_symbol_name(i[1].split("[")[0]))
             generate_tac(tree[2][1][2])
             traverse_tree_tac(tree[2][1][2])
             symbol_table.exit_scope()
@@ -217,19 +192,19 @@ def traverse_tree(tree):
         right = get_expression_Type(tree[3])
 
         binop_type_check(left, operator, right, tree[0])
-        
+
     if tree[0] == "RelationalExpression" and len(tree) == 4 and tree[2] != "instanceof":
         operator = tree[2]
         left = get_expression_Type(tree[1])
         right = get_expression_Type(tree[3])
-        binop_type_check(left, operator, right, tree[0])   
+        binop_type_check(left, operator, right, tree[0])
 
     if tree[0] == "EqualityExpression" and len(tree) == 4:
         operator = tree[2]
         left = get_expression_Type(tree[1])
         right = get_expression_Type(tree[3])
 
-        binop_type_check(left, operator, right, tree[0])   
+        binop_type_check(left, operator, right, tree[0])
 
     match tree[0]:
         case "BetaAlphaTypeDeclaration":
@@ -378,7 +353,7 @@ def traverse_tree(tree):
             post_type_check(tree)
             normalTypes = ["int", "char", "boolean", "float", "double", "long", "short", "byte", "String"]
             if fieldType not in normalTypes:
-                for i in symbol_table.root.get_symbol(fieldType).symbol_table.symbols.values() :
+                for i in symbol_table.root.get_symbol(fieldType).symbol_table.symbols.values():
                     if not i.name.startswith("this."):
                         if i.symbol_type == "variable" and "private" not in i.scope:
                             # print("YOYOYOYO",symbol_table.current)
@@ -386,7 +361,7 @@ def traverse_tree(tree):
                                 newj = j
                                 if j[-1] == "]":
                                     newj = j[: j.find("[")]
-                                symbol_table.add_symbol(VariableSymbol(j+"."+i.name, i.data_type, 0, 0, i.scope, i.dims))
+                                symbol_table.add_symbol(VariableSymbol(j + "." + i.name, i.data_type, 0, 0, i.scope, i.dims))
                         # elif i.symbol_type == "method":
                         #     print("YOYOYOYO",symbol_table.current)
                         #     for j in fieldVariables:
@@ -499,9 +474,7 @@ def initial_Traverse(tree):
                 symbol_table.add_symbol(
                     VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], fieldModifiers, dims)
                 )
-                symbol_table.add_symbol(
-                    VariableSymbol("this."+newi, fieldType, 0, 0, fieldModifiers, dims)
-                )
+                symbol_table.add_symbol(VariableSymbol("this." + newi, fieldType, 0, 0, fieldModifiers, dims))
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
             post_type_check(tree)
@@ -724,7 +697,6 @@ def get_expression_Type(expression):
         case "LeftHandSide":
             return get_expression_Type(expression[1])
         case "FieldAccess":
-
             # print("AAAAAAAAAAAAAAAAAA",expression)
             return symbol_table.get_symbol(get_Name(expression)).data_type
         case "NameDotIdentifierId":

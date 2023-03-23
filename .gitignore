@@ -139,3 +139,7 @@ src/*.dot
 src/*.ps
 ast*
 *.csv
+*.txt
+
+*javao*
+
