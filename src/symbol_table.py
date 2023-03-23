@@ -149,6 +149,7 @@ class ImportSymbol(Symbol):
         return DELIMERTER.join([self.name, self.symbol_type])
 
 
+printfuncs = ["System.out.println", "println", "System.out.print", "print"]
 class SymbolTable:
     def __init__(self, parent=None, name=None):
         self.name = name
@@ -161,7 +162,6 @@ class SymbolTable:
         self.symbols[symbol.name] = symbol
 
     def get_symbol(self, name, symbol_type=None):
-        printfuncs = ["System.out.println", "println", "System.out.print", "print"]
         if name in printfuncs:
             return
         symbol = self.symbols.get(name)
@@ -173,6 +173,8 @@ class SymbolTable:
             raise Exception(f"Symbol {name} not found")
         
     def get_symbol_name(self, name, symbol_type=None):
+        if name in printfuncs:
+            return name
         symbol = self.symbols.get(name)
         if symbol is not None and (symbol_type is None or symbol.symbol_type == symbol_type):
             sym_name =  symbol.name
@@ -185,7 +187,7 @@ class SymbolTable:
         elif self.parent is not None:
             return self.parent.get_symbol_name(name, symbol_type)
         else:
-            raise Exception("Symbol not found")
+            raise Exception(f"Symbol {name} not found")
 
     def tprint(self,level):
         symbols_with_symbol_tables = ["class", "method", "block", "interface"]
@@ -207,7 +209,7 @@ class RootSymbolTable:
         self.current = self.root
 
     def add_symbol(self, symbol):
-        print("Adding symbol: " + symbol.name)
+        # print("Adding symbol: " + symbol.name)
         self.current.add_symbol(symbol)
 
     def get_symbol(self, name, symbol_type=None):
@@ -217,14 +219,14 @@ class RootSymbolTable:
         return self.current.get_symbol_name(name, symbol_type)
 
     def enter_scope(self, name):
-        print("Entering scope: " + name)
+        # print("Entering scope: " + name)
         self.current = self.current.get_symbol(name).symbol_table
         # What if there are two scopes with same name???????????
 
     def exit_scope(self):
-        print("Exiting scope: " + self.current.name)
+        # print("Exiting scope: " + self.current.name)
         self.current = self.current.parent
-        print("Parent scope: " + self.current.name)
+        # print("Parent scope: " + self.current.name)
 
     def get_method_symbol(self):
         current_sym = self.current
