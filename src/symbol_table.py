@@ -1,5 +1,5 @@
 from enum import Enum
-
+import sys
 
 DELIMERTER = "\t\t"
 
@@ -233,11 +233,12 @@ class SymbolTable:
         symbol_tables = []
         file_name = prefix + "_" +self.name + ".csv"
         file_name = file_name.replace(" ", "_")
-        with open(file_name, "w") as f:
+        with open(file_name, "a") as sys.stdout:
             for symbol in self.symbols.values():
-                f.write(str(symbol))
+                print(symbol)
                 if symbol.symbol_type in symbols_with_symbol_tables:
                     symbol_tables.append(symbol.symbol_table)
+        sys.stdout = sys.__stdout__
         if file_name.endswith(".csv"):
             file_name = file_name[:-4]
         if file_name.endswith("_symbol_table"):
