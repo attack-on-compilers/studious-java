@@ -15,9 +15,9 @@ class GoGo {
         int a=968;
         System.out.println(a);
 		Hii go1 = new Hii();
-        // GoGo go2 = new GoGo("Yo", 3);
-        // go2.a = "Yo"; // Need to fix this
-        // go1.a=5;
+        GoGo go2 = new GoGo("Yo", 3);
+        go2.a = "Yo"; // Need to fix this
+        go1.a=5;
 	}
 }
 
@@ -29,7 +29,7 @@ class Hii {
 
         GoGo go1;
         go1 = new GoGo("",5);
-        // go1.a = "555";
+        go1.a = "555";
 
         System.out.println(go1.a);
         System.out.println(go1.ab); //Why this works?

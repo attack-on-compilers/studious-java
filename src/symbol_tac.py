@@ -265,7 +265,7 @@ def traverse_tree(tree):
                         dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
                 symbol_table.add_symbol(
-                    VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], VariableScope.PARAMETER, dims)
+                    VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], dims)
                 )
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[2][1][2])
@@ -365,7 +365,7 @@ def traverse_tree(tree):
                 # print("RRRRRRRRRRRRRRRRRtemp", symbol_table.root.get_symbol(fieldType).symbol_table.symbols)
                 for i in symbol_table.root.get_symbol(fieldType).symbol_table.symbols.values() :
                     if not i.name.startswith("this."):
-                        if i.symbol_type == "variable":
+                        if i.symbol_type == "variable" and "private" not in i.scope:
                             print("YOYOYOYO",symbol_table.current)
                             for j in fieldVariables:
                                 newj = j
@@ -485,7 +485,7 @@ def initial_Traverse(tree):
                     VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], fieldModifiers, dims)
                 )
                 symbol_table.add_symbol(
-                    VariableSymbol("this."+newi, fieldType, 0, offset[-1], fieldModifiers, dims)
+                    VariableSymbol("this."+newi, fieldType, 0, 0, fieldModifiers, dims)
                 )
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
@@ -713,7 +713,7 @@ def get_expression_Type(expression):
             print("AAAAAAAAAAAAAAAAAA",expression)
             return symbol_table.get_symbol(get_Name(expression)).data_type
         case "NameDotIdentifierId":
-            return symbol_table.get_symbol(expression[3]).data_type
+            return symbol_table.get_symbol(get_Name(expression)).data_type
 
         case "ArrayAccess":
             t = get_expression_Type(expression[3])
