@@ -34,7 +34,7 @@ def generate_symbol_table(tree, args):
     sys.stdout = sys.__stdout__
     print("Symbol Table generated: {}.csv".format(args.output))
 
-    # symbol_table.fprint(args.output)
+    symbol_table.fprint(args.output)
 
     global block_count
     block_count = 0
