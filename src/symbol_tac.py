@@ -920,7 +920,8 @@ def generate_tac(tree, begin="", end=""):
             if len(tree) == 2:
                 return generate_tac(tree[1])
             else:
-                raise Exception("Conditional Expression not supported")
+                pass
+                # raise Exception("Conditional Expression not supported")
         case "ConditionalOrExpression":
             if len(tree) == 2:
                 return generate_tac(tree[1])
