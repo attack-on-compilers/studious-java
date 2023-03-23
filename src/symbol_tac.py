@@ -1079,9 +1079,10 @@ def generate_tac(tree, begin="", end=""):
             if len(tree) == 5:
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
                 args = get_Argument_list(tree[3])
-                args.reverse()
-                for arg in args:
-                    tac.push_param(arg)
+                if args is not None:
+                    args.reverse()
+                    for arg in args:
+                        tac.push_param(arg)
                 out = tac.new_temp()
                 tac.add_call(funcname, out)
                 return out
@@ -1236,13 +1237,14 @@ def generate_tac(tree, begin="", end=""):
                 "MethodDeclaration",
                 "ConstructorDeclaration",
                 "SwitchBlock",
-                "Statement"
+                # "Statement"
             ]:
                 return
             if type(tree) == tuple:
                 for i in range(1, len(tree)):
                     try:
-                        if tree[i][0] in ["ForStatement"]:
+                        print(tree[i][0])
+                        if tree[i][0] in ["ForStatement", "Block", "ForStatementNoShortIf"]:
                             return
                     except:
                         pass
