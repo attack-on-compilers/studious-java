@@ -840,6 +840,9 @@ def generate_tac(tree, begin="", end=""):
             return generate_tac(tree[1])
         case "Assignment":
             left = symbol_table.get_symbol_name(get_Name(tree[1]))
+            if tree[1][1][0] == "ArrayAccess":
+                left = generate_tac(tree[1][1])
+                left = "(" + left + ")"
             right = generate_tac(tree[3])
             tac.add3(tree[2][1], right, left)
             return left
