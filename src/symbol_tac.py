@@ -402,6 +402,17 @@ def initial_Traverse(tree):
                 count += 1
             symbol_table.current.parent.get_symbol(symbol_table.current.name.split(" ")[0]).size = offset[-1]
             post_type_check(tree)
+            normalTypes = ["int", "char", "boolean", "float", "double", "long", "short", "byte", "String"]
+            if fieldType not in normalTypes:
+                for i in symbol_table.root.get_symbol(fieldType).symbol_table.symbols.values():
+                    if not i.name.startswith("this."):
+                        if i.symbol_type == "variable" and "private" not in i.scope:
+                            # print("YOYOYOYO",symbol_table.current)
+                            for j in fieldVariables:
+                                newj = j
+                                if j[-1] == "]":
+                                    newj = j[: j.find("[")]
+                                symbol_table.add_symbol(VariableSymbol(j + "." + i.name, i.data_type, 0, 0, i.scope, i.dims))
 
         case "MethodDeclaration":
             methodModifiers = get_Modifiers(tree[1][1])
@@ -977,6 +988,7 @@ def generate_tac(tree, begin="", end=""):
             out = tac.new_temp()
             classname = get_Name(tree[2])
             tac.add_call(f"{classname}_{classname}", out)
+            return out
         case "FieldAccess":
             try:
                 var = get_Name(tree[1][1])
