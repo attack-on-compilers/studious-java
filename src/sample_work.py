@@ -15,7 +15,7 @@ pc = 0
 def call(function_name, num_params):
     global sp, pc
     # push activation record onto stack
-    ar = ActivationRecord(num_params, 10)
+    ar = ActivationRecord(num_params, xxnumberxx)
     ar.old_sp = len(stack) - num_params - 1 # store old stack pointer
     ar.return_address = pc + 1             # store return address
     stack.append(ar)
