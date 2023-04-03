@@ -398,6 +398,8 @@ def initial_Traverse(tree):
                 symbol_table.add_symbol(VariableSymbol("this." + newi, fieldType, 0, 0, fieldModifiers, dims))
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
+                print("Offset", offset[-1])
+            symbol_table.current.parent.get_symbol(symbol_table.current.name.split(" ")[0]).size = offset[-1]
             post_type_check(tree)
 
         case "MethodDeclaration":
@@ -500,7 +502,7 @@ def initial_initial_Traverse(tree):
             classModifiers = get_Modifiers(tree[1])
             classParent = get_Parent(tree[4])
             classInterfaces = get_Interfaces(tree[5])
-            symbol_table.add_symbol(ClassSymbol(className, symbol_table.current, classModifiers, classParent, classInterfaces))
+            symbol_table.add_symbol(ClassSymbol(className, symbol_table.current, 0, classModifiers, classParent, classInterfaces))
 
         case "InterfaceDeclaration":
             interfaceName = tree[3]

@@ -37,4 +37,5 @@ class Hii {
 
 
     }
+    double b;
 }

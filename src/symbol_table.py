@@ -52,12 +52,13 @@ class Symbol:
 
 
 class ClassSymbol(Symbol):
-    def __init__(self, name, parent_symbol_table, scope=VariableScope.PRIVATE, parent_class=None, interfaces=None):
+    def __init__(self, name, parent_symbol_table, size, scope=VariableScope.PRIVATE, parent_class=None, interfaces=None):
         super().__init__(name, "class")
         self.symbol_table = SymbolTable(parent=parent_symbol_table, name=name + " symbol table")
         self.scope = scope
         self.parent_class = parent_class
         self.interfaces = interfaces
+        self.size = size
 
     def AllOperations(self):
         # operations = []
@@ -74,6 +75,7 @@ class ClassSymbol(Symbol):
                 str(self.name),
                 str(self.symbol_type),
                 str(self.symbol_table.name),
+                str(self.size),
                 str(self.scope),
                 str(self.parent_class),
                 str(self.interfaces),
