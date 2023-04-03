@@ -2,6 +2,7 @@
 class GoGo {
 	String a = "A", b=a + 5.5;
 	String name;
+    Hii h = new Hii();
     
 	GoGo(String name, int id)
 	{ 
@@ -24,6 +25,7 @@ class GoGo {
 
 class Hii {
     int a;
+    GoGo g = new GoGo("Yo", 3);
     public static void main(String[] args)
     {
         Hii h = new Hii(); //Default constructor

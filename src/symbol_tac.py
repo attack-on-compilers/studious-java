@@ -365,8 +365,10 @@ def initial_Traverse(tree):
         case "ClassDeclaration":
             className = tree[3]
             symbol_table.enter_scope(className)
+            offset = offset + [0]
             initial_Traverse(tree[6])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "InterfaceDeclaration":
             interfaceName = tree[3]
@@ -398,7 +400,6 @@ def initial_Traverse(tree):
                 symbol_table.add_symbol(VariableSymbol("this." + newi, fieldType, 0, 0, fieldModifiers, dims))
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
-                print("Offset", offset[-1])
             symbol_table.current.parent.get_symbol(symbol_table.current.name.split(" ")[0]).size = offset[-1]
             post_type_check(tree)
 
@@ -1228,3 +1229,26 @@ def get_Argument_list(tree):
                 return [out]
             else:
                 return get_Argument_list(tree[1]) + [generate_tac(tree[3])]
+
+
+def get_TypeSize(type):
+    if type == "int":
+        return 4
+    elif type == "boolean":
+        return 1
+    elif type == "char":
+        return 1
+    elif type == "byte":
+        return 1
+    elif type == "short":
+        return 2
+    elif type == "long":
+        return 8
+    elif type == "float":
+        return 4
+    elif type == "double":
+        return 8
+    elif type == "String":
+        return 8
+    else:
+        return symbol_table.root.get_symbol(type).size
