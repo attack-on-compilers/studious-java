@@ -52,12 +52,13 @@ class Symbol:
 
 
 class ClassSymbol(Symbol):
-    def __init__(self, name, parent_symbol_table, scope=VariableScope.PRIVATE, parent_class=None, interfaces=None):
+    def __init__(self, name, parent_symbol_table, size, scope=VariableScope.PRIVATE, parent_class=None, interfaces=None):
         super().__init__(name, "class")
         self.symbol_table = SymbolTable(parent=parent_symbol_table, name=name + " symbol table")
         self.scope = scope
         self.parent_class = parent_class
         self.interfaces = interfaces
+        self.size = size
 
     def AllOperations(self):
         # operations = []
@@ -74,6 +75,7 @@ class ClassSymbol(Symbol):
                 str(self.name),
                 str(self.symbol_type),
                 str(self.symbol_table.name),
+                str(self.size),
                 str(self.scope),
                 str(self.parent_class),
                 str(self.interfaces),
@@ -112,7 +114,7 @@ class BlockSymbol(Symbol):
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name)])
 
 
 class InterfaceSymbol(Symbol):
@@ -121,7 +123,7 @@ class InterfaceSymbol(Symbol):
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name)])
 
 
 class VariableSymbol(Symbol):
@@ -149,7 +151,7 @@ class ConstructorSymbol(Symbol):
 
     def __str__(self):
         params_str = DELIMERTER.join([str(p) for p in self.params])
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name, str(self.scope), params_str])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name), str(self.scope), params_str])
 
 
 # Added temporarily
@@ -231,7 +233,7 @@ class SymbolTable:
     def fprint(self, prefix=""):
         symbols_with_symbol_tables = ["class", "method", "block", "interface"]
         symbol_tables = []
-        file_name = prefix + "_" +self.name + ".csv"
+        file_name = prefix + "_" + str(self.name) + ".csv"
         file_name = file_name.replace(" ", "_")
         with open(file_name, "a") as sys.stdout:
             for symbol in self.symbols.values():

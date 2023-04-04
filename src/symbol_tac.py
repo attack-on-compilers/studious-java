@@ -1,12 +1,8 @@
 from pprint import pprint as pprint
-
 from symbol_table import *
 from lexer import *
 from utils import *
 from tac import *
-
-import csv
-import os
 
 static_init_count = 0
 previous_block_count = 0
@@ -365,8 +361,10 @@ def initial_Traverse(tree):
         case "ClassDeclaration":
             className = tree[3]
             symbol_table.enter_scope(className)
+            offset = offset + [0]
             initial_Traverse(tree[6])
             symbol_table.exit_scope()
+            offset.pop()
 
         case "InterfaceDeclaration":
             interfaceName = tree[3]
@@ -398,7 +396,19 @@ def initial_Traverse(tree):
                 symbol_table.add_symbol(VariableSymbol("this." + newi, fieldType, 0, 0, fieldModifiers, dims))
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
+            symbol_table.current.parent.get_symbol(symbol_table.current.name.split(" ")[0]).size = offset[-1]
             post_type_check(tree)
+            normalTypes = ["int", "char", "boolean", "float", "double", "long", "short", "byte", "String"]
+            if fieldType not in normalTypes:
+                for i in symbol_table.root.get_symbol(fieldType).symbol_table.symbols.values():
+                    if not i.name.startswith("this."):
+                        if i.symbol_type == "variable" and "private" not in i.scope:
+                            # print("YOYOYOYO",symbol_table.current)
+                            for j in fieldVariables:
+                                newj = j
+                                if j[-1] == "]":
+                                    newj = j[: j.find("[")]
+                                symbol_table.add_symbol(VariableSymbol(j + "." + i.name, i.data_type, 0, 0, i.scope, i.dims))
 
         case "MethodDeclaration":
             methodModifiers = get_Modifiers(tree[1][1])
@@ -500,7 +510,7 @@ def initial_initial_Traverse(tree):
             classModifiers = get_Modifiers(tree[1])
             classParent = get_Parent(tree[4])
             classInterfaces = get_Interfaces(tree[5])
-            symbol_table.add_symbol(ClassSymbol(className, symbol_table.current, classModifiers, classParent, classInterfaces))
+            symbol_table.add_symbol(ClassSymbol(className, symbol_table.current, 0, classModifiers, classParent, classInterfaces))
 
         case "InterfaceDeclaration":
             interfaceName = tree[3]
@@ -802,12 +812,10 @@ def get_expression_Type(expression):
             pass
 
 
-def TOIMPLEMENT():
-    raise Exception("TO IMPLEMENT")
-
-
 def generate_tac(tree, begin="", end=""):
     global block_count
+    global stackman
+    global tac
     match tree[0]:
         case "VariableDeclarator":
             if len(tree) == 4:
@@ -970,13 +978,21 @@ def generate_tac(tree, begin="", end=""):
             return tree[1]
         case "ClassInstanceCreationExpression":
             args = get_Argument_list(tree[4])
+            classname = get_Name(tree[2])
+            sym = symbol_table.root.get_symbol(classname)
+            thisp, tacentry = stackman.allocStack(classname, 8)
+            tac.add_entry(tacentry)
+            tac.alloc_mem(sym.size, "0(rsp)")
+            stackman.addSequence(classname)
+            tac.push_stack_param(f"{classname}_{classname}_this", 8, thisp)
             if args is not None:
                 args.reverse()
                 for arg in args:
                     tac.push_param(arg)
+
             out = tac.new_temp()
-            classname = get_Name(tree[2])
             tac.add_call(f"{classname}_{classname}", out)
+            return out
         case "FieldAccess":
             try:
                 var = get_Name(tree[1][1])
@@ -1229,3 +1245,26 @@ def get_Argument_list(tree):
                 return [out]
             else:
                 return get_Argument_list(tree[1]) + [generate_tac(tree[3])]
+
+
+def get_TypeSize(type):
+    if type == "int":
+        return 4
+    elif type == "boolean":
+        return 1
+    elif type == "char":
+        return 1
+    elif type == "byte":
+        return 1
+    elif type == "short":
+        return 2
+    elif type == "long":
+        return 8
+    elif type == "float":
+        return 4
+    elif type == "double":
+        return 8
+    elif type == "String":
+        return 8
+    else:
+        return symbol_table.root.get_symbol(type).size

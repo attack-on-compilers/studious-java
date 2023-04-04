@@ -141,25 +141,6 @@ def get_LiteralValue(tree):
                 return 1
 
 
-def get_TypeSize(type):
-    if type == "int":
-        return 4
-    elif type == "boolean":
-        return 1
-    elif type == "char":
-        return 1
-    elif type == "byte":
-        return 1
-    elif type == "short":
-        return 2
-    elif type == "long":
-        return 8
-    elif type == "float":
-        return 4
-    elif type == "double":
-        return 8
-    else:
-        return 0
 
 
 def get_Modifiers(tree):
