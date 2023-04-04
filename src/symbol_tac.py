@@ -161,8 +161,9 @@ def traverse_tree(tree):
             methodSignature += ")"
             method_sym_name = symbol_table.get_symbol_name(methodName)
             symbol_table.enter_scope(methodName)
-            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
             offset = offset + [0]
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
+            offset[-1] = offset[-1] + 8
             for i in methodParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -201,8 +202,9 @@ def traverse_tree(tree):
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.enter_scope(constructorName)
-            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
             offset = offset + [0]
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
+            offset[-1] = offset[-1] + 8
             for i in constructorParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -865,17 +867,15 @@ def generate_tac(tree, begin="", end=""):
     global tac
     match tree[0]:
         case "VariableDeclarator":
+            if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type not in ["int", "float", "boolean", "char", "short", "long", "double", "byte"]:
+                size = 8
+            else:
+                size = get_TypeSize(symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type)
+            tac.alloc_stack(size)
             if len(tree) == 4:
                 # print("#"*100, symbol_table.current.name)
                 right = generate_tac(tree[3])
                 left = symbol_table.get_symbol_name(get_Name(tree[1]).split("[")[0])
-                if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(
-                    get_Name(tree[1]).split("[")[0]
-                ).data_type not in ["int", "float", "boolean", "char", "short", "long", "double", "byte"]:
-                    size = 8
-                else:
-                    size = get_TypeSize(symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type)
-                tac.alloc_stack(size)
                 tac.add3("=", right, left)
                 return
         case "VariableInitializer":
@@ -1102,7 +1102,7 @@ def generate_tac(tree, begin="", end=""):
                     tac.add("+", x, y, y)
             tac.add("*", y, size, y)
             tac.add("+", symbol_table.get_symbol_name(name), y, y)
-            # print("MEOWMEOWMEOWMEOWMEOW", name, dimensions, indices, sym_type, size)
+            print("MEOWMEOWMEOWMEOWMEOW", name, dimensions, indices, sym_type, size)
             # var = generate_tac(tree[1])
             # index = generate_tac(tree[3])
             # out = tac.new_temp()
