@@ -161,6 +161,7 @@ def traverse_tree(tree):
             methodSignature += ")"
             method_sym_name = symbol_table.get_symbol_name(methodName)
             symbol_table.enter_scope(methodName)
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
             offset = offset + [0]
             for i in methodParams:
                 fieldModifiers = []
@@ -200,6 +201,7 @@ def traverse_tree(tree):
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.enter_scope(constructorName)
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
             offset = offset + [0]
             for i in constructorParams:
                 fieldModifiers = []
@@ -213,7 +215,7 @@ def traverse_tree(tree):
                     # if dims == 0:
                     #     dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], newdims, []))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], newdims, []))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[4])
             symbol_table.exit_scope()
@@ -366,6 +368,8 @@ def initial_Traverse(tree):
             className = tree[3]
             symbol_table.enter_scope(className)
             offset = offset + [0]
+            symbol_table.add_symbol(VariableSymbol("this", className, 8, 0, [], 0, []))
+            offset[-1] = offset[-1] + 8
             initial_Traverse(tree[6])
             symbol_table.exit_scope()
             offset.pop()
@@ -819,7 +823,6 @@ def get_expression_Type(expression):
 
 def generate_tac(tree, begin="", end=""):
     global block_count
-    global stackman
     global tac
     match tree[0]:
         case "VariableDeclarator":
@@ -827,6 +830,11 @@ def generate_tac(tree, begin="", end=""):
                 # print("#"*100, symbol_table.current.name)
                 right = generate_tac(tree[3])
                 left = symbol_table.get_symbol_name(get_Name(tree[1]).split("[")[0])
+                if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type not in ["int", "float", "boolean", "char", "short", "long", "double", "byte"]:
+                    size = 8
+                else:
+                    size = get_TypeSize(symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type)
+                tac.alloc_stack(size)
                 tac.add3("=", right, left)
                 return
         case "VariableInitializer":
@@ -834,17 +842,47 @@ def generate_tac(tree, begin="", end=""):
         case "Expression":
             return generate_tac(tree[1])
         case "ArrayInitializer":
-            pass
+            pass # Removed from basic feature
         case "AssignmentExpression":
             return generate_tac(tree[1])
         case "Assignment":
-            left = symbol_table.get_symbol_name(get_Name(tree[1]))
-            if tree[1][1][0] == "ArrayAccess":
-                left = generate_tac(tree[1][1])
-                left = "(" + left + ")"
-            right = generate_tac(tree[3])
-            tac.add3(tree[2][1], right, left)
-            return left
+            if symbol_table.get_symbol(get_Name(tree[1])).dims > 0:
+                name = get_Name(tree[1])
+                dimensions = symbol_table.get_symbol(name).dimArr
+                indices = get_Indices(tree[1])
+                sym_type = symbol_table.get_symbol(name).data_type
+                size = get_TypeSize(sym_type)
+                y = tac.new_temp()
+                tac.add3("=", 0, y)
+                x = tac.new_temp()
+                for i in range(len(dimensions)):
+                    for j in range(i+1, len(dimensions)):
+                        tac.add("*", indices[i], dimensions[j], x)
+                        tac.add("+", x, y, y)
+                tac.add("*", y, size, y)
+                tac.add("+", name, y, y)
+                right = generate_tac(tree[3])
+                tac.add3(tree[2][1], right, "("+y+")")
+                print("XXXXXXXXXXXXXXXXXXX",name,dimensions,indices,symbol_table.get_symbol(name).data_type,size)
+                return y
+            elif "." in get_Name(tree[1]):
+                # Non array access case (field access)
+                base, comp = get_Name(tree[1]).split(".")
+                sym = symbol_table.get_symbol(base)
+                offset = sym.offset
+                stype = sym.data_type
+                symtable = symbol_table.root.get_symbol(stype)
+                offset += symtable.symbol_table.symbols[comp].offset
+                right = generate_tac(tree[3])
+                left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"({offset})"
+                tac.add3(tree[2][1], right, left)
+                return left
+            else:
+                # Non array field access
+                left = symbol_table.get_symbol_name(get_Name(tree[1]))
+                right = generate_tac(tree[3])
+                tac.add3(tree[2][1], right, left)
+                return left
         case "ConditionalExpression":
             if len(tree) == 2:
                 return generate_tac(tree[1])
@@ -982,29 +1020,31 @@ def generate_tac(tree, begin="", end=""):
         case "Literal":
             return tree[1]
         case "ClassInstanceCreationExpression":
+            out = tac.new_temp()
             args = get_Argument_list(tree[4])
             classname = get_Name(tree[2])
             sym = symbol_table.root.get_symbol(classname)
-            thisp, tacentry = stackman.allocStack(classname, 8)
-            tac.add_entry(tacentry)
-            tac.alloc_mem(sym.size, "0(rsp)")
-            stackman.addSequence(classname)
-            tac.push_stack_param(f"{classname}_this", 8, thisp)
-            if args is not None:
-                args.reverse()
-                for arg in args:
-                    tac.push_param(arg)
-
-            out = tac.new_temp()
-            tac.add_call(f"{classname}_{classname}", out)
+            tac.alloc_mem(sym.size, out)
+            try: 
+                argtype = sym.symbol_table.symbols[classname].params
+                if args is not None:
+                    args.reverse()
+                    argtype.reverse()
+                    for i in range(len(args)):
+                        tac.push_param(args[i], get_TypeSize(argtype[i]))
+                tac.push_param(out)
+                tac.add_call(f"{classname}_{classname}", "__")
+            except Exception as e:
+                pass
             return out
         case "FieldAccess":
             try:
-                var = get_Name(tree[1][1])
+                sym = symbol_table.get_symbol(get_Name(tree[1][1]))
+                print(sym)
                 var += "." + tree[3]
-                return var
-            except:
-                pass
+                return (var, tree[1][1]) 
+            except Exception as e:
+                print(e)
         case "ArrayAccess":
             var = generate_tac(tree[1])
             index = generate_tac(tree[3])
@@ -1033,7 +1073,12 @@ def generate_tac(tree, begin="", end=""):
                 tac.add_call(funcname, out)
                 return out
         case "ArrayCreationExpression":
-            pass
+            x = tac.new_temp()
+            nelem = get_NumberOfElements(tree)
+            sym_type = get_Type(tree[2])
+            size = get_TypeSize(sym_type)
+            tac.alloc_mem(size*get_NumberOfElements(tree), x)
+            return x
         case "CastExpression":
             if tree[2][0] != "PrimitiveType":
                 raise Exception("CastExpression only supported with PrimitiveType, recieved {}".format(tree[2][0]))
@@ -1348,4 +1393,14 @@ def get_LiteralValue2(tree):
                 return get_LiteralValue2(tree[1])
             else:
                 return 1
-
+            
+def get_Indices(tree):
+    match tree[0]:
+        case "LeftHandSide":
+            return get_Indices(tree[1])
+        case "ArrayAccess":
+            return get_Indices(tree[1]) + [get_LiteralValue2(tree[3])]
+        case "Name":
+            return []
+        case "PrimaryNoNewArray":
+            return get_Indices(tree[1])

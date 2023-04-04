@@ -143,8 +143,6 @@ def get_LiteralValue(tree):
                 return 1
 
 
-
-
 def get_Modifiers(tree):
     match tree[0]:
         case "BetaAlphaModifier":
