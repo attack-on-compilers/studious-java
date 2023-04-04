@@ -1086,6 +1086,7 @@ def generate_tac(tree, begin="", end=""):
             out = tac.new_temp()
             right = generate_tac(tree[5])
             tac.add3("cast_to_" + ctype, right, out)
+            return out
         case "Name":
             try:
                 return symbol_table.get_symbol_name(get_Name(tree[1]))
