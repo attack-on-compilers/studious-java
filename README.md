@@ -2,7 +2,7 @@
 
 # studious-java
 
-JAVA compiler implementation in python
+JAVA compiler implementation in python using PLY
 
 ## Report
 

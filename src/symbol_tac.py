@@ -896,7 +896,6 @@ def generate_tac(tree, begin="", end=""):
                 y = tac.new_temp()
                 tac.add3("=", 0, y)
                 x = tac.new_temp()
-                
                 for i in range(len(dimensions)):
                     tac.add3("=", indices[i], x)
                     for j in range(i+1, len(dimensions)):
