@@ -173,12 +173,13 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
+                newdims = dims + i[1].count("[")
                 if i[1][-1] == "]":
-                    if dims == 0:
-                        dims = i[1].count("[")
+                    # if dims == 0:
+                    #     dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
                 symbol_table.add_symbol(
-                    VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], dims, [])
+                    VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], newdims, [])
                 )
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[2][1][2])
@@ -211,11 +212,12 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
+                newdims = dims + i[1].count("[")
                 if i[1][-1] == "]":
-                    if dims == 0:
-                        dims = i[1].count("[")
+                    # if dims == 0:
+                    #     dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims, []))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], newdims, []))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[4])
             symbol_table.exit_scope()

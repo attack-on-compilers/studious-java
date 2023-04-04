@@ -29,6 +29,10 @@ class GoGo {
 class Hii {
     int a;
     GoGo g = new GoGo("Yo", 3);
+	int foo(int a, double b, int[][][] arr[][])
+	{
+		return 1;
+	}
     public static void main(String[] args)
     {
         Hii h = new Hii(); //Default constructor
