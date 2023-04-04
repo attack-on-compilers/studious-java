@@ -858,6 +858,7 @@ def generate_tac(tree, begin="", end=""):
                         tac.add("*", indices[i], dimensions[j], x)
                         tac.add("+", x, y, y)
                 tac.add("*", y, size, y)
+                tac.add("+", name, y, y)
                 right = generate_tac(tree[3])
                 tac.add3(tree[2][1], right, "("+y+")")
                 print("XXXXXXXXXXXXXXXXXXX",name,dimensions,indices,symbol_table.get_symbol(name).data_type,size)
@@ -1056,7 +1057,16 @@ def generate_tac(tree, begin="", end=""):
                 tac.add_call(funcname, out)
                 return out
         case "ArrayCreationExpression":
-            pass # TODO implement array creation expression (new int[5])
+            x = tac.new_temp()
+            nelem = get_NumberOfElements(tree)
+            sym_type = get_Type(tree[2])
+            basic_type_size = {"int": 4, "float": 4, "char": 1, "boolean": 1, "long": 8, "double": 8, "short": 2, "byte": 1, "String": 8}
+            if sym_type in basic_type_size:
+                size = basic_type_size[sym_type]
+            else:
+                size = symbol_table.root.get_symbol(sym_type).size
+            tac.alloc_mem(size*get_NumberOfElements(tree), x)
+            return x
         case "CastExpression":
             if tree[2][0] != "PrimitiveType":
                 raise Exception("CastExpression only supported with PrimitiveType, recieved {}".format(tree[2][0]))
