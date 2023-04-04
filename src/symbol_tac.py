@@ -989,7 +989,7 @@ def generate_tac(tree, begin="", end=""):
             tac.add_entry(tacentry)
             tac.alloc_mem(sym.size, "0(rsp)")
             stackman.addSequence(classname)
-            tac.push_stack_param(f"{classname}_{classname}_this", 8, thisp)
+            tac.push_stack_param(f"{classname}_this", 8, thisp)
             if args is not None:
                 args.reverse()
                 for arg in args:
