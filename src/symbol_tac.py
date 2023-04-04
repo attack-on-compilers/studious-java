@@ -379,6 +379,7 @@ def initial_Traverse(tree):
             symbol_table.exit_scope()
 
         case "FieldDeclaration":
+            # print("AAAAAAAAAAAAAAA", tree)
             fieldModifiers = get_Modifiers(tree[1])
             fieldType = get_Type(tree[2])
             dims = 0
@@ -388,8 +389,8 @@ def initial_Traverse(tree):
             typeSize = get_TypeSize(fieldType)
             fieldVariables = get_Variables(tree[3])
             variablesizes = get_NumberOfElements(tree[3])
-            arraydimensions = get_ArrayDimensions(tree[2])
-            # print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
+            arraydimensions = get_ArrayDimensions(tree[3])
+            # print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", fieldVariables, variablesizes, arraydimensions, tree[2])
             count = 0
             for i in fieldVariables:
                 newi = i
