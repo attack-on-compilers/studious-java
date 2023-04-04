@@ -845,11 +845,7 @@ def generate_tac(tree, begin="", end=""):
                 dimensions = symbol_table.get_symbol(name).dimArr
                 indices = get_Indices(tree[1])
                 sym_type = symbol_table.get_symbol(name).data_type
-                basic_type_size = {"int": 4, "float": 4, "char": 1, "boolean": 1, "long": 8, "double": 8, "short": 2, "byte": 1, "String": 8}
-                if sym_type in basic_type_size:
-                    size = basic_type_size[sym_type]
-                else:
-                    size = symbol_table.root.get_symbol(sym_type).size
+                size = get_TypeSize(sym_type)
                 y = tac.new_temp()
                 tac.add3("=", 0, y)
                 x = tac.new_temp()
@@ -1060,11 +1056,7 @@ def generate_tac(tree, begin="", end=""):
             x = tac.new_temp()
             nelem = get_NumberOfElements(tree)
             sym_type = get_Type(tree[2])
-            basic_type_size = {"int": 4, "float": 4, "char": 1, "boolean": 1, "long": 8, "double": 8, "short": 2, "byte": 1, "String": 8}
-            if sym_type in basic_type_size:
-                size = basic_type_size[sym_type]
-            else:
-                size = symbol_table.root.get_symbol(sym_type).size
+            size = get_TypeSize(sym_type)
             tac.alloc_mem(size*get_NumberOfElements(tree), x)
             return x
         case "CastExpression":
