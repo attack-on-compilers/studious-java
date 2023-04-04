@@ -36,3 +36,8 @@ class HeapStackManager:
         for i in range(len(self.stacktable) - 1, -1, -1):
             if self.stacktable[i][0] == name:
                 return self.stacktable[i][1], self.stacktable[i][2], self.stack - self.stacktable[i][1]
+
+    def getSymbolHeapInfo(self, name):
+        for i in range(len(self.heaptable) - 1, -1, -1):
+            if self.heaptable[i][0] == name:
+                return self.heaptable[i][1], self.heaptable[i][2]

@@ -114,7 +114,7 @@ class BlockSymbol(Symbol):
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name)])
 
 
 class InterfaceSymbol(Symbol):
@@ -123,7 +123,7 @@ class InterfaceSymbol(Symbol):
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name)])
 
 
 class VariableSymbol(Symbol):
@@ -151,7 +151,7 @@ class ConstructorSymbol(Symbol):
 
     def __str__(self):
         params_str = DELIMERTER.join([str(p) for p in self.params])
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name, str(self.scope), params_str])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name), str(self.scope), params_str])
 
 
 # Added temporarily
@@ -209,7 +209,7 @@ class SymbolTable:
             current_temp = self
             while current_temp.parent is not None:
                 scope_name = current_temp.name[:-13].replace(" ", "_")
-                sym_name = scope_name + "_" + sym_name
+                sym_name = scope_name + "@#@" + sym_name
                 current_temp = current_temp.parent
             return sym_name
         elif self.parent is not None:
@@ -233,7 +233,7 @@ class SymbolTable:
     def fprint(self, prefix=""):
         symbols_with_symbol_tables = ["class", "method", "block", "interface"]
         symbol_tables = []
-        file_name = prefix + "_" +self.name + ".csv"
+        file_name = prefix + "_" + str(self.name) + ".csv"
         file_name = file_name.replace(" ", "_")
         with open(file_name, "a") as sys.stdout:
             for symbol in self.symbols.values():
