@@ -19,6 +19,7 @@ public class test_5 {
         do {
             System.out.println(j);
             k+=1;
+            continue;
         } while (k < 10);
         {
             int s = 100;

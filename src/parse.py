@@ -1021,6 +1021,6 @@ if __name__ == "__main__":
                 tree_gen(tree_reduce(tree), args.output)
         if args.verbose:
             print("Dot file generated: {}.dot".format(args.output))
-        global_symbol_table = generate_symbol_table(tree,args)
+        global_symbol_table = generate_symbol_table(tree, args)
         if args.verbose:
             print("Symbol Table and TAC generated")

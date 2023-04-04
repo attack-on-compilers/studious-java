@@ -31,8 +31,14 @@ public class test_8
     }  
     public static void main(String argvs[])  
     {  
-        int values[] = { 100, 60, 120 };  
-        int weight[] = { 20, 10, 30 };  
+        int values[] = new int[3];  
+        int weight[] = new int[5];  
+        values[0]   = 60;
+        values[1]   = 100;
+        values[2]   = 120;
+        weight[0]   = 10;
+        weight[1]   = 20;
+        weight[2]   = 30;
         int C = 50;  
         int l = 3;  
         int maxVal = maxValueKnapsack(C, weight, values, l);  

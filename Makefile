@@ -10,8 +10,8 @@ dev:
 	python ./src/parse.py -i ./tests/test_$(ARG).java -o src/javao -v -a
 
 dev-g: dev
-	dot -Tsvg src/ast.dot -o src/ast.svg
-	xdg-open src/ast.svg
+	dot -Tsvg src/javao.dot -o src/javao.svg
+	xdg-open src/javao.svg
 
 graph:
 	dot -Tps $(FILE) -o src/ast.ps

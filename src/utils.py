@@ -125,7 +125,7 @@ def get_NumberOfElements(tree):
                 return get_NumberOfElements(tree[1])
             else:
                 return 1
-
+            
 
 def get_LiteralValue(tree):
     # print("NOOOOOOOOO",tree[0])
@@ -134,32 +134,13 @@ def get_LiteralValue(tree):
             return get_LiteralValue(tree[2])
         case "Literal":
             return int(tree[1])
+        case "IdentifierId":
+            return 1
         case _:
             if len(tree) == 2:
                 return get_LiteralValue(tree[1])
             else:
                 return 1
-
-
-def get_TypeSize(type):
-    if type == "int":
-        return 4
-    elif type == "boolean":
-        return 1
-    elif type == "char":
-        return 1
-    elif type == "byte":
-        return 1
-    elif type == "short":
-        return 2
-    elif type == "long":
-        return 8
-    elif type == "float":
-        return 4
-    elif type == "double":
-        return 8
-    else:
-        return 0
 
 
 def get_Modifiers(tree):

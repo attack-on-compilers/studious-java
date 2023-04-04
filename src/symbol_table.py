@@ -41,7 +41,7 @@ def get_variable_symbols(name, data_type, parent):
     variables = []
     for symbol in data_symbol_table.symbols.values():
         if symbol.scope == VariableScope.PUBLIC:
-            variables.append(VariableSymbol(symbol.name, symbol.data_type, scope=VariableScope.PUBLIC, dims=symbol.dims))
+            variables.append(VariableSymbol(symbol.name, symbol.data_type, symbol.size, symbol.offset, scope=VariableScope.PUBLIC, dims=symbol.dims, dimArr=symbol.dimArr))
     return variables
 
 
@@ -52,12 +52,13 @@ class Symbol:
 
 
 class ClassSymbol(Symbol):
-    def __init__(self, name, parent_symbol_table, scope=VariableScope.PRIVATE, parent_class=None, interfaces=None):
+    def __init__(self, name, parent_symbol_table, size, scope=VariableScope.PRIVATE, parent_class=None, interfaces=None):
         super().__init__(name, "class")
         self.symbol_table = SymbolTable(parent=parent_symbol_table, name=name + " symbol table")
         self.scope = scope
         self.parent_class = parent_class
         self.interfaces = interfaces
+        self.size = size
 
     def AllOperations(self):
         # operations = []
@@ -74,6 +75,7 @@ class ClassSymbol(Symbol):
                 str(self.name),
                 str(self.symbol_type),
                 str(self.symbol_table.name),
+                str(self.size),
                 str(self.scope),
                 str(self.parent_class),
                 str(self.interfaces),
@@ -112,7 +114,7 @@ class BlockSymbol(Symbol):
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name)])
 
 
 class InterfaceSymbol(Symbol):
@@ -121,21 +123,22 @@ class InterfaceSymbol(Symbol):
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
 
     def __str__(self):
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name)])
 
 
 class VariableSymbol(Symbol):
-    def __init__(self, name, data_type, size, offset, scope=VariableScope.PRIVATE, dims=0):
+    def __init__(self, name, data_type, size, offset, scope=VariableScope.PRIVATE, dims=0, dimArr=[]):
         super().__init__(name, "variable")
         self.data_type = data_type
         self.scope = scope
         self.dims = dims
         self.size = size
         self.offset = offset
+        self.dimArr = dimArr
 
     def __str__(self):
         return DELIMERTER.join(
-            [self.name, self.symbol_type, self.data_type, str(self.size), str(self.offset), str(self.scope), str(self.dims)]
+            [self.name, self.symbol_type, self.data_type, str(self.size), str(self.offset), str(self.scope), str(self.dims), str(self.dimArr)]
         )
 
 
@@ -149,7 +152,7 @@ class ConstructorSymbol(Symbol):
 
     def __str__(self):
         params_str = DELIMERTER.join([str(p) for p in self.params])
-        return DELIMERTER.join([self.name, self.symbol_type, self.symbol_table.name, str(self.scope), params_str])
+        return DELIMERTER.join([self.name, self.symbol_type, str(self.symbol_table.name), str(self.scope), params_str])
 
 
 # Added temporarily
@@ -231,7 +234,7 @@ class SymbolTable:
     def fprint(self, prefix=""):
         symbols_with_symbol_tables = ["class", "method", "block", "interface"]
         symbol_tables = []
-        file_name = prefix + "_" +self.name + ".csv"
+        file_name = prefix + "_" + str(self.name) + ".csv"
         file_name = file_name.replace(" ", "_")
         with open(file_name, "a") as sys.stdout:
             for symbol in self.symbols.values():
