@@ -821,7 +821,6 @@ def get_expression_Type(expression):
 
 def generate_tac(tree, begin="", end=""):
     global block_count
-    global stackman
     global tac
     match tree[0]:
         case "VariableDeclarator":
@@ -1002,27 +1001,28 @@ def generate_tac(tree, begin="", end=""):
         case "Literal":
             return tree[1]
         case "ClassInstanceCreationExpression":
+            out = tac.new_temp()
             args = get_Argument_list(tree[4])
             classname = get_Name(tree[2])
             sym = symbol_table.root.get_symbol(classname)
-            thisp, tacentry = stackman.allocStack(classname, 8)
-            tac.add_entry(tacentry)
-            tac.alloc_mem(sym.size, "0(rsp)")
-            stackman.addSequence(classname)
-            tac.push_stack_param(f"{classname}_this", 8, thisp)
-            if args is not None:
-                args.reverse()
-                for arg in args:
-                    tac.push_param(arg)
-
-            out = tac.new_temp()
-            tac.add_call(f"{classname}_{classname}", out)
+            tac.alloc_mem(sym.size, out)
+            try: 
+                argtype = sym.symbol_table.symbols[classname].params
+                if args is not None:
+                    args.reverse()
+                    argtype.reverse()
+                    for i in range(len(args)):
+                        tac.push_param(args[i], get_TypeSize(argtype[i]))
+                tac.push_param(out)
+                tac.add_call(f"{classname}_{classname}", "__")
+            except Exception as e:
+                pass
             return out
         case "FieldAccess":
             try:
                 var = get_Name(tree[1][1])
-                var += "." + tree[3]
-                return var
+                # var += "." + tree[3]
+                return (var, tree[1][1]) 
             except:
                 pass
         case "ArrayAccess":

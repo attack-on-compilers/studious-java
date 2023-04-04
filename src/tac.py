@@ -1,22 +1,15 @@
-from stack import StackManager
-
-global stackman
-stackman = StackManager()
-
-
 # A Class for three AC (TAC) system stored in quadripole
 class TAC:
-    def __init__(self, temp_prefix="__t", temp_suffix=""):
+    def __init__(self, temp_prefix="__t"):
         self.temp_var = type("temp_var", (object,), {})()
         self.temp_var.count = 0
         self.temp_var.prefix = temp_prefix + "_"
-        self.temp_var.suffix = "_" + temp_suffix if temp_suffix else ""
         self.table = []
         self.labels = []
 
     def new_temp(self):
         self.temp_var.count += 1
-        return self.temp_var.prefix + str(self.temp_var.count) + self.temp_var.suffix
+        return self.temp_var.prefix + str(self.temp_var.count)
 
     def add(self, op, arg1, arg2, result):
         self.table.append([op, arg1, arg2, result])
@@ -31,12 +24,9 @@ class TAC:
         self.table.append(["PopFromStack", param])
 
     def push_param(self, param, size=None):
+        if size is not None:
+            self.table.append(["stackpoint++", size])
         self.table.append(["PushToStack", param])
-
-    def push_stack_param(self, name, size, stackaddr):
-        paramaddr, tacentry = stackman.allocStack(name, 8)
-        self.add_entry(tacentry)
-        self.add3("=", f"{stackman.stack-stackaddr}(rsp)", "0(rsp)")
 
     def add_return(self, result):
         self.table.append(["Return", result])
