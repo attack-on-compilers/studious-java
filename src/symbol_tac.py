@@ -1,12 +1,8 @@
 from pprint import pprint as pprint
-
 from symbol_table import *
 from lexer import *
 from utils import *
 from tac import *
-
-import csv
-import os
 
 static_init_count = 0
 previous_block_count = 0
@@ -821,12 +817,10 @@ def get_expression_Type(expression):
             pass
 
 
-def TOIMPLEMENT():
-    raise Exception("TO IMPLEMENT")
-
-
 def generate_tac(tree, begin="", end=""):
     global block_count
+    global stackman
+    global tac
     match tree[0]:
         case "VariableDeclarator":
             if len(tree) == 4:
@@ -845,6 +839,9 @@ def generate_tac(tree, begin="", end=""):
             return generate_tac(tree[1])
         case "Assignment":
             left = symbol_table.get_symbol_name(get_Name(tree[1]))
+            if tree[1][1][0] == "ArrayAccess":
+                left = generate_tac(tree[1][1])
+                left = "(" + left + ")"
             right = generate_tac(tree[3])
             tac.add3(tree[2][1], right, left)
             return left
@@ -986,12 +983,19 @@ def generate_tac(tree, begin="", end=""):
             return tree[1]
         case "ClassInstanceCreationExpression":
             args = get_Argument_list(tree[4])
+            classname = get_Name(tree[2])
+            sym = symbol_table.root.get_symbol(classname)
+            thisp, tacentry = stackman.allocStack(classname, 8)
+            tac.add_entry(tacentry)
+            tac.alloc_mem(sym.size, "0(rsp)")
+            stackman.addSequence(classname)
+            tac.push_stack_param(f"{classname}_{classname}_this", 8, thisp)
             if args is not None:
                 args.reverse()
                 for arg in args:
                     tac.push_param(arg)
+
             out = tac.new_temp()
-            classname = get_Name(tree[2])
             tac.add_call(f"{classname}_{classname}", out)
             return out
         case "FieldAccess":
@@ -1344,3 +1348,4 @@ def get_LiteralValue2(tree):
                 return get_LiteralValue2(tree[1])
             else:
                 return 1
+

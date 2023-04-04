@@ -218,7 +218,7 @@ Rule 189   SwitchLabel -> DEFAULT COLON -->
 <!-- Rule 225   PrimaryNoNewArray -> MethodInvocation -->
 <!-- Rule 226   PrimaryNoNewArray -> ArrayAccess -->
 <!-- Rule 230   ArrayCreationExpression -> NEW PrimitiveType BetaAlphaDimExpr BetaAlphaDim -->
-<!-- Rule 231   ArrayCreationExpression -> NEW ClassOrInterfaceType BetaAlphaDimExpr BetaAlphaDim -->
+<!-- Rule 231   ArrayCreationExpression -> NEW ClassOrInterfaceType BetaAlphaDimExpr BetaAlphaDim ##-->
 
 <!-- Rule 227   ClassInstanceCreationExpression -> NEW ClassType LEFT_PAREN BetaArgumentList RIGHT_PAREN -->
 
