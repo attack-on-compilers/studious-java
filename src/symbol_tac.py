@@ -1055,17 +1055,18 @@ def generate_tac(tree, begin="", end=""):
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
                 out = tac.new_temp()
                 args = get_Argument_list(tree[3])
-                tac.push_param("this")
+                sym = symbol_table.get_symbol(get_Name(tree[1]))
                 try:
-                    argtype = symbol_table.symbols[funcname].params
+                    argtype = sym.params
                     if args is not None:
                         args.reverse()
                         argtype.reverse()
                         for i in range(len(args)):
                             tac.push_param(args[i], get_TypeSize(argtype[i]))
-                        tac.push_param(out)
-                    tac.add_call(funcname)
+                    tac.push_param("this")
+                    tac.add_call(funcname, out)
                 except Exception as e:
+                    # print("#"*10,e)
                     pass
                 return out
             if len(tree) == 7:
@@ -1073,17 +1074,18 @@ def generate_tac(tree, begin="", end=""):
                 funcname += "." + get_Name(tree[3])
                 out = tac.new_temp()
                 args = get_Argument_list(tree[5])
-                tac.push_param("this")
+                sym = symbol_table.get_symbol(get_Name(tree[1]))
                 try:
-                    argtype = symbol_table.symbols[funcname].params
+                    argtype = sym.params
                     if args is not None:
                         args.reverse()
                         argtype.reverse()
                         for i in range(len(args)):
                             tac.push_param(args[i], get_TypeSize(argtype[i]))
-                        tac.push_param(out)
-                    tac.add_call(funcname)
+                    tac.push_param("this")
+                    tac.add_call(funcname, out)
                 except Exception as e:
+                    # print(e)
                     pass
                 return out
         case "ArrayCreationExpression":
@@ -1264,7 +1266,7 @@ def generate_tac(tree, begin="", end=""):
         case "ContinueStatement":
             tac.jump(begin)
         case "ReturnStatement":
-            if len(tree) == 3:
+            if len(tree) == 4:
                 out = generate_tac(tree[2])
                 tac.add_return(out)
         case "BetaExpression":
