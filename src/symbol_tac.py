@@ -863,8 +863,20 @@ def generate_tac(tree, begin="", end=""):
                 tac.add3(tree[2][1], right, "("+y+")")
                 print("XXXXXXXXXXXXXXXXXXX",name,dimensions,indices,symbol_table.get_symbol(name).data_type,size)
                 return y
+            elif "." in get_Name(tree[1]):
+                # Non array access case (field access)
+                base, comp = get_Name(tree[1]).split(".")
+                sym = symbol_table.get_symbol(base)
+                offset = sym.offset
+                stype = sym.data_type
+                symtable = symbol_table.root.get_symbol(stype)
+                offset += symtable.symbol_table.symbols[comp].offset
+                right = generate_tac(tree[3])
+                left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"({offset})"
+                tac.add3(tree[2][1], right, left)
+                return left
             else:
-                # Non array access case (name or field access)
+                # Non array field access
                 left = symbol_table.get_symbol_name(get_Name(tree[1]))
                 right = generate_tac(tree[3])
                 tac.add3(tree[2][1], right, left)
@@ -1025,11 +1037,12 @@ def generate_tac(tree, begin="", end=""):
             return out
         case "FieldAccess":
             try:
-                var = get_Name(tree[1][1])
-                # var += "." + tree[3]
+                sym = symbol_table.get_symbol(get_Name(tree[1][1]))
+                print(sym)
+                var += "." + tree[3]
                 return (var, tree[1][1]) 
-            except:
-                pass
+            except Exception as e:
+                print(e)
         case "ArrayAccess":
             var = generate_tac(tree[1])
             index = generate_tac(tree[3])
