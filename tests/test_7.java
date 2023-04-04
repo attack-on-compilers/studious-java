@@ -1,34 +1,34 @@
 // Default constructor, object creation, constructor calling by another class
 class GoGo {
-	// // String b;
-	// // int a;
-	// int appp[][]=new int[55][66],bgr=5;
-	// String a = "A", b=a + 5.5;
-	// String name;
-    // Hii h = new Hii();
+	// String b;
+	// int a;
+	int appp[][]=new int[55][66],bgr=5;
+	String a = "A", b=a + 5.5;
+	String name;
+    Hii h = new Hii();
     
-	// GoGo(String name, int id)
-	// { 
-    //     float x = (float) id;
-	// 	this.name =name;
-	// 	System.out.println("Constructor called");
-    //     GoGo go1 = new GoGo("Yo", 3);
-	// }
+	GoGo(String name, int id)
+	{ 
+        float x = (float) id;
+		this.name =name;
+		System.out.println("Constructor called");
+        GoGo go1 = new GoGo("Yo", 3);
+	}
 
 	public static void main(String[] args)
 	{
 		int n=10,m=5;
-		// GoGo a = new GoGo();
+		GoGo a = new GoGo();
         int app[][][][] = new int[m][6][n][8], c[][], d, e[][][][]=new int[5][n][][], f[][]=new int[5][6], g[]=new int[7777];
-		// f[1]= 5;
-        // app[1][n][m][4]=5;
-		// int y=5766045;
-		// int z;
-		// int x=565152;
-		// int x1 = app[1000000][n][m][40000000];
+		f[1][5]= 5;
+        app[1][n][m][4]=5;
+		int y=5766045;
+		int z;
+		int x=565152;
+		int x1 = app[1000000][n][m][40000000];
 		int x2 = f[55555555][666666666];
 		int x3 = g[777777777];
-		int x2 = f[1];
+		int x4 = f[1][2];
 		a.b = "Yo";
 		System.out.println(a);
 		Hii ho1 = new Hii();
