@@ -20,6 +20,9 @@ class TAC:
     def add_call(self, func, result):
         self.table.append(["ProcCall", func, result])
 
+    def add_epilouge(self):
+        self.table.append(["=", "stackpoint", "basepoint"])
+
     def pop_param(self, param):
         self.table.append(["PopFromStack", param])
 
@@ -44,9 +47,12 @@ class TAC:
 
     def alloc_mem(self, size, result_addr):
         self.table.append(["allocmem", size, result_addr])
-    
+
     def alloc_stack(self, size):
         self.table.append(["stackpoint++", size])
+
+    def free_stack(self, size):
+        self.table.append(["stackpoint--", size])
 
     def add_entry(self, entry):
         self.table.append(entry)
