@@ -2,8 +2,8 @@
 public class R {
 
   public static void main(String args[]) {
-    long nFactoriral = factorialProgram(9);
-    System.out.println(nFactoriral);
+    long nFactorial = factorialProgram(9);
+    System.out.println(nFactorial);
   }
 
   /* Java factorial program with recursion. */
