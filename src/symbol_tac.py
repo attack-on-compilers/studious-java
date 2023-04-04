@@ -1,4 +1,4 @@
-from pprint import pprint as pprint
+from pprint import pprint
 from symbol_table import *
 from lexer import *
 from utils import *
@@ -1040,11 +1040,10 @@ def generate_tac(tree, begin="", end=""):
         case "FieldAccess":
             try:
                 sym = symbol_table.get_symbol(get_Name(tree[1][1]))
-                print(sym)
                 var += "." + tree[3]
-                return (var, tree[1][1]) 
+                return var 
             except Exception as e:
-                print(e)
+                pass
         case "ArrayAccess":
             var = generate_tac(tree[1])
             index = generate_tac(tree[3])
@@ -1101,9 +1100,20 @@ def generate_tac(tree, begin="", end=""):
             out = tac.new_temp()
             right = generate_tac(tree[5])
             tac.add3("cast_to_" + ctype, right, out)
+            return out
         case "Name":
             try:
-                return symbol_table.get_symbol_name(get_Name(tree[1]))
+                gname = get_Name(tree[1])
+                if "." in gname:
+                    base, comp = gname.split(".")
+                    sym = symbol_table.get_symbol(base)
+                    offset = sym.offset
+                    stype = sym.data_type
+                    symtable = symbol_table.root.get_symbol(stype)
+                    offset += symtable.symbol_table.symbols[comp].offset
+                    left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"({offset})"
+                    return left
+                return symbol_table.get_symbol_name(gname)
             except:
                 return
         case "PostIncrementExpression":
