@@ -1,12 +1,8 @@
 from pprint import pprint as pprint
-
 from symbol_table import *
 from lexer import *
 from utils import *
 from tac import *
-
-import csv
-import os
 
 static_init_count = 0
 previous_block_count = 0
@@ -816,12 +812,10 @@ def get_expression_Type(expression):
             pass
 
 
-def TOIMPLEMENT():
-    raise Exception("TO IMPLEMENT")
-
-
 def generate_tac(tree, begin="", end=""):
     global block_count
+    global stackman
+    global tac
     match tree[0]:
         case "VariableDeclarator":
             if len(tree) == 4:
@@ -988,6 +982,7 @@ def generate_tac(tree, begin="", end=""):
                 args.reverse()
                 for arg in args:
                     tac.push_param(arg)
+            # sym = symbol_table.get_symbol(get_Name(tree[1])) HARSHIT
             out = tac.new_temp()
             classname = get_Name(tree[2])
             tac.add_call(f"{classname}_{classname}", out)

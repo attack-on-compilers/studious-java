@@ -1,3 +1,9 @@
+from stack import StackManager
+
+global stackman
+stackman = StackManager()
+
+
 # A Class for three AC (TAC) system stored in quadripole
 class TAC:
     def __init__(self, temp_prefix="__t", temp_suffix=""):
@@ -24,7 +30,7 @@ class TAC:
 
     def pop_param(self, param):
         self.table.append(["PopFromStack", param])
-    
+
     def push_param(self, param):
         self.table.append(["PushToStack", param])
 
