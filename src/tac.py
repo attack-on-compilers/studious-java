@@ -11,7 +11,6 @@ class TAC:
         self.temp_var.count = 0
         self.temp_var.prefix = temp_prefix + "_"
         self.temp_var.suffix = "_" + temp_suffix if temp_suffix else ""
-
         self.table = []
         self.labels = []
 
@@ -31,8 +30,13 @@ class TAC:
     def pop_param(self, param):
         self.table.append(["PopFromStack", param])
 
-    def push_param(self, param):
+    def push_param(self, param, size=None):
         self.table.append(["PushToStack", param])
+
+    def push_stack_param(self, name, size, stackaddr):
+        paramaddr, tacentry = stackman.allocStack(name, 8)
+        self.add_entry(tacentry)
+        self.add3("=", f"{stackman.stack-stackaddr}(rsp)", "0(rsp)")
 
     def add_return(self, result):
         self.table.append(["Return", result])
@@ -47,6 +51,12 @@ class TAC:
         label = "L" + str(len(self.labels))
         self.labels.append(label)
         return label
+
+    def alloc_mem(self, size, result_addr):
+        self.table.append(["allocmem", size, result_addr])
+
+    def add_entry(self, entry):
+        self.table.append(entry)
 
     def add_label(self, label=""):
         if not label:

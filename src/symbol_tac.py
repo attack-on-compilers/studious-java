@@ -978,13 +978,19 @@ def generate_tac(tree, begin="", end=""):
             return tree[1]
         case "ClassInstanceCreationExpression":
             args = get_Argument_list(tree[4])
+            classname = get_Name(tree[2])
+            sym = symbol_table.root.get_symbol(classname)
+            thisp, tacentry = stackman.allocStack(classname, 8)
+            tac.add_entry(tacentry)
+            tac.alloc_mem(sym.size, "0(rsp)")
+            stackman.addSequence(classname)
+            tac.push_stack_param(f"{classname}_{classname}_this", 8, thisp)
             if args is not None:
                 args.reverse()
                 for arg in args:
                     tac.push_param(arg)
-            # sym = symbol_table.get_symbol(get_Name(tree[1])) HARSHIT
+
             out = tac.new_temp()
-            classname = get_Name(tree[2])
             tac.add_call(f"{classname}_{classname}", out)
             return out
         case "FieldAccess":

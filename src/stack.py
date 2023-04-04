@@ -5,10 +5,10 @@ class StackManager:
 
     def allocStack(self, name, size):
         self.stack -= size
-        if self.stack < self.heap:
+        if self.stack < 0:
             raise Exception("Stack overflow")
         self.stacktable.append((name, self.stack, size))
-        return self.stack, size
+        return self.stack, ["sub", "rsp", size]
 
     def addSequence(self, name):
         self.stacktable.append(name)

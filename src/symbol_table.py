@@ -209,7 +209,7 @@ class SymbolTable:
             current_temp = self
             while current_temp.parent is not None:
                 scope_name = current_temp.name[:-13].replace(" ", "_")
-                sym_name = scope_name + "@#@" + sym_name
+                sym_name = scope_name + "_" + sym_name
                 current_temp = current_temp.parent
             return sym_name
         elif self.parent is not None:
