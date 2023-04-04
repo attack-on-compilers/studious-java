@@ -1054,23 +1054,38 @@ def generate_tac(tree, begin="", end=""):
         case "MethodInvocation":
             if len(tree) == 5:
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
-                args = get_Argument_list(tree[3])
-                if args is not None:
-                    args.reverse()
-                    for arg in args:
-                        tac.push_param(arg)
                 out = tac.new_temp()
-                tac.add_call(funcname, out)
+                args = get_Argument_list(tree[3])
+                tac.push_param("this")
+                try:
+                    argtype = symbol_table.symbols[funcname].params
+                    if args is not None:
+                        args.reverse()
+                        argtype.reverse()
+                        for i in range(len(args)):
+                            tac.push_param(args[i], get_TypeSize(argtype[i]))
+                        tac.push_param(out)
+                    tac.add_call(funcname)
+                except Exception as e:
+                    pass
                 return out
             if len(tree) == 7:
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
                 funcname += "." + get_Name(tree[3])
-                args = get_Argument_list(tree[5])
-                args.reverse()
-                for arg in args:
-                    tac.push_param(arg)
                 out = tac.new_temp()
-                tac.add_call(funcname, out)
+                args = get_Argument_list(tree[5])
+                tac.push_param("this")
+                try:
+                    argtype = symbol_table.symbols[funcname].params
+                    if args is not None:
+                        args.reverse()
+                        argtype.reverse()
+                        for i in range(len(args)):
+                            tac.push_param(args[i], get_TypeSize(argtype[i]))
+                        tac.push_param(out)
+                    tac.add_call(funcname)
+                except Exception as e:
+                    pass
                 return out
         case "ArrayCreationExpression":
             x = tac.new_temp()
