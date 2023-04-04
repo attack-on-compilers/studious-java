@@ -6,7 +6,7 @@ JAVA compiler implementation in python
 
 ## Report
 
-Instructions .pdf file ('report') to execute can be found in: "/doc".
+Instructions file [report](./doc/report.pdf) to execute the compiler can be found in `/doc` directory
 
 ## Team Members:
 
