@@ -9,9 +9,9 @@ public class test_1
     public static void main(String[] args)
     {
         {
-            int x=100;
+            // int x=100;
             {
-                x = 555;
+                int x = 555;
                 {
                     {
                         {
@@ -26,8 +26,9 @@ public class test_1
 
         int t = (int) 5.0;
         // int x = 5;
-        System.out.println(5);
+        // System.out.println(5);
         foo(4,5);
+        int jnd=565;
         foo(1,2);
     }
 }

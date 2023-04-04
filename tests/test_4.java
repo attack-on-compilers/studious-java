@@ -19,5 +19,7 @@ public class test_4 {
         float l[];
         char m[] = new char[5], n[] = new char[5], o=6;
         double[][] q = new double[5][10], r = new double[5][];
+        q[4][5] = 5.0;      //Array access on LHS
+        q[7][8] = q[4][5];  //Array access on RHS
     }
 }
