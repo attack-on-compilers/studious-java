@@ -29,6 +29,7 @@ class Temp {
     int foo() {
         Hii h = new Hii();
         h.a = 5;
+        int s = h.a;
         return 1;
     }
 }
