@@ -860,10 +860,10 @@ def generate_tac(tree, begin="", end=""):
                         tac.add("*", indices[i], dimensions[j], x)
                         tac.add("+", x, y, y)
                 tac.add("*", y, size, y)
-                tac.add("+", name, y, y)
+                tac.add("+", symbol_table.get_symbol_name(name), y, y)
                 right = generate_tac(tree[3])
                 tac.add3(tree[2][1], right, "("+y+")")
-                print("XXXXXXXXXXXXXXXXXXX",name,dimensions,indices,symbol_table.get_symbol(name).data_type,size)
+                # print("XXXXXXXXXXXXXXXXXXX",name,dimensions,indices,symbol_table.get_symbol(name).data_type,size)
                 return y
             elif "." in get_Name(tree[1]):
                 # Non array access case (field access)
@@ -1045,11 +1045,26 @@ def generate_tac(tree, begin="", end=""):
             except Exception as e:
                 pass
         case "ArrayAccess":
-            var = generate_tac(tree[1])
-            index = generate_tac(tree[3])
-            out = tac.new_temp()
-            tac.add("[]", var, index, out)
-            return out
+            name = get_Name(tree[1])
+            dimensions = symbol_table.get_symbol(name).dimArr
+            indices = get_Indices(tree)
+            sym_type = symbol_table.get_symbol(name).data_type
+            size = get_TypeSize(sym_type)
+            y = tac.new_temp()
+            tac.add3("=", 0, y)
+            x = tac.new_temp()
+            for i in range(len(dimensions)):
+                for j in range(i+1, len(dimensions)):
+                    tac.add("*", indices[i], dimensions[j], x)
+                    tac.add("+", x, y, y)
+            tac.add("*", y, size, y)
+            tac.add("+", symbol_table.get_symbol_name(name), y, y)
+            # print("MEOWMEOWMEOWMEOWMEOW", name, dimensions, indices, sym_type, size)
+            # var = generate_tac(tree[1])
+            # index = generate_tac(tree[3])
+            # out = tac.new_temp()
+            # tac.add("[]", y, index, out)
+            return y
         case "MethodInvocation":
             if len(tree) == 5:
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
