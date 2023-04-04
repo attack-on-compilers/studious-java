@@ -213,7 +213,7 @@ def traverse_tree(tree):
                     # if dims == 0:
                     #     dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], newdims, []))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], newdims, []))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[4])
             symbol_table.exit_scope()
@@ -366,6 +366,8 @@ def initial_Traverse(tree):
             className = tree[3]
             symbol_table.enter_scope(className)
             offset = offset + [0]
+            symbol_table.add_symbol(VariableSymbol("this", className, 8, 0, [], 0, []))
+            offset[-1] = offset[-1] + 8
             initial_Traverse(tree[6])
             symbol_table.exit_scope()
             offset.pop()
@@ -834,17 +836,38 @@ def generate_tac(tree, begin="", end=""):
         case "Expression":
             return generate_tac(tree[1])
         case "ArrayInitializer":
-            pass
+            pass # Removed from basic feature
         case "AssignmentExpression":
             return generate_tac(tree[1])
         case "Assignment":
-            left = symbol_table.get_symbol_name(get_Name(tree[1]))
-            if tree[1][1][0] == "ArrayAccess":
-                left = generate_tac(tree[1][1])
-                left = "(" + left + ")"
-            right = generate_tac(tree[3])
-            tac.add3(tree[2][1], right, left)
-            return left
+            if symbol_table.get_symbol(get_Name(tree[1])).dims > 0:
+                name = get_Name(tree[1])
+                dimensions = symbol_table.get_symbol(name).dimArr
+                indices = get_Indices(tree[1])
+                sym_type = symbol_table.get_symbol(name).data_type
+                basic_type_size = {"int": 4, "float": 4, "char": 1, "boolean": 1, "long": 8, "double": 8, "short": 2, "byte": 1, "String": 8}
+                if sym_type in basic_type_size:
+                    size = basic_type_size[sym_type]
+                else:
+                    size = symbol_table.root.get_symbol(sym_type).size
+                y = tac.new_temp()
+                tac.add3("=", 0, y)
+                x = tac.new_temp()
+                for i in range(len(dimensions)):
+                    for j in range(i+1, len(dimensions)):
+                        tac.add("*", indices[i], dimensions[j], x)
+                        tac.add("+", x, y, y)
+                tac.add("*", y, size, y)
+                right = generate_tac(tree[3])
+                tac.add3(tree[2][1], right, "("+y+")")
+                print("XXXXXXXXXXXXXXXXXXX",name,dimensions,indices,symbol_table.get_symbol(name).data_type,size)
+                return y
+            else:
+                # Non array access case (name or field access)
+                left = symbol_table.get_symbol_name(get_Name(tree[1]))
+                right = generate_tac(tree[3])
+                tac.add3(tree[2][1], right, left)
+                return left
         case "ConditionalExpression":
             if len(tree) == 2:
                 return generate_tac(tree[1])
@@ -1033,7 +1056,7 @@ def generate_tac(tree, begin="", end=""):
                 tac.add_call(funcname, out)
                 return out
         case "ArrayCreationExpression":
-            pass
+            pass # TODO implement array creation expression (new int[5])
         case "CastExpression":
             if tree[2][0] != "PrimitiveType":
                 raise Exception("CastExpression only supported with PrimitiveType, recieved {}".format(tree[2][0]))
@@ -1348,4 +1371,14 @@ def get_LiteralValue2(tree):
                 return get_LiteralValue2(tree[1])
             else:
                 return 1
-
+            
+def get_Indices(tree):
+    match tree[0]:
+        case "LeftHandSide":
+            return get_Indices(tree[1])
+        case "ArrayAccess":
+            return get_Indices(tree[1]) + [get_LiteralValue2(tree[3])]
+        case "Name":
+            return []
+        case "PrimaryNoNewArray":
+            return get_Indices(tree[1])
