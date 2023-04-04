@@ -25,45 +25,45 @@ class GoGo {
 		// int y=5766045;
 		// int z;
 		// int x=565152;
-		int x1 = app[1000000][n][m][40000000];
+		// int x1 = app[1000000][n][m][40000000];
 		int x2 = f[55555555][666666666];
 		int x3 = g[777777777];
-		// int x2 = f[1];
-		// a.b = "Yo";
-		// System.out.println(a);
-		// Hii ho1 = new Hii();
-        // GoGo go2 = new GoGo("Yo", 3);
-        // go2.a = "Yo"; // Need to fix this
-        // ho1.a=5;
+		int x2 = f[1];
+		a.b = "Yo";
+		System.out.println(a);
+		Hii ho1 = new Hii();
+        GoGo go2 = new GoGo("Yo", 3);
+        go2.a = "Yo"; // Need to fix this
+        ho1.a=5;
 	}
 }
 
-// class Hii {
-//     int a;
-//     GoGo g = new GoGo("Yo", 3);
-// 	int fooooo(int a, double b, int[][][] arr[][])
-// 	{
-// 		return 1;
-// 	}
-//     public static void main(String[] args)
-//     {
-//         Hii h = new Hii(); //Default constructor
+class Hii {
+    int a;
+    GoGo g = new GoGo("Yo", 3);
+	int fooooo(int a, double b, int[][][] arr[][])
+	{
+		return 1;
+	}
+    public static void main(String[] args)
+    {
+        Hii h = new Hii(); //Default constructor
 
-//         GoGo go1;
-//         go1 = new GoGo("",5);
-//         go1.b = "555";
+        GoGo go1;
+        go1 = new GoGo("",5);
+        go1.b = "555";
 
-//         System.out.println(go1.a);
-//         System.out.println(go1.a); //Why this works?
-//     }
-//     double b;
-// }
+        System.out.println(go1.a);
+        System.out.println(go1.a); //Why this works?
+    }
+    double b;
+}
 
-// class Temp {
-//     int foo() {
-//         Hii h = new Hii();
-//         h.a = 5;
-//         int s = h.a;
-//         return 1;
-//     }
-// }
+class Temp {
+    int foo() {
+        Hii h = new Hii();
+        h.a = 5;
+        int s = h.a;
+        return 1;
+    }
+}

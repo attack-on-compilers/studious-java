@@ -897,9 +897,10 @@ def generate_tac(tree, begin="", end=""):
                 tac.add3("=", 0, y)
                 x = tac.new_temp()
                 for i in range(len(dimensions)):
-                    for j in range(i + 1, len(dimensions)):
-                        tac.add("*", indices[i], dimensions[j], x)
-                        tac.add("+", x, y, y)
+                    tac.add3("=", indices[i], x)
+                    for j in range(i+1, len(dimensions)):
+                        tac.add("*", x, dimensions[j], x)
+                    tac.add("+", x, y, y)
                 tac.add("*", y, size, y)
                 tac.add("+", symbol_table.get_symbol_name(name), y, y)
                 right = generate_tac(tree[3])
@@ -1097,9 +1098,10 @@ def generate_tac(tree, begin="", end=""):
             tac.add3("=", 0, y)
             x = tac.new_temp()
             for i in range(len(dimensions)):
-                for j in range(i + 1, len(dimensions)):
-                    tac.add("*", indices[i], dimensions[j], x)
-                    tac.add("+", x, y, y)
+                tac.add3("=", indices[i], x)
+                for j in range(i+1, len(dimensions)):
+                    tac.add("*", x, dimensions[j], x)
+                tac.add("+", x, y, y)
             tac.add("*", y, size, y)
             tac.add("+", symbol_table.get_symbol_name(name), y, y)
             print("MEOWMEOWMEOWMEOWMEOW", name, dimensions, indices, sym_type, size)
