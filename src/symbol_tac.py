@@ -215,7 +215,9 @@ def traverse_tree(tree):
                     # if dims == 0:
                     #     dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], newdims, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], newdims, [])
+                )
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[4])
             symbol_table.exit_scope()
@@ -270,7 +272,11 @@ def traverse_tree(tree):
                 if i[-1] == "]":
                     # if dims == 0:
                     newi = i[: i.find("[")]
-                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], [], tempdims, arraydimensions[count]))
+                symbol_table.add_symbol(
+                    VariableSymbol(
+                        newi, fieldType, typeSize * variablesizes[count], offset[-1], [], tempdims, arraydimensions[count]
+                    )
+                )
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
             post_type_check(tree)
@@ -284,7 +290,9 @@ def traverse_tree(tree):
                                 newj = j
                                 if j[-1] == "]":
                                     newj = j[: j.find("[")]
-                                symbol_table.add_symbol(VariableSymbol(newj + "." + i.name, i.data_type, 0, 0, i.scope, i.dims, i.dimArr))
+                                symbol_table.add_symbol(
+                                    VariableSymbol(newj + "." + i.name, i.data_type, 0, 0, i.scope, i.dims, i.dimArr)
+                                )
                         # elif i.symbol_type == "method":
                         #     print("YOYOYOYO",symbol_table.current)
                         #     for j in fieldVariables:
@@ -400,9 +408,19 @@ def initial_Traverse(tree):
                 if i[-1] == "]":
                     newi = i[: i.find("[")]
                 symbol_table.add_symbol(
-                    VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], fieldModifiers, tempdims, arraydimensions[count])
+                    VariableSymbol(
+                        newi,
+                        fieldType,
+                        typeSize * variablesizes[count],
+                        offset[-1],
+                        fieldModifiers,
+                        tempdims,
+                        arraydimensions[count],
+                    )
                 )
-                symbol_table.add_symbol(VariableSymbol("this." + newi, fieldType, 0, 0, fieldModifiers, dims, arraydimensions[count]))
+                symbol_table.add_symbol(
+                    VariableSymbol("this." + newi, fieldType, 0, 0, fieldModifiers, dims, arraydimensions[count])
+                )
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
             symbol_table.current.parent.get_symbol(symbol_table.current.name.split(" ")[0]).size = offset[-1]
@@ -417,7 +435,9 @@ def initial_Traverse(tree):
                                 newj = j
                                 if j[-1] == "]":
                                     newj = j[: j.find("[")]
-                                symbol_table.add_symbol(VariableSymbol(j + "." + i.name, i.data_type, 0, 0, i.scope, i.dims, i.dimArr))
+                                symbol_table.add_symbol(
+                                    VariableSymbol(j + "." + i.name, i.data_type, 0, 0, i.scope, i.dims, i.dimArr)
+                                )
 
         case "MethodDeclaration":
             methodModifiers = get_Modifiers(tree[1][1])
@@ -821,6 +841,25 @@ def get_expression_Type(expression):
             pass
 
 
+def clear_stack_mem():
+    global symbol_table
+    global tac
+    try:
+        symtabsize = 0
+        for sym in symbol_table.current.symbols.values():
+            try:
+                sz = sym.size
+                if sz > 8:
+                    sz = 8
+                symtabsize += sz
+            except:
+                pass
+        if symtabsize > 0:
+            tac.free_stack(symtabsize)
+    except Exception as e:
+        pass
+
+
 def generate_tac(tree, begin="", end=""):
     global block_count
     global tac
@@ -830,7 +869,9 @@ def generate_tac(tree, begin="", end=""):
                 # print("#"*100, symbol_table.current.name)
                 right = generate_tac(tree[3])
                 left = symbol_table.get_symbol_name(get_Name(tree[1]).split("[")[0])
-                if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type not in ["int", "float", "boolean", "char", "short", "long", "double", "byte"]:
+                if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(
+                    get_Name(tree[1]).split("[")[0]
+                ).data_type not in ["int", "float", "boolean", "char", "short", "long", "double", "byte"]:
                     size = 8
                 else:
                     size = get_TypeSize(symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type)
@@ -842,7 +883,7 @@ def generate_tac(tree, begin="", end=""):
         case "Expression":
             return generate_tac(tree[1])
         case "ArrayInitializer":
-            pass # Removed from basic feature
+            pass  # Removed from basic feature
         case "AssignmentExpression":
             return generate_tac(tree[1])
         case "Assignment":
@@ -856,13 +897,13 @@ def generate_tac(tree, begin="", end=""):
                 tac.add3("=", 0, y)
                 x = tac.new_temp()
                 for i in range(len(dimensions)):
-                    for j in range(i+1, len(dimensions)):
+                    for j in range(i + 1, len(dimensions)):
                         tac.add("*", indices[i], dimensions[j], x)
                         tac.add("+", x, y, y)
                 tac.add("*", y, size, y)
                 tac.add("+", symbol_table.get_symbol_name(name), y, y)
                 right = generate_tac(tree[3])
-                tac.add3(tree[2][1], right, "("+y+")")
+                tac.add3(tree[2][1], right, "(" + y + ")")
                 # print("XXXXXXXXXXXXXXXXXXX",name,dimensions,indices,symbol_table.get_symbol(name).data_type,size)
                 return y
             elif "." in get_Name(tree[1]):
@@ -1025,7 +1066,8 @@ def generate_tac(tree, begin="", end=""):
             classname = get_Name(tree[2])
             sym = symbol_table.root.get_symbol(classname)
             tac.alloc_mem(sym.size, out)
-            try: 
+            tac.add_epilouge()
+            try:
                 argtype = sym.symbol_table.symbols[classname].params
                 if args is not None:
                     args.reverse()
@@ -1036,12 +1078,13 @@ def generate_tac(tree, begin="", end=""):
                 tac.add_call(f"{classname}_{classname}", "__")
             except Exception as e:
                 pass
+            tac.add_epilouge()
             return out
         case "FieldAccess":
             try:
                 sym = symbol_table.get_symbol(get_Name(tree[1][1]))
                 var += "." + tree[3]
-                return var 
+                return var
             except Exception as e:
                 pass
         case "ArrayAccess":
@@ -1054,7 +1097,7 @@ def generate_tac(tree, begin="", end=""):
             tac.add3("=", 0, y)
             x = tac.new_temp()
             for i in range(len(dimensions)):
-                for j in range(i+1, len(dimensions)):
+                for j in range(i + 1, len(dimensions)):
                     tac.add("*", indices[i], dimensions[j], x)
                     tac.add("+", x, y, y)
             tac.add("*", y, size, y)
@@ -1071,6 +1114,7 @@ def generate_tac(tree, begin="", end=""):
                 out = tac.new_temp()
                 args = get_Argument_list(tree[3])
                 sym = symbol_table.get_symbol(get_Name(tree[1]))
+                tac.add_epilouge()
                 try:
                     argtype = sym.params
                     if args is not None:
@@ -1083,6 +1127,7 @@ def generate_tac(tree, begin="", end=""):
                 except Exception as e:
                     # print("#"*10,e)
                     pass
+                tac.add_epilouge()
                 return out
             if len(tree) == 7:
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
@@ -1108,7 +1153,7 @@ def generate_tac(tree, begin="", end=""):
             nelem = get_NumberOfElements(tree)
             sym_type = get_Type(tree[2])
             size = get_TypeSize(sym_type)
-            tac.alloc_mem(size*get_NumberOfElements(tree), x)
+            tac.alloc_mem(size * get_NumberOfElements(tree), x)
             return x
         case "CastExpression":
             if tree[2][0] != "PrimitiveType":
@@ -1250,6 +1295,7 @@ def generate_tac(tree, begin="", end=""):
                 pass
             tac.jump(begin_label)
             tac.add_label(end_label)
+            clear_stack_mem()
             symbol_table.exit_scope()
         case "ForStatementNoShortIf":
             block_count += 1
@@ -1273,6 +1319,7 @@ def generate_tac(tree, begin="", end=""):
                 generate_tac(tree[9][1][1][2])
             else:
                 generate_tac(tree[9])
+            clear_stack_mem()
             symbol_table.exit_scope()
         case "StatementNoShortIf":
             return generate_tac(tree[1])
@@ -1291,6 +1338,7 @@ def generate_tac(tree, begin="", end=""):
             symbol_table.enter_scope(className)
             tac.add_label(className)
             generate_tac(tree[6])
+            clear_stack_mem()
             symbol_table.exit_scope()
         case "MethodDeclaration":
             methodName = get_Name(tree[1][3])
@@ -1303,6 +1351,7 @@ def generate_tac(tree, begin="", end=""):
             for i in methodParams:
                 tac.pop_param(symbol_table.get_symbol_name(i[1].split("[")[0]))
             generate_tac(tree[2][1][2])
+            clear_stack_mem()
             symbol_table.exit_scope()
         case "ConstructorDeclaration":
             constructorName = get_Name(tree[2][1])
@@ -1312,12 +1361,14 @@ def generate_tac(tree, begin="", end=""):
             for i in constructorParams:
                 tac.pop_param(symbol_table.get_symbol_name(i[1]))
             generate_tac(tree[4])
+            clear_stack_mem()
             symbol_table.exit_scope()
         case "Block":
             block_count += 1
             previous_block_count = block_count
             symbol_table.enter_scope("block" + str(block_count))
             generate_tac(tree[2])
+            clear_stack_mem()
             symbol_table.exit_scope()
         case _:
             if type(tree) == tuple:
@@ -1360,7 +1411,8 @@ def get_TypeSize(type):
         return 8
     else:
         return symbol_table.root.get_symbol(type).size
-    
+
+
 def get_ArrayDimensions(tree):
     # print("YOOOOOOOOO",tree[0])
     match tree[0]:
@@ -1421,6 +1473,7 @@ def get_ArrayDimensions(tree):
             else:
                 return []
 
+
 def get_LiteralValue2(tree):
     # print("NOOOOOOOOO",tree[0])
     match tree[0]:
@@ -1435,7 +1488,8 @@ def get_LiteralValue2(tree):
                 return get_LiteralValue2(tree[1])
             else:
                 return 1
-            
+
+
 def get_Indices(tree):
     match tree[0]:
         case "LeftHandSide":
