@@ -828,6 +828,11 @@ def generate_tac(tree, begin="", end=""):
                 # print("#"*100, symbol_table.current.name)
                 right = generate_tac(tree[3])
                 left = symbol_table.get_symbol_name(get_Name(tree[1]).split("[")[0])
+                if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type not in ["int", "float", "boolean", "char", "short", "long", "double", "byte"]:
+                    size = 8
+                else:
+                    size = get_TypeSize(symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type)
+                tac.alloc_stack(size)
                 tac.add3("=", right, left)
                 return
         case "VariableInitializer":

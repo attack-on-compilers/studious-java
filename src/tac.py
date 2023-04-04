@@ -44,6 +44,9 @@ class TAC:
 
     def alloc_mem(self, size, result_addr):
         self.table.append(["allocmem", size, result_addr])
+    
+    def alloc_stack(self, size):
+        self.table.append(["stackpoint++", size])
 
     def add_entry(self, entry):
         self.table.append(entry)
