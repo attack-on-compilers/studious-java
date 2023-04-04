@@ -169,12 +169,13 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
+                newdims = dims + i[1].count("[")
                 if i[1][-1] == "]":
-                    if dims == 0:
-                        dims = i[1].count("[")
+                    # if dims == 0:
+                    #     dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
                 symbol_table.add_symbol(
-                    VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], dims)
+                    VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], newdims, [])
                 )
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[2][1][2])
@@ -207,11 +208,12 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
+                newdims = dims + i[1].count("[")
                 if i[1][-1] == "]":
-                    if dims == 0:
-                        dims = i[1].count("[")
+                    # if dims == 0:
+                    #     dims = i[1].count("[")
                     i[1] = i[1][: i[1].find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], newdims, []))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             traverse_tree(tree[4])
             symbol_table.exit_scope()
@@ -243,7 +245,7 @@ def traverse_tree(tree):
                 if fieldType[-1] == "]":
                     dims = fieldType.count("[")
                     fieldType = fieldType[: fieldType.find("[")]
-                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims))
+                symbol_table.add_symbol(VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [], dims, []))
                 offset[-1] = offset[-1] + get_TypeSize(fieldType)
             symbol_table.exit_scope()
             offset.pop()
@@ -257,14 +259,16 @@ def traverse_tree(tree):
             typeSize = get_TypeSize(fieldType)
             fieldVariables = get_Variables(tree[2])
             variablesizes = get_NumberOfElements(tree[2])
+            arraydimensions = get_ArrayDimensions(tree[2])
+            # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",arraydimensions)
             count = 0
             for i in fieldVariables:
                 newi = i
+                tempdims = dims + i.count("[")
                 if i[-1] == "]":
-                    if dims == 0:
-                        dims = i.count("[")
+                    # if dims == 0:
                     newi = i[: i.find("[")]
-                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], [], dims))
+                symbol_table.add_symbol(VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], [], tempdims, arraydimensions[count]))
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
             post_type_check(tree)
@@ -278,7 +282,7 @@ def traverse_tree(tree):
                                 newj = j
                                 if j[-1] == "]":
                                     newj = j[: j.find("[")]
-                                symbol_table.add_symbol(VariableSymbol(j + "." + i.name, i.data_type, 0, 0, i.scope, i.dims))
+                                symbol_table.add_symbol(VariableSymbol(newj + "." + i.name, i.data_type, 0, 0, i.scope, i.dims, i.dimArr))
                         # elif i.symbol_type == "method":
                         #     print("YOYOYOYO",symbol_table.current)
                         #     for j in fieldVariables:
@@ -373,6 +377,7 @@ def initial_Traverse(tree):
             symbol_table.exit_scope()
 
         case "FieldDeclaration":
+            # print("AAAAAAAAAAAAAAA", tree)
             fieldModifiers = get_Modifiers(tree[1])
             fieldType = get_Type(tree[2])
             dims = 0
@@ -382,18 +387,18 @@ def initial_Traverse(tree):
             typeSize = get_TypeSize(fieldType)
             fieldVariables = get_Variables(tree[3])
             variablesizes = get_NumberOfElements(tree[3])
-            # print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", variablesizes)
+            arraydimensions = get_ArrayDimensions(tree[3])
+            # print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", fieldVariables, variablesizes, arraydimensions, tree[2])
             count = 0
             for i in fieldVariables:
                 newi = i
+                tempdims = dims + i.count("[")
                 if i[-1] == "]":
-                    if dims == 0:
-                        dims = i.count("[")
                     newi = i[: i.find("[")]
                 symbol_table.add_symbol(
-                    VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], fieldModifiers, dims)
+                    VariableSymbol(newi, fieldType, typeSize * variablesizes[count], offset[-1], fieldModifiers, tempdims, arraydimensions[count])
                 )
-                symbol_table.add_symbol(VariableSymbol("this." + newi, fieldType, 0, 0, fieldModifiers, dims))
+                symbol_table.add_symbol(VariableSymbol("this." + newi, fieldType, 0, 0, fieldModifiers, dims, arraydimensions[count]))
                 offset[-1] = offset[-1] + typeSize * variablesizes[count]
                 count += 1
             symbol_table.current.parent.get_symbol(symbol_table.current.name.split(" ")[0]).size = offset[-1]
@@ -408,7 +413,7 @@ def initial_Traverse(tree):
                                 newj = j
                                 if j[-1] == "]":
                                     newj = j[: j.find("[")]
-                                symbol_table.add_symbol(VariableSymbol(j + "." + i.name, i.data_type, 0, 0, i.scope, i.dims))
+                                symbol_table.add_symbol(VariableSymbol(j + "." + i.name, i.data_type, 0, 0, i.scope, i.dims, i.dimArr))
 
         case "MethodDeclaration":
             methodModifiers = get_Modifiers(tree[1][1])
@@ -1268,3 +1273,79 @@ def get_TypeSize(type):
         return 8
     else:
         return symbol_table.root.get_symbol(type).size
+    
+def get_ArrayDimensions(tree):
+    # print("YOOOOOOOOO",tree[0])
+    match tree[0]:
+        case "AlphaVariableDeclarator":
+            if len(tree) == 2:
+                return [get_ArrayDimensions(tree[1])]
+            else:
+                return get_ArrayDimensions(tree[1]) + [get_ArrayDimensions(tree[3])]
+        case "VariableDeclarator":
+            if len(tree) == 2:
+                if len(tree[1]) == 2:
+                    return []
+                else:
+                    return []
+            else:
+                return get_ArrayDimensions(tree[3])
+        case "VariableInitializer":
+            return get_ArrayDimensions(tree[1])
+        case "Expression":
+            return get_ArrayDimensions(tree[1])
+        case "ArrayCreationExpression":
+            return get_ArrayDimensions(tree[3]) + get_ArrayDimensions(tree[4])
+        case "BetaAlphaDim":
+            if tree[1][0] == "":
+                return []
+            else:
+                return get_ArrayDimensions(tree[1])
+        case "AlphaDim":
+            if len(tree) == 4:
+                return get_ArrayDimensions(tree[1]) + [1]
+            else:
+                return [1]
+        case "AlphaDimExpr":
+            # print("BLABLABLA",tree)
+            if len(tree) == 3:
+                return get_ArrayDimensions(tree[1]) + [get_LiteralValue2(tree[2])]
+            else:
+                return [get_LiteralValue2(tree[1])]
+        case "DimExpr":
+            return get_ArrayDimensions(tree[2])
+        case "Literal":
+            return []
+        case "ArrayInitializer":
+            return get_ArrayDimensions(tree[2])
+        case "BetaAlphaVariableInitializer":
+            if tree[1] == "":
+                return 0
+            else:
+                return get_ArrayDimensions(tree[1])
+        case "AlphaVariableInitializer":
+            if len(tree) == 2:
+                return get_ArrayDimensions(tree[1])
+            else:
+                return get_ArrayDimensions(tree[1]) + get_ArrayDimensions(tree[3])
+        case _:
+            if len(tree) == 2:
+                return get_ArrayDimensions(tree[1])
+            else:
+                return []
+
+def get_LiteralValue2(tree):
+    # print("NOOOOOOOOO",tree[0])
+    match tree[0]:
+        case "DimExpr":
+            return get_LiteralValue2(tree[2])
+        case "Literal":
+            return int(tree[1])
+        case "IdentifierId":
+            return symbol_table.get_symbol_name(tree[1])
+        case _:
+            if len(tree) == 2:
+                return get_LiteralValue2(tree[1])
+            else:
+                return 1
+

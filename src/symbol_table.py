@@ -41,7 +41,7 @@ def get_variable_symbols(name, data_type, parent):
     variables = []
     for symbol in data_symbol_table.symbols.values():
         if symbol.scope == VariableScope.PUBLIC:
-            variables.append(VariableSymbol(symbol.name, symbol.data_type, scope=VariableScope.PUBLIC, dims=symbol.dims))
+            variables.append(VariableSymbol(symbol.name, symbol.data_type, symbol.size, symbol.offset, scope=VariableScope.PUBLIC, dims=symbol.dims, dimArr=symbol.dimArr))
     return variables
 
 
@@ -127,17 +127,18 @@ class InterfaceSymbol(Symbol):
 
 
 class VariableSymbol(Symbol):
-    def __init__(self, name, data_type, size, offset, scope=VariableScope.PRIVATE, dims=0):
+    def __init__(self, name, data_type, size, offset, scope=VariableScope.PRIVATE, dims=0, dimArr=[]):
         super().__init__(name, "variable")
         self.data_type = data_type
         self.scope = scope
         self.dims = dims
         self.size = size
         self.offset = offset
+        self.dimArr = dimArr
 
     def __str__(self):
         return DELIMERTER.join(
-            [self.name, self.symbol_type, self.data_type, str(self.size), str(self.offset), str(self.scope), str(self.dims)]
+            [self.name, self.symbol_type, self.data_type, str(self.size), str(self.offset), str(self.scope), str(self.dims), str(self.dimArr)]
         )
 
 
