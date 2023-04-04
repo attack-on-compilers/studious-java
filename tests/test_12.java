@@ -1,6 +1,5 @@
-package com.mcnz.recursion;
 
-public class RecursiveJavaFactorialProgram {
+public class R {
 
   public static void main(String args[]) {
     long nFactoriral = factorialProgram(9);
