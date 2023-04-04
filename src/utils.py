@@ -125,7 +125,7 @@ def get_NumberOfElements(tree):
                 return get_NumberOfElements(tree[1])
             else:
                 return 1
-
+            
 
 def get_LiteralValue(tree):
     # print("NOOOOOOOOO",tree[0])
@@ -134,6 +134,8 @@ def get_LiteralValue(tree):
             return get_LiteralValue(tree[2])
         case "Literal":
             return int(tree[1])
+        case "IdentifierId":
+            return 1
         case _:
             if len(tree) == 2:
                 return get_LiteralValue(tree[1])
