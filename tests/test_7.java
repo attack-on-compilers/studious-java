@@ -34,7 +34,7 @@ class GoGo {
 class Hii {
     int a;
     GoGo g = new GoGo("Yo", 3);
-	int foo(int a, double b, int[][][] arr[][])
+	int fooooo(int a, double b, int[][][] arr[][])
 	{
 		return 1;
 	}
