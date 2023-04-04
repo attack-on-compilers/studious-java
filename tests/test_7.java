@@ -14,7 +14,6 @@ class GoGo {
 
 class Hii {
     int a;
-
     public static void main(String[] args)
     {
         GoGo go1;

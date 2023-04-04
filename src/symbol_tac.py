@@ -161,6 +161,7 @@ def traverse_tree(tree):
             methodSignature += ")"
             method_sym_name = symbol_table.get_symbol_name(methodName)
             symbol_table.enter_scope(methodName)
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
             offset = offset + [0]
             for i in methodParams:
                 fieldModifiers = []
@@ -200,6 +201,7 @@ def traverse_tree(tree):
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.enter_scope(constructorName)
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
             offset = offset + [0]
             for i in constructorParams:
                 fieldModifiers = []
