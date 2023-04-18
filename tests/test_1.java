@@ -1,6 +1,7 @@
 // Basic test case- Hello World!
 public class test_1
 {
+    int a,b,c;
     static int foo(int x, int y)
     {
         int z = x+y;
@@ -22,6 +23,15 @@ public class test_1
                 int y=6555;
             }
             // int x = 5;
+        }
+        int a=100;
+        if(a>5)
+        {
+            int x = 5;
+        }
+        else
+        {
+            int x = 5;
         }
 
         int t = (int) 5.0;

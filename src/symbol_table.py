@@ -84,9 +84,10 @@ class ClassSymbol(Symbol):
 
 
 class MethodSymbol(Symbol):
-    def __init__(self, name, signature, params, return_type, parent, scope=VariableScope.PUBLIC, throws=None):
+    def __init__(self, name, size, signature, params, return_type, parent, scope=VariableScope.PUBLIC, throws=None):
         super().__init__(name, "method")
         self.symbol_table = SymbolTable(parent=parent, name=name + " symbol table")
+        self.size = size
         self.signature = signature
         self.params = params
         self.return_type = return_type
@@ -99,6 +100,7 @@ class MethodSymbol(Symbol):
                 str(self.name),
                 str(self.signature),
                 str(self.symbol_type),
+                str(self.size),
                 str(self.symbol_table.name),
                 str(self.params),
                 str(self.return_type),

@@ -143,3 +143,7 @@ ast*
 
 *javao*
 
+*.o
+*.s
+*.out
+
