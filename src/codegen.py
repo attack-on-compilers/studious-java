@@ -71,7 +71,7 @@ class Register:
             return reg, []
         
         self.count = self.count + 1
-        reg = self.lru_policy(_)
+        reg = self.lru_policy()
         instructions = self.write_back([reg], True)
         self.regs[reg] = v, self.count
 
