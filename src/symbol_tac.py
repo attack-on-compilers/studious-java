@@ -163,7 +163,7 @@ def traverse_tree(tree):
             methodSignature += ")"
             method_sym_name = symbol_table.get_symbol_name(methodName)
             symbol_table.enter_scope(methodName)
-            offset = offset + [-8]
+            offset = offset + [-16]
             symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, offset[-1], [], 0, []))
             offset[-1] = offset[-1] - 8
             for i in methodParams:
@@ -206,7 +206,7 @@ def traverse_tree(tree):
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.enter_scope(constructorName)
-            offset = offset + [-8]
+            offset = offset + [-16]
             symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, -8, [], 0, []))
             offset[-1] = offset[-1] + 8
             for i in constructorParams:
@@ -1212,13 +1212,14 @@ def generate_tac(tree, begin="", end=""):
                 tac.add_epilouge()
                 try:
                     argtype = sym.params
+                    tac.add_function_invocation(funcname)
                     if args is not None:
                         args.reverse()
                         argtype.reverse()
                         for i in range(len(args)):
                             tac.push_param(args[i], get_TypeSize(argtype[i]))
-                    tac.push_param("this")
-                    tac.add_call(funcname, out)
+                    tac.push_param(symbol_table.get_symbol_name("this"))
+                    tac.add_call(funcname, out, (len(args) + 2)*8)
                 except Exception as e:
                     # print("#"*10,e)
                     pass
@@ -1241,8 +1242,8 @@ def generate_tac(tree, begin="", end=""):
                         argtype.reverse()
                         for i in range(len(args)):
                             tac.push_param(args[i], get_TypeSize(argtype[i]))
-                    tac.push_param("this")
-                    tac.add_call(funcname, out)
+                    tac.push_param(symbol_table.get_symbol_name("this"))
+                    tac.add_call(funcname, out, (len(args) + 2)*8)
                 except Exception as e:
                     # print(e)
                     pass

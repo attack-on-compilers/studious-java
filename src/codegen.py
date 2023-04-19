@@ -375,7 +375,11 @@ class GAS:
 
             if t[0] == "BeginFunction":
                 funcname = t[1][:-1]
-                instructions.append(t[1])
+                if funcname.endswith("main"):
+                    instructions.append("  .globl main")
+                    instructions.append("main:")
+                else:
+                    instructions.append(t[1])
                 instructions.append("  pushq %rbp")
                 instructions.append("  movq %rsp, %rbp")
                 instructions.append(f"  subq ${tac.size[funcname]}, %rsp")
@@ -390,6 +394,14 @@ class GAS:
                     instructions.append("  ret")
             if len(t) == 1 and t[0][0] == "." and t[0][-1] == ":":
                 instructions.append(t[0])
+            if t[0] == "FunctionInvocation":
+                instructions.append(f"  subq $8, %rsp")
+            if t[0] == "PushToStack":
+                instructions.append(f"  pushq {parse_tac_arg(t[1])}")
+            if t[0] == "ProcCall":
+                instructions.append(f"  call {t[1]}")
+            if t[0] == "addrsp":
+                instructions.append(f"  addq ${t[1]}, %rsp")
             
         self.instructions = instructions
 

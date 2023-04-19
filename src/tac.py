@@ -18,10 +18,13 @@ class TAC:
     def add3(self, op, arg1, result):
         self.table.append([op, arg1, result])
 
-    def add_call(self, func, result):
+    def add_call(self, func, result, size=None):
         self.table.append(["ProcCall", func, result])
+        if size is not None:
+            self.table.append(["addrsp", size])
 
     def add_epilouge(self):
+        return
         self.table.append(["=", "stackpoint", "basepoint"])
 
     def pop_param(self, param):
@@ -72,6 +75,10 @@ class TAC:
     def add_function(self, label):
         self.table.append(["BeginFunction", label+ ":"])
         self.labels.append(label)
+        return label
+    
+    def add_function_invocation(self, label):
+        self.table.append(["FunctionInvocation", label])
         return label
 
     def tprint(self):
