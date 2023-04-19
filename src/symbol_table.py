@@ -203,7 +203,7 @@ class SymbolTable:
         else:
             raise Exception(f"Symbol {name} not found")
 
-    def get_symbol_name(self, name, symbol_type=None):
+    def get_symbol_name(self, name, symbol_type=None, get_offset=False):
         if name in printfuncs:
             return name
         symbol = self.symbols.get(name)
@@ -214,6 +214,8 @@ class SymbolTable:
                 scope_name = current_temp.name[:-13].replace(" ", "_")
                 sym_name = scope_name + "_" + sym_name
                 current_temp = current_temp.parent
+            if get_offset:
+                return sym_name, symbol.offset
             return sym_name
         elif self.parent is not None:
             return self.parent.get_symbol_name(name, symbol_type)

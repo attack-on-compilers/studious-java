@@ -1434,17 +1434,20 @@ def generate_tac(tree, begin="", end=""):
             generate_tac(tree[2][1][2])
             clear_stack_mem()
             tac.add_return()
+            tac.size[method_sym_name] = symbol_table.get_method_symbol_table().size
             symbol_table.exit_scope()
         case "ConstructorDeclaration":
             constructorName = get_Name(tree[2][1])
             constructorParams = get_Parameters(tree[2][3])
-            tac.add_function(symbol_table.get_symbol_name(constructorName))
+            constructor_sym_name = symbol_table.get_symbol_name(constructorName)
+            tac.add_function(constructor_sym_name)
             symbol_table.enter_scope(constructorName)
             for i in constructorParams:
                 tac.pop_param(symbol_table.get_symbol_name(i[1]))
             generate_tac(tree[4])
             clear_stack_mem()
             tac.add_return()
+            tac.size[constructor_sym_name] = symbol_table.get_method_symbol_table().size
             symbol_table.exit_scope()
         case "Block":
             block_count += 1

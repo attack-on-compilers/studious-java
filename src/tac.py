@@ -6,6 +6,7 @@ class TAC:
         self.temp_var.prefix = temp_prefix + "_"
         self.table = []
         self.labels = []
+        self.size = dict()
 
     def new_temp(self):
         self.temp_var.count += 1
@@ -68,8 +69,7 @@ class TAC:
         return label
     
     def add_function(self, label, size):
-        self.table.append([label + ":"])
-        self.table.append(["BeginFunction", size]) # size is the size of the stack frame
+        self.table.append(["BeginFunction", label, ":"])
         self.labels.append(label)
         return label
 
