@@ -1207,6 +1207,20 @@ def generate_tac(tree, begin="", end=""):
                     VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
                 )
                 symbol_table.get_method_else_class_symbol_table().size += 8
+                if funcname == "System.out.println" or funcname == "System.out.print":
+                    args = get_Argument_list2(tree[3])
+                    for arg in args:
+                        if arg[0] == '"':
+                            tac.print_string(arg)
+                        else:
+                            try:
+                                intcast = int(arg)
+                                tac.print_int(arg)
+                            except:
+                                tac.print_int(symbol_table.get_symbol_name(arg))
+                    if funcname == "System.out.println":
+                        tac.print_newline()
+                    return out
                 args = get_Argument_list(tree[3])
                 sym = symbol_table.get_symbol(get_Name(tree[1]))
                 tac.add_epilouge()
@@ -1538,6 +1552,16 @@ def get_Argument_list(tree):
             else:
                 return get_Argument_list(tree[1]) + [generate_tac(tree[3])]
 
+def get_Argument_list2(tree):
+    if type(tree) != tuple:
+        return [tree]
+    match len(tree):
+        case 2:
+            return get_Argument_list2(tree[1])
+        case 1:
+            return [tree[0]]
+        case 4:
+            return get_Argument_list2(tree[1]) + get_Argument_list2(tree[3])
 
 def get_TypeSize(type):
     return 8

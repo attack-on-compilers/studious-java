@@ -73,6 +73,15 @@ class TAC:
         self.table.append(["BeginFunction", label+ ":"])
         self.labels.append(label)
         return label
+    
+    def print_string(self, string):
+        self.table.append(["PrintString", string])
+    
+    def print_int(self, string):
+        self.table.append(["PrintInt", string])
+    
+    def print_newline(self):
+        self.table.append(["PrintNewline"])
 
     def tprint(self):
         for i in range(len(self.table)):
