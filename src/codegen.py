@@ -15,8 +15,7 @@ class Register:
     # registers for arguments
     argument_registers = dict(zip(map(str, range(6)), ["%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"]))
 
-    RIP_reg = None
-    RBP_reg = None
+    rbp = dict.fromkeys(["%rbp"], [None, 0])
     count = 0
     locations = dict()
 
@@ -59,22 +58,17 @@ class Register:
     def get_register(self, v=None):
         v = "".join(secrets.choice(string.ascii_lowercase) for _ in range(8)) if v is None else v
         instructions = []
-        if v in self.locations and self.locations[v][0] is not None:
-            reg = self.locations[v][0]
-            # self.regs[reg][1] = self.count
-            self.count = self.count + 1
-            return reg, []
-
         self.count = self.count + 1
         reg = self.lru_policy()
         # instructions = self.write_back([reg], True)
         self.regs[reg] = v, self.count
 
         if v not in self.locations:
-            self.locations[v] = [reg, "Tempo"]
-        else:
-            self.locations[v][0] = reg
-            instructions.append(f"  mov {self.locations[v][1]}, {reg}")
+            self.locations[v] = [reg, v]
+        #     self.locations[v] = [reg, "Tempo"]
+        # else:
+        self.locations[v][0] = reg
+        instructions.append(f"  mov {self.locations[v][1]}, {reg}")
         return reg, instructions
 
 
@@ -89,6 +83,7 @@ class ASM:
             ['=', '5', 'test_13_main_block1_x#56'],
             ['=', '6', 'test_13_main_block1_y#64'],
             ['+', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
+            ['-', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
             ['=', '__t_18#240', 'test_13_main_block1_z#72']
         ]
         # Loop through each TAC instruction
@@ -114,7 +109,7 @@ class ASM:
 
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg2}, {g}(%rbp)")
 
                 elif op == "-":
                     # Load arg1 into a register
@@ -132,7 +127,7 @@ class ASM:
                     instructions.append(f"  sub {reg1}, {reg2}")
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg2}, {g}(%rbp)")
 
                 elif op == "*":
                     # Load arg1 into a register
@@ -150,7 +145,7 @@ class ASM:
                     instructions.append(f"  imul {reg1}, {reg2}")
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg2}, {g}(%rbp)")
 
                 elif op == "/":
                     # Load arg1 into a register
@@ -167,7 +162,7 @@ class ASM:
                     # Divide the values and store the result in res
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg1}, {g}(%rbp)")
 
                     instructions.append(f"  cqo")
                     instructions.append(f"  idiv {reg2}")
@@ -188,7 +183,7 @@ class ASM:
                     # Divide the values and store the result in res
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg1}, {g}(%rbp)")
                     instructions.append(f"  cqo")
                     instructions.append(f"  idiv {reg2}")
                     # check completeness one more statement may be needded
@@ -312,7 +307,7 @@ class ASM:
                     
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg2}, {g}(%rbp)")
 
                 elif op == "||":
                     # Load arg1 into a register
@@ -330,7 +325,7 @@ class ASM:
                     
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg2}, {g}(%rbp)")
 
                 elif op == "^":
                     # Load arg1 into a register
@@ -347,7 +342,7 @@ class ASM:
                     instructions.append(f"  xor {reg1}, {reg2}")
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg2}, {g}(%rbp)")
 
                 elif op == ">>":
                     # Load arg1 into a register
@@ -363,9 +358,9 @@ class ASM:
 
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg1}, {g}(%rbp)")
 
-                    instructions.append(f"  shr {g}(%rbp), {reg2}")
+                    instructions.append(f"  shr {reg2}, {g}(%rbp)")
 
                 elif op == "<<":
                     # Load arg1 into a register
@@ -381,9 +376,9 @@ class ASM:
 
                     g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+                    instructions.append(f"  mov {reg1}, {g}(%rbp)")
 
-                    instructions.append(f"  shl {g}(%rbp), {reg2}")
+                    instructions.append(f"  shl {reg2}, {g}(%rbp)")
 
         self.instructions = instructions
 
