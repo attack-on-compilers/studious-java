@@ -79,6 +79,9 @@ class Register:
 
 
 class ASM:
+    def __init__(self):
+        self.instructions = []
+
     def tac_to_x86_mapping(self, tac):
         instructions = []
         reg = Register()
@@ -357,9 +360,17 @@ class ASM:
                     instructions.append(f"  mov {reg3}, {reg1}")
                     instructions.append(f"  shl {reg3}, {reg2}")
 
-        pprint(instructions)
+        self.instructions = instructions
 
+
+    def print(self):
+        for instruction in self.instructions:
+            print(instruction)
+    def fprint(self, file):
+        for instruction in self.instructions:
+            file.write(instruction + "\n")  
 
 if __name__ == "__main__":
     asm = ASM()
     asm.tac_to_x86_mapping(None)
+    asm.print()

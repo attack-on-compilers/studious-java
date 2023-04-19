@@ -1361,6 +1361,7 @@ def generate_tac(tree, begin="", end=""):
                 tac.pop_param(symbol_table.get_symbol_name(i[1].split("[")[0]))
             generate_tac(tree[2][1][2])
             clear_stack_mem()
+            tac.add_return()
             symbol_table.exit_scope()
         case "ConstructorDeclaration":
             constructorName = get_Name(tree[2][1])
@@ -1371,6 +1372,7 @@ def generate_tac(tree, begin="", end=""):
                 tac.pop_param(symbol_table.get_symbol_name(i[1]))
             generate_tac(tree[4])
             clear_stack_mem()
+            tac.add_return()
             symbol_table.exit_scope()
         case "Block":
             block_count += 1

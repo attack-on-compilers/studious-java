@@ -31,8 +31,11 @@ class TAC:
             self.table.append(["stackpoint++", size])
         self.table.append(["PushToStack", param])
 
-    def add_return(self, result):
-        self.table.append(["Return", result])
+    def add_return(self, result=None):
+        if result is not None:
+            self.table.append(["Return", result])
+        else:
+            self.table.append(["Return"])
 
     def cond_jump(self, cond, label):
         self.table.append(["CondJump", cond, label])
