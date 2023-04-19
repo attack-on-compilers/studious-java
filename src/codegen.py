@@ -64,7 +64,7 @@ class Register:
         self.regs[reg] = v, self.count
 
         if v not in self.locations:
-            self.locations[v] = [reg, v]
+            self.locations[v] = [reg, parse_tac_arg(v)]
         #     self.locations[v] = [reg, "Tempo"]
         # else:
         self.locations[v][0] = reg
@@ -72,7 +72,7 @@ class Register:
         return reg, instructions
 
 
-def parseTACfield(field):
+def parse_tac_arg(field):
     spl = field.split("#")
     if len(spl) == 1:
         return "#" + field
@@ -116,9 +116,8 @@ class GAS:
                     # Add the values and store the result in res
                     instructions.append(f"  add {reg1}, {reg2}")
 
-                    g = -1*(int)(t[3].split("#")[-1])
-
-                    instructions.append(f"  mov {reg2}, {g}(%rbp)")
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  mov {reg2}, {res}")
 
                 elif op == "-":
                     # Load arg1 into a register
@@ -152,9 +151,9 @@ class GAS:
 
                     # Multiply the values and store the result in res
                     instructions.append(f"  imul {reg1}, {reg2}")
-                    g = -1*(int)(t[3].split("#")[-1])
 
-                    instructions.append(f"  mov {reg2}, {g}(%rbp)")
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  mov {reg2}, {res}")
 
                 elif op == "/":
                     # Load arg1 into a register
