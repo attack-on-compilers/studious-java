@@ -166,9 +166,9 @@ def traverse_tree(tree):
             methodSignature += ")"
             method_sym_name = symbol_table.get_symbol_name(methodName)
             symbol_table.enter_scope(methodName)
-            offset = offset + [0]
-            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
-            offset[-1] = offset[-1] + 8
+            offset = offset + [-8]
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, offset[-1], [], 0, []))
+            offset[-1] = offset[-1] - 8
             for i in methodParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -184,7 +184,8 @@ def traverse_tree(tree):
                 symbol_table.add_symbol(
                     VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], newdims, [])
                 )
-                offset[-1] = offset[-1] + get_TypeSize(fieldType)
+                offset[-1] = offset[-1] - get_TypeSize(fieldType)
+            offset[-1] = 8
             traverse_tree(tree[2][1][2])
             symbol_table.current.parent.get_symbol(symbol_table.current.name.split(" ")[0]).size = offset[-1]
             symbol_table.exit_scope()
@@ -208,8 +209,8 @@ def traverse_tree(tree):
                 constructorSignature += i[0] + ","
             constructorSignature += ")"
             symbol_table.enter_scope(constructorName)
-            offset = offset + [0]
-            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, 0, [], 0, []))
+            offset = offset + [-8]
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, -8, [], 0, []))
             offset[-1] = offset[-1] + 8
             for i in constructorParams:
                 fieldModifiers = []
@@ -226,7 +227,8 @@ def traverse_tree(tree):
                 symbol_table.add_symbol(
                     VariableSymbol(i[1], fieldType, get_TypeSize(fieldType), offset[-1], [VariableScope.PARAMETER], newdims, [])
                 )
-                offset[-1] = offset[-1] + get_TypeSize(fieldType)
+                offset[-1] = offset[-1] - get_TypeSize(fieldType)
+            offset[-1] = 8
             traverse_tree(tree[4])
             symbol_table.current.parent.get_symbol(symbol_table.current.name.split(" ")[0]).size = offset[-1]
             symbol_table.exit_scope()
