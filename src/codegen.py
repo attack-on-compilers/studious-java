@@ -125,9 +125,12 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
+                    reg3, load3 = reg.get_register(res)
+                    instructions.extend(load3)
+
                     # Add the values and store the result in res
                     instructions.append(f"  add {reg1}, {reg2}")
-                    instructions.append(f"  mov {res}, {reg1}")
+                    instructions.append(f"  mov {reg3}, {reg1}")
 
                 elif op == "-":
                     # Load arg1 into a register
@@ -138,9 +141,86 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
+                    reg3, load3 = reg.get_register(res)
+                    instructions.extend(load3)
+
                     # Subtract the values and store the result in res
                     instructions.append(f"  sub {reg1}, {reg2}")
-                    instructions.append(f"  mov {res}, {reg1}")
+                    instructions.append(f"  mov {reg3}, {reg1}")
+
+                elif op == "*":
+
+                    # Load arg1 into a register
+                    reg1, load1 = reg.get_register(arg1)
+                    instructions.extend(load1)
+
+                    # Load arg2 into a register
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+
+                    reg3, load3 = reg.get_register(res)
+                    instructions.extend(load3)
+
+                    # Multiply the values and store the result in res
+                    instructions.append(f"  imul {reg1}, {reg2}")
+                    instructions.append(f"  mov {reg3}, {reg1}")
+
+                elif op == "/":
+
+                    # Load arg1 into a register
+                    reg1, load1 = reg.get_register(arg1)
+                    instructions.extend(load1)
+
+                    # Load arg2 into a register
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+
+                    reg3, load3 = reg.get_register(res)
+                    instructions.extend(load3)
+
+                    # Divide the values and store the result in res
+                    instructions.append(f"  mov {reg3}, {reg1}")
+                    instructions.append(f"  cqo")
+                    instructions.append(f"  idiv {reg2}")   
+                    #check completeness one more statement may be needded
+
+                elif op == "%":
+
+                    # Load arg1 into a register
+                    reg1, load1 = reg.get_register(arg1)
+                    instructions.extend(load1)
+
+                    # Load arg2 into a register
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+
+                    reg3, load3 = reg.get_register(res)
+                    instructions.extend(load3)
+
+                    # Divide the values and store the result in res
+                    instructions.append(f"  mov {reg3}, {reg1}")
+                    instructions.append(f"  cqo")
+                    instructions.append(f"  idiv {reg2}")
+                    #check completeness one more statement may be needded    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       
+
+
+
         pprint(instructions)
 
 
