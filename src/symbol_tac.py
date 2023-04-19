@@ -45,10 +45,7 @@ def generate_symbol_table(tree, args):
     sys.stdout = sys.__stdout__
     print("TAC generated: {}.txt".format(args.output))
 
-    # if args.verbose:
-        # print("Symbol Table:")
-        # symbol_table.tprint()
-        # print("Symbol Table generated again!")
+    return symbol_table, tac
 
 
 def traverse_tree(tree):
@@ -286,9 +283,7 @@ def traverse_tree(tree):
                     # if dims == 0:
                     newi = i[: i.find("[")]
                 symbol_table.add_symbol(
-                    VariableSymbol(
-                        newi, fieldType, typeSize, offset[-1], [], tempdims, arraydimensions[count]
-                    )
+                    VariableSymbol(newi, fieldType, typeSize, offset[-1], [], tempdims, arraydimensions[count])
                 )
                 offset[-1] = offset[-1] + typeSize
                 count += 1
@@ -881,7 +876,9 @@ def generate_tac(tree, begin="", end=""):
     global tac
     match tree[0]:
         case "VariableDeclarator":
-            if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type not in ["int", "float", "boolean", "char", "short", "long", "double", "byte"]:
+            if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(
+                get_Name(tree[1]).split("[")[0]
+            ).data_type not in ["int", "float", "boolean", "char", "short", "long", "double", "byte"]:
                 size = 8
             else:
                 size = get_TypeSize(symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).data_type)
@@ -907,16 +904,20 @@ def generate_tac(tree, begin="", end=""):
                 indices = get_Indices(tree[1])
                 sym_type = symbol_table.get_symbol(name).data_type
                 size = get_TypeSize(sym_type)
-                y = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size) 
-                symbol_table.add_symbol(VariableSymbol(y, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                y = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.add_symbol(
+                    VariableSymbol(y, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 tac.add3("=", 0, y)
                 x = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(x, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(x, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 for i in range(len(dimensions)):
                     tac.add3("=", indices[i], x)
-                    for j in range(i+1, len(dimensions)):
+                    for j in range(i + 1, len(dimensions)):
                         tac.add("*", x, dimensions[j], x)
                     tac.add("+", x, y, y)
                 tac.add("*", y, size, y)
@@ -954,7 +955,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -965,7 +968,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -976,7 +981,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -987,7 +994,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -998,7 +1007,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -1009,7 +1020,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -1020,7 +1033,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -1033,7 +1048,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -1044,7 +1061,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -1055,7 +1074,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 left = generate_tac(tree[1])
                 right = generate_tac(tree[3])
@@ -1066,14 +1087,18 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 right = generate_tac(tree[2])
                 tac.add3(tree[1], right, out)
                 return out
         case "PreIncrementExpression":
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             right = generate_tac(tree[2])
             tac.add("+", right, "1", right)
@@ -1081,7 +1106,9 @@ def generate_tac(tree, begin="", end=""):
             return out
         case "PreDecrementExpression":
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             right = generate_tac(tree[2])
             tac.add("-", right, "1", right)
@@ -1092,7 +1119,9 @@ def generate_tac(tree, begin="", end=""):
                 return generate_tac(tree[1])
             else:
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 right = generate_tac(tree[2])
                 tac.add3(tree[1], right, out)
@@ -1109,7 +1138,9 @@ def generate_tac(tree, begin="", end=""):
             return tree[1]
         case "ClassInstanceCreationExpression":
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             args = get_Argument_list(tree[4])
             classname = get_Name(tree[2])
@@ -1143,15 +1174,19 @@ def generate_tac(tree, begin="", end=""):
             sym_type = symbol_table.get_symbol(name).data_type
             size = get_TypeSize(sym_type)
             y = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(y, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(y, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             tac.add3("=", 0, y)
             x = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(x, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(x, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             for i in range(len(dimensions)):
                 tac.add3("=", indices[i], x)
-                for j in range(i+1, len(dimensions)):
+                for j in range(i + 1, len(dimensions)):
                     tac.add("*", x, dimensions[j], x)
                 tac.add("+", x, y, y)
             tac.add("*", y, size, y)
@@ -1168,7 +1203,9 @@ def generate_tac(tree, begin="", end=""):
             if len(tree) == 5:
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 args = get_Argument_list(tree[3])
                 sym = symbol_table.get_symbol(get_Name(tree[1]))
@@ -1191,7 +1228,9 @@ def generate_tac(tree, begin="", end=""):
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
                 funcname += "." + get_Name(tree[3])
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+                symbol_table.add_symbol(
+                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 args = get_Argument_list(tree[5])
                 sym = symbol_table.get_symbol(get_Name(tree[1]))
@@ -1210,7 +1249,9 @@ def generate_tac(tree, begin="", end=""):
                 return out
         case "ArrayCreationExpression":
             x = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(x, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(x, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             nelem = get_NumberOfElements(tree)
             sym_type = get_Type(tree[2])
@@ -1222,7 +1263,9 @@ def generate_tac(tree, begin="", end=""):
                 raise Exception("CastExpression only supported with PrimitiveType, recieved {}".format(tree[2][0]))
             ctype = get_Type(tree[2])
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             right = generate_tac(tree[5])
             tac.add3("cast_to_" + ctype, right, out)
@@ -1244,7 +1287,9 @@ def generate_tac(tree, begin="", end=""):
                 return
         case "PostIncrementExpression":
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             right = generate_tac(tree[1])
             tac.add3("=", right, out)
@@ -1252,7 +1297,9 @@ def generate_tac(tree, begin="", end=""):
             return out
         case "PostDecrementExpression":
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             right = generate_tac(tree[1])
             tac.add3("=", right, out)
@@ -1282,7 +1329,9 @@ def generate_tac(tree, begin="", end=""):
         case "IfThenElseStatementNoShortIf":
             cond = generate_tac(tree[3])
             notcond = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(notcond, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(notcond, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             tac.add3("!", cond, notcond)
             else_label = tac.gen_label()
@@ -1295,7 +1344,9 @@ def generate_tac(tree, begin="", end=""):
             tac.add_label(begin_label)
             cond = generate_tac(tree[3])
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             tac.add3("!", cond, out)
             tac.cond_jump(out, end_label)
@@ -1309,7 +1360,9 @@ def generate_tac(tree, begin="", end=""):
             tac.add_label(begin_label)
             cond = generate_tac(tree[5])
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             tac.add3("!", cond, out)
             tac.cond_jump(out, end_label)
@@ -1321,7 +1374,9 @@ def generate_tac(tree, begin="", end=""):
             cond = generate_tac(tree[3])
             end_label = tac.gen_label()
             notcond = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(notcond, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(notcond, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             tac.add3("!", cond, notcond)
             tac.cond_jump(notcond, end_label)
@@ -1347,7 +1402,9 @@ def generate_tac(tree, begin="", end=""):
             tac.add_label(begin_label)
             cond = generate_tac(tree[3])
             notcond = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(notcond, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(notcond, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             tac.add3("!", cond, notcond)
             tac.cond_jump(notcond, end_label)
@@ -1363,7 +1420,9 @@ def generate_tac(tree, begin="", end=""):
             tac.add_label(begin_label)
             cond = generate_tac(tree[5])
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             tac.add3("!", cond, out)
             tac.cond_jump(out, end_label)
@@ -1386,7 +1445,9 @@ def generate_tac(tree, begin="", end=""):
             tac.add_label(begin_label)
             cond = generate_tac(tree[5])
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
+            symbol_table.add_symbol(
+                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             tac.add3("!", cond, out)
             tac.cond_jump(out, end_label)

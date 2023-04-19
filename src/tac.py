@@ -45,7 +45,7 @@ class TAC:
         self.table.append(["Jump", label])
 
     def gen_label(self):
-        label = "L" + str(len(self.labels))
+        label = ".L" + str(len(self.labels))
         self.labels.append(label)
         return label
 
@@ -70,7 +70,7 @@ class TAC:
         return label
     
     def add_function(self, label):
-        self.table.append(["BeginFunction", label, ":"])
+        self.table.append(["BeginFunction", label+ ":"])
         self.labels.append(label)
         return label
 

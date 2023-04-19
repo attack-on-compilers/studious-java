@@ -72,22 +72,23 @@ class Register:
         return reg, instructions
 
 
-class ASM:
+class GAS:
     def __init__(self):
         self.instructions = []
 
     def tac_to_x86_mapping(self, tac):
         instructions = []
         reg = Register()
-        tac = [
-            ['=', '5', 'test_13_main_block1_x#56'],
-            ['=', '6', 'test_13_main_block1_y#64'],
-            ['+', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
-            ['-', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
-            ['=', '__t_18#240', 'test_13_main_block1_z#72']
-        ]
+        # tac = TAC()
+        # tac.table = [
+        #     ['=', '5', 'test_13_main_block1_x#56'],
+        #     ['=', '6', 'test_13_main_block1_y#64'],
+        #     ['+', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
+        #     ['-', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
+        #     ['=', '__t_18#240', 'test_13_main_block1_z#72']
+        # ]
         # Loop through each TAC instruction
-        for t in tac:
+        for t in tac.table:
             if len(t) == 4:
                 op, arg1, arg2, res = t[0], t[1], t[2], t[3]
 
@@ -380,10 +381,27 @@ class ASM:
 
                     instructions.append(f"  shl {reg2}, {g}(%rbp)")
 
+            if t[0] == "BeginFunction":
+                funcname = t[1][:-1]
+                instructions.append(t[1])
+                instructions.append("  pushq %rbp")
+                instructions.append("  movq %rsp, %rbp")
+                instructions.append(f"  subq ${tac.size[funcname]}, %rsp")
+            
+            if t[0] == "Return":
+                if len(t) == 2:
+                    reg1, load1 = reg.get_register(t[1])
+                    instructions.extend(load1)
+                    instructions.append(f"  mov {reg1}, %rax")
+                instructions.append("  leave")
+                instructions.append("  ret")
+            if len(t) == 1 and t[0][0] == "." and t[0][-1] == ":":
+                instructions.append(t[0])
+            
         self.instructions = instructions
 
 
-    def print(self):
+    def tprint(self):
         for instruction in self.instructions:
             print(instruction)
     def fprint(self, file):
@@ -391,6 +409,6 @@ class ASM:
             file.write(instruction + "\n")  
 
 if __name__ == "__main__":
-    asm = ASM()
+    asm = GAS()
     asm.tac_to_x86_mapping(None)
-    asm.print()
+    asm.tprint()

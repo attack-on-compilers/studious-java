@@ -7,7 +7,7 @@ all:
 	
 dev:
 	clear
-	python ./src/parse.py -i ./tests/test_$(ARG).java -o src/javao -v -a
+	python ./src/main.py -i ./tests/test_$(ARG).java -o src/javao -v -a
 
 dev-g: dev
 	dot -Tsvg src/javao.dot -o src/javao.svg
@@ -20,10 +20,7 @@ vgraph:
 	xdg-open src/ast.ps
 
 build:
-	gcc -c $(ARG).s -o $(ARG).o
-	gcc -o $(ARG) -no-pie $(ARG).o
-	./$(ARG)
-	rm -f $(ARG).o $(ARG)
+	gcc -c $(ARG).s -o $(ARG).o; gcc -o $(ARG) -no-pie $(ARG).o; ./$(ARG); rm -f $(ARG).o $(ARG)
 
 clean:
 	rm -rf src/__pycache__
