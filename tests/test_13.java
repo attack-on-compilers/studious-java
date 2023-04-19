@@ -15,6 +15,17 @@ public class test_13 {
         int a =10;
         int b = 5;
         int c = a+b+5+7;
+        int d = a/b;
+        int d1 = a%b;
+        if (a>b) {
+            int x = 5;
+            int y = 6;
+            int z = x+y;
+        } else {
+            int x = 5;
+            int y = 6;
+            int z = x+y;
+        }
     }
 }
 
