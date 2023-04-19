@@ -28,7 +28,7 @@ class TAC:
         self.table.append(["PopFromStack", param])
 
     def push_param(self, param, size=None):
-        if size is not None:
+        if size is not None and False: 
             self.table.append(["stackpoint++", size])
         self.table.append(["PushToStack", param])
 
@@ -53,6 +53,7 @@ class TAC:
         self.table.append(["allocmem", size, result_addr])
 
     def alloc_stack(self, size):
+        return
         self.table.append(["stackpoint++", size])
 
     def free_stack(self, size):
