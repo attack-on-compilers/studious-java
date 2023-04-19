@@ -63,7 +63,8 @@ class Register:
     def get_register(self, v=None):
 
         v = ''.join(secrets.choice(string.ascii_lowercase) for _ in range(8)) if v is None else v
-        
+        def tac_to_x86:
+        instructions = []
         if v in self.locations and self.locations[v][0] is not None:
             reg = self.locations[v][0]
             self.regs[reg][1] = self.count
@@ -86,7 +87,48 @@ class Register:
         
 
 
-#class ASM:
+class ASM:
+    def tac_to_x86_mapping(self, tac):
+        instructions = []
+        reg = Register()
+
+        # Loop through each TAC instruction
+        for t in tac:
+
+            if len(t) == 4:
+                op, arg1, arg2, res = t[0], t[1], t[2], t[3]
+
+                if op == "+":
+                    # Load arg1 into a register
+                    reg1, load1 = reg.get_register(arg1)
+                    instructions.extend(load1)
+
+                    # Load arg2 into a register
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+
+                    # Add the values and store the result in res
+                    instructions.append(f"\tadd {reg1}, {reg2}")
+                    instructions.append(f"\tmov {res}, {reg1}")
+
+                elif op == "-":
+                    # Load arg1 into a register
+                    reg1, load1 = reg.get_register(arg1)
+                    instructions.extend(load1)
+
+                    # Load arg2 into a register
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+
+                    # Subtract the values and store the result in res
+                    instructions.append(f"\tsub {reg1}, {reg2}")
+                    instructions.append(f"\tmov {res}, {reg1}")
+
+
+
+        
+
+    
 
 
 
