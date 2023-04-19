@@ -55,3 +55,6 @@ if __name__ == "__main__":
         gas.tac_to_x86_mapping(tac)
 
         gas.tprint()
+
+        with open("output.s", "w") as f:
+            gas.fprint(f)

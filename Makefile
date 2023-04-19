@@ -8,6 +8,8 @@ all:
 dev:
 	clear
 	python ./src/main.py -i ./tests/test_$(ARG).java -o src/javao -v -a
+	make build ARG=output
+	
 
 dev-g: dev
 	dot -Tsvg src/javao.dot -o src/javao.svg
