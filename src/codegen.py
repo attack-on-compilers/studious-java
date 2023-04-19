@@ -92,24 +92,24 @@ class ASM:
         instructions = []
         reg = Register()
         tac = [['test_13:'],
-['BeginFunction', 'test_13_main:'],
-['PopFromStack', 'test_13_main_args'],
-['stackpoint++', 8],
-['=', '10', 'test_13_main_a'],
-['stackpoint++', 8],
-['=', '5', 'test_13_main_b'],
-['stackpoint++', 8],
-['-', 'test_13_main_a', 'test_13_main_b', '__t_3'],
-['+', '__t_3', '5', '__t_2'],
-['-', '__t_2', '7', '__t_1'],
-['=', '__t_1', 'test_13_main_c'],
-['stackpoint--', 40],
-['stackpoint--', 16],
-['myClass:'],
-['stackpoint++', 8],
-['stackpoint++', 8],
-['stackpoint++', 8],
-['stackpoint--', 56]]
+               ['BeginFunction', 'test_13_main:'],
+               ['PopFromStack', 'test_13_main_args'],
+               ['stackpoint++', 8],
+               ['=', '10', 'test_13_main_a'],
+               ['stackpoint++', 8],
+               ['=', '5', 'test_13_main_b'],
+               ['stackpoint++', 8],
+               ['-', 'test_13_main_a', 'test_13_main_b', '__t_3'],
+               ['+', '__t_3', '5', '__t_2'],
+               ['-', '__t_2', '7', '__t_1'],
+               ['=', '__t_1', 'test_13_main_c'],
+               ['stackpoint--', 40],
+               ['stackpoint--', 16],
+               ['myClass:'],
+               ['stackpoint++', 8],
+               ['stackpoint++', 8],
+               ['stackpoint++', 8],
+               ['stackpoint--', 56]]
         # Loop through each TAC instruction
         for t in tac:
 

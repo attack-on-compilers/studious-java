@@ -281,6 +281,16 @@ class RootSymbolTable:
                 return sym.return_type
             current_sym = current_sym.parent
         raise Exception("Method symbol not found")
+    
+    def get_method_symbol_table(self):
+        current_sym = self.current
+        while current_sym is not None:
+            cur_sym_tab_name = current_sym.name[:-13]
+            sym = self.get_symbol(cur_sym_tab_name)
+            if sym.symbol_type == "method":
+                return sym
+            current_sym = current_sym.parent
+        raise Exception("Class symbol not found")
 
     def tprint(self):
         self.root.tprint(0)

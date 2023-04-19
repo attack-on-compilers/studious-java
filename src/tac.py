@@ -64,10 +64,9 @@ class TAC:
         self.labels.append(label)
         return label
     
-    def add_function(self, label=""):
-        if not label:
-            label = "L" + str(len(self.labels))
-        self.table.append(["BeginFunction", label + ":"])
+    def add_function(self, label, size):
+        self.table.append([label + ":"])
+        self.table.append(["BeginFunction", size]) # size is the size of the stack frame
         self.labels.append(label)
         return label
 
