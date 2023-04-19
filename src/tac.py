@@ -69,7 +69,7 @@ class TAC:
         self.labels.append(label)
         return label
     
-    def add_function(self, label, size):
+    def add_function(self, label):
         self.table.append(["BeginFunction", label, ":"])
         self.labels.append(label)
         return label

@@ -1427,7 +1427,7 @@ def generate_tac(tree, begin="", end=""):
                 methodParams = get_Parameters(tree[1][3][3])
             method_sym_name = symbol_table.get_symbol_name(methodName)
             size = symbol_table.current.get_symbol(methodName).size
-            tac.add_function(method_sym_name,size)
+            tac.add_function(method_sym_name)
             symbol_table.enter_scope(methodName)
             for i in methodParams:
                 tac.pop_param(symbol_table.get_symbol_name(i[1].split("[")[0]))
