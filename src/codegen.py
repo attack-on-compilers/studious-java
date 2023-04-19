@@ -65,14 +65,14 @@ class Register:
 
         if v not in self.locations:
             self.locations[v] = [reg, parse_tac_arg(v)]
-        #     self.locations[v] = [reg, "Tempo"]
-        # else:
         self.locations[v][0] = reg
         instructions.append(f"  mov {self.locations[v][1]}, {reg}")
         return reg, instructions
 
 
 def parse_tac_arg(field):
+    if type(field) == int:
+        return f"#{field}"
     spl = field.split("#")
     if len(spl) == 1:
         return "#" + field
