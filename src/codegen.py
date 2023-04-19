@@ -8,7 +8,8 @@ import secrets
 
 class Register:
     # these registers mapped to None and 0 initially (for no initial stored values and start time)
-    regs = dict.fromkeys(['%rbx', '%r10', '%r11', '%r12', '%r13', '%r14', '%r15'], [None, 0])
+    regs = dict.fromkeys(['%rbx', '%r10', '%r11', '%r12', '%r13', '%r14'], [None, 0])
+    heap_reg = dict.fromkeys(['%r15'], [None, 0])
 
     #registers for arguments
     argument_registers = dict(
@@ -63,7 +64,6 @@ class Register:
     def get_register(self, v=None):
 
         v = ''.join(secrets.choice(string.ascii_lowercase) for _ in range(8)) if v is None else v
-        def tac_to_x86:
         instructions = []
         if v in self.locations and self.locations[v][0] is not None:
             reg = self.locations[v][0]
@@ -73,14 +73,14 @@ class Register:
         
         self.count = self.count + 1
         reg = self.lru_policy()
-        instructions = self.write_back([reg], True)
+        # instructions = self.write_back([reg], True)
         self.regs[reg] = v, self.count
 
         if v not in self.locations:
             self.locations[v] = [reg, 'Tempo']
         else:
             self.locations[v][0] = reg
-            instructions.append(f"\tmov {self.locations[v][1]}, {reg}")
+            instructions.append(f"  mov {self.locations[v][1]}, {reg}")
         return reg, instructions
 
 
@@ -91,7 +91,25 @@ class ASM:
     def tac_to_x86_mapping(self, tac):
         instructions = []
         reg = Register()
-
+        tac = [['test_13:'],
+['BeginFunction', 'test_13_main:'],
+['PopFromStack', 'test_13_main_args'],
+['stackpoint++', 8],
+['=', '10', 'test_13_main_a'],
+['stackpoint++', 8],
+['=', '5', 'test_13_main_b'],
+['stackpoint++', 8],
+['+', 'test_13_main_a', 'test_13_main_b', '__t_3'],
+['+', '__t_3', '5', '__t_2'],
+['+', '__t_2', '7', '__t_1'],
+['=', '__t_1', 'test_13_main_c'],
+['stackpoint--', 40],
+['stackpoint--', 16],
+['myClass:'],
+['stackpoint++', 8],
+['stackpoint++', 8],
+['stackpoint++', 8],
+['stackpoint--', 56]]
         # Loop through each TAC instruction
         for t in tac:
 
@@ -108,8 +126,8 @@ class ASM:
                     instructions.extend(load2)
 
                     # Add the values and store the result in res
-                    instructions.append(f"\tadd {reg1}, {reg2}")
-                    instructions.append(f"\tmov {res}, {reg1}")
+                    instructions.append(f"  add {reg1}, {reg2}")
+                    instructions.append(f"  mov {res}, {reg1}")
 
                 elif op == "-":
                     # Load arg1 into a register
@@ -121,12 +139,15 @@ class ASM:
                     instructions.extend(load2)
 
                     # Subtract the values and store the result in res
-                    instructions.append(f"\tsub {reg1}, {reg2}")
-                    instructions.append(f"\tmov {res}, {reg1}")
+                    instructions.append(f"  sub {reg1}, {reg2}")
+                    instructions.append(f"  mov {res}, {reg1}")
+        pprint(instructions)
 
 
 
-        
+if __name__ == "__main__":
+    asm = ASM()
+    asm.tac_to_x86_mapping(None)
 
     
 

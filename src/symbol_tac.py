@@ -1355,7 +1355,7 @@ def generate_tac(tree, begin="", end=""):
             if len(tree[1][3]) == 5:
                 methodParams = get_Parameters(tree[1][3][3])
             method_sym_name = symbol_table.get_symbol_name(methodName)
-            tac.add_label(method_sym_name)
+            tac.add_function(method_sym_name)
             symbol_table.enter_scope(methodName)
             for i in methodParams:
                 tac.pop_param(symbol_table.get_symbol_name(i[1].split("[")[0]))
@@ -1365,7 +1365,7 @@ def generate_tac(tree, begin="", end=""):
         case "ConstructorDeclaration":
             constructorName = get_Name(tree[2][1])
             constructorParams = get_Parameters(tree[2][3])
-            tac.add_label(symbol_table.get_symbol_name(constructorName))
+            tac.add_function(symbol_table.get_symbol_name(constructorName))
             symbol_table.enter_scope(constructorName)
             for i in constructorParams:
                 tac.pop_param(symbol_table.get_symbol_name(i[1]))

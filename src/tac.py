@@ -63,6 +63,13 @@ class TAC:
         self.table.append([label + ":"])
         self.labels.append(label)
         return label
+    
+    def add_function(self, label=""):
+        if not label:
+            label = "L" + str(len(self.labels))
+        self.table.append(["BeginFunction", label + ":"])
+        self.labels.append(label)
+        return label
 
     def tprint(self):
         for i in range(len(self.table)):
