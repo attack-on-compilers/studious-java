@@ -86,25 +86,10 @@ class ASM:
         instructions = []
         reg = Register()
         tac = [
-            ["test_13:"],
-            ["BeginFunction", "test_13_main:"],
-            ["PopFromStack", "test_13_main_args"],
-            ["stackpoint++", 8],
-            ["=", "10", "test_13_main_a"],
-            ["stackpoint++", 8],
-            ["=", "5", "test_13_main_b"],
-            ["stackpoint++", 8],
-            ["-", "test_13_main_a", "test_13_main_b", "__t_3"],
-            ["+", "__t_3", "5", "__t_2"],
-            ["-", "__t_2", "7", "__t_1"],
-            ["=", "__t_1", "test_13_main_c"],
-            ["stackpoint--", 40],
-            ["stackpoint--", 16],
-            ["myClass:"],
-            ["stackpoint++", 8],
-            ["stackpoint++", 8],
-            ["stackpoint++", 8],
-            ["stackpoint--", 56],
+            ['=', '5', 'test_13_main_block1_x#56'],
+            ['=', '6', 'test_13_main_block1_y#64'],
+            ['+', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
+            ['=', '__t_18#240', 'test_13_main_block1_z#72']
         ]
         # Loop through each TAC instruction
         for t in tac:
@@ -120,12 +105,16 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
+                    
                     # Add the values and store the result in res
                     instructions.append(f"  add {reg1}, {reg2}")
-                    instructions.append(f"  mov {reg3}, {reg1}")
+
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
 
                 elif op == "-":
                     # Load arg1 into a register
@@ -136,12 +125,14 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     # Subtract the values and store the result in res
                     instructions.append(f"  sub {reg1}, {reg2}")
-                    instructions.append(f"  mov {reg3}, {reg1}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
 
                 elif op == "*":
                     # Load arg1 into a register
@@ -152,12 +143,14 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     # Multiply the values and store the result in res
                     instructions.append(f"  imul {reg1}, {reg2}")
-                    instructions.append(f"  mov {reg3}, {reg1}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
 
                 elif op == "/":
                     # Load arg1 into a register
@@ -168,11 +161,14 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     # Divide the values and store the result in res
-                    instructions.append(f"  mov {reg3}, {reg1}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+
                     instructions.append(f"  cqo")
                     instructions.append(f"  idiv {reg2}")
                     # check completeness one more statement may be needded
@@ -186,11 +182,13 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     # Divide the values and store the result in res
-                    instructions.append(f"  mov {reg3}, {reg1}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
                     instructions.append(f"  cqo")
                     instructions.append(f"  idiv {reg2}")
                     # check completeness one more statement may be needded
@@ -204,11 +202,14 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  cmp {reg1}, {reg2}")
-                    instructions.append(f"  setg {reg3}")
+
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  setg {g}(%rbp)")
 
                 elif op == "<":
                     # Load arg1 into a register
@@ -219,11 +220,13 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  cmp {reg1}, {reg2}")
-                    instructions.append(f"  setl {reg3}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  setl {g}(%rbp)")
 
                 elif op == ">=":
                     # Load arg1 into a register
@@ -234,11 +237,13 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  cmp {reg1}, {reg2}")
-                    instructions.append(f"  setge {reg3}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  setge {g}(%rbp)")
 
                 elif op == "<=":
                     # Load arg1 into a register
@@ -249,11 +254,13 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  cmp {reg1}, {reg2}")
-                    instructions.append(f"  setle {reg3}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  setle {g}(%rbp)")
 
                 elif op == "==":
                     # Load arg1 into a register
@@ -264,11 +271,13 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  cmp {reg1}, {reg2}")
-                    instructions.append(f"  sete {reg3}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  sete {g}(%rbp)")
 
                 elif op == "!=":
                     # Load arg1 into a register
@@ -279,11 +288,13 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  cmp {reg1}, {reg2}")
-                    instructions.append(f"  setne {reg3}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  setne {g}(%rbp)")
 
                 elif op == "&&":
                     # Load arg1 into a register
@@ -294,11 +305,14 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  and {reg1}, {reg2}")
-                    instructions.append(f"  mov {reg3}, {reg1}")
+                    
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
 
                 elif op == "||":
                     # Load arg1 into a register
@@ -309,11 +323,14 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  or {reg1}, {reg2}")
-                    instructions.append(f"  mov {reg3}, {reg1}")
+                    
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
 
                 elif op == "^":
                     # Load arg1 into a register
@@ -324,11 +341,13 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
                     instructions.append(f"  xor {reg1}, {reg2}")
-                    instructions.append(f"  mov {reg3}, {reg1}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
 
                 elif op == ">>":
                     # Load arg1 into a register
@@ -339,11 +358,14 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
-                    instructions.append(f"  mov {reg3}, {reg1}")
-                    instructions.append(f"  shr {reg3}, {reg2}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+
+                    instructions.append(f"  shr {g}(%rbp), {reg2}")
 
                 elif op == "<<":
                     # Load arg1 into a register
@@ -354,11 +376,14 @@ class ASM:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    reg3, load3 = reg.get_register(res)
-                    instructions.extend(load3)
+                    # reg3, load3 = reg.get_register(res)
+                    # instructions.extend(load3)
 
-                    instructions.append(f"  mov {reg3}, {reg1}")
-                    instructions.append(f"  shl {reg3}, {reg2}")
+                    g = -1*(int)(t[3].split("#")[-1])
+
+                    instructions.append(f"  mov {g}(%rbp), {reg1}")
+
+                    instructions.append(f"  shl {g}(%rbp), {reg2}")
 
         self.instructions = instructions
 
