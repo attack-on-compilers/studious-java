@@ -14,7 +14,7 @@ public class test_13 {
         // int x = a[0] + a[1];
         int a =10;
         int b = 5;
-        int c = a+b+5+7;
+        int c = a+b+5+7+5+5+5+5+5+5+5+5+5+5+5;
         int d = a/b;
         int d1 = a%b;
         if (a>b) {

@@ -9,6 +9,7 @@ class GoGo {
     
 	GoGo(String name, int id)
 	{ 
+		// this.a=a+'a';
         float x = (float) id;
 		this.name =name;
 		System.out.println("Constructor called");
@@ -18,6 +19,7 @@ class GoGo {
 	public static void main(String[] args)
 	{
 		int n=10,m=5;
+		// this.a="Yo";
 		GoGo a = new GoGo("Apple",5);
         int app[][][][] = new int[m][6][n][8], c[][], d, e[][][][]=new int[5][n][][], f[][]=new int[5][6], g[]=new int[7777];
 		f[1][5]= 5;
