@@ -83,9 +83,18 @@ def parse_tac_arg(field):
     offset = -1 * offset
     return f"{offset}(%rbp)"
 
+
 class GAS:
     def __init__(self):
         self.instructions = []
+        self.constants = [".LC0:", '  .string "%d"', ".LC1:", '  .string "\\n"']
+
+    def add_constant(self, c):
+        label = f".LC{len(self.constants) // 2}"
+        self.constants.append(label + ":")
+        self.constants.append(f'  .string {c}')
+        return label
+
 
     def tac_to_x86_mapping(self, tac):
         instructions = []
@@ -115,7 +124,6 @@ class GAS:
                     # reg3, load3 = reg.get_register(res)
                     # instructions.extend(load3)
 
-                    
                     # Add the values and store the result in res
                     instructions.append(f"  addq {reg1}, {reg2}")
 
@@ -134,7 +142,6 @@ class GAS:
                     # reg3, load3 = reg.get_register(res)
                     # instructions.extend(load3)
 
-                    
                     # Add the values and store the result in res
                     instructions.append(f"  subq {reg1}, {reg2}")
 
@@ -142,12 +149,11 @@ class GAS:
                     instructions.append(f"  movq {reg2}, {res}")
 
                 elif op == "*":
-
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
 
                     # Multiply the values and store the result in res
                     instructions.append(f"  imulq {parse_tac_arg(arg2)}, %rax")
-                    
+
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
@@ -165,8 +171,6 @@ class GAS:
 
                     # Divide the values and store the result in res
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
-
-                   
 
                     instructions.append(f"  cqto")
                     instructions.append(f"  idivq {parse_tac_arg(arg2)}")
@@ -256,7 +260,7 @@ class GAS:
                 #     # instructions.extend(load3)
 
                 #     instructions.append(f"  and {reg1}, {reg2}")
-                    
+
                 #     g = -1*(int)(t[3].split("#")[-1])
 
                 #     instructions.append(f"  mov {reg2}, {g}(%rbp)")
@@ -274,7 +278,7 @@ class GAS:
                 #     # instructions.extend(load3)
 
                 #     instructions.append(f"  or {reg1}, {reg2}")
-                    
+
                 #     g = -1*(int)(t[3].split("#")[-1])
 
                 #     instructions.append(f"  mov {reg2}, {g}(%rbp)")
@@ -342,7 +346,7 @@ class GAS:
                 instructions.append("  pushq %rbp")
                 instructions.append("  movq %rsp, %rbp")
                 instructions.append(f"  subq ${tac.size[funcname]}, %rsp")
-            
+
             if t[0] == "Return":
                 if len(t) == 2:
                     reg1, load1 = reg.get_register(t[1])
@@ -360,19 +364,40 @@ class GAS:
                 instructions.append(f"  call {t[1]}")
             if t[0] == "addrsp":
                 instructions.append(f"  addq ${t[1]}, %rsp")
-            
+            if t[0] == "PrintNewline":
+                instructions.append(f"  movq $.LC1, %rdi")
+                instructions.append(f"  movl $0, %eax")
+                instructions.append(f"  call printf")
+            if t[0] == "PrintInt":
+                reg1, load = reg.get_register(t[1])
+                instructions.extend(load)
+                instructions.append(f"  movq {reg1}, %rsi")
+                instructions.append(f"  movq $.LC0, %rdi")
+                instructions.append(f"  movl $0, %eax")
+                instructions.append(f"  call printf")
+            if t[0] == "PrintString":
+                lc = self.add_constant(t[1])
+                instructions.append(f"  movq ${lc}, %rdi")
+                instructions.append(f"  movl $0, %eax")
+                instructions.append(f"  call printf")
+
+
         self.instructions = instructions
 
-
     def tprint(self):
+        for constant in self.constants:
+            print(constant)
         for instruction in self.instructions:
             print(instruction)
+
     def fprint(self, file):
+        for constant in self.constants:
+            file.write(constant + "\n")
         for instruction in self.instructions:
-            file.write(instruction + "\n")  
+            file.write(instruction + "\n")
+
 
 if __name__ == "__main__":
     asm = GAS()
     asm.tac_to_x86_mapping(None)
     asm.tprint()
-
