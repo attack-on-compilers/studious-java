@@ -72,6 +72,14 @@ class Register:
         return reg, instructions
 
 
+def parseTACfield(field):
+    spl = field.split("#")
+    if len(spl) == 1:
+        return "#" + field
+    offset = int(spl[1])
+    offset = -1 * offset
+    return f"{offset}(%rbp)"
+
 class GAS:
     def __init__(self):
         self.instructions = []

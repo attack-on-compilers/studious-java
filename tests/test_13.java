@@ -27,6 +27,11 @@ public class test_13 {
             int z = x+y;
         }
     }
+
+    int sexy(int a, int b) {
+        int c = a+b;
+        return c;
+    }
 }
 
 class myClass {
