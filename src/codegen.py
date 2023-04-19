@@ -400,8 +400,9 @@ class GAS:
                     reg1, load1 = reg.get_register(t[1])
                     instructions.extend(load1)
                     instructions.append(f"  mov {reg1}, %rax")
-                instructions.append("  leave")
-                instructions.append("  ret")
+                else:
+                    instructions.append("  leave")
+                    instructions.append("  ret")
             if len(t) == 1 and t[0][0] == "." and t[0][-1] == ":":
                 instructions.append(t[0])
             
