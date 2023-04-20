@@ -269,6 +269,54 @@ class GAS:
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
+                elif op == ">>":
+
+                    reg1, load1 = reg.get_register(arg2, "%rax")
+                    instructions.extend(load1)
+
+                    instructions.append(f"  movl %eax, %edx")
+
+                    reg2, load2 = reg.get_register(arg1, "%rax")
+                    instructions.extend(load2)
+
+                    instructions.append(f"  movl %edx, %ecx")
+
+                    instructions.append(f"  sarq %cl, %rax")
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  movq %rax, {res}")
+
+                elif op == "<<":
+
+                    reg1, load1 = reg.get_register(arg2, "%rax")
+                    instructions.extend(load1)
+
+                    instructions.append(f"  movl %eax, %edx")
+
+                    reg2, load2 = reg.get_register(arg1, "%rax")
+                    instructions.extend(load2)
+
+                    instructions.append(f"  movl %edx, %ecx")
+
+                    instructions.append(f"  salq %cl, %rax")
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  movq %rax, {res}") 
+
+                elif op ==">>>":
+                    #have to check once    
+                    reg1, load1 = reg.get_register(arg2, "%rax")
+                    instructions.extend(load1)
+
+                    instructions.append(f"  movl %eax, %edx")
+
+                    reg2, load2 = reg.get_register(arg1, "%rax")
+                    instructions.extend(load2)
+
+                    instructions.append(f"  movl %edx, %ecx")
+
+                    instructions.append(f"  shrq %cl, %rax")
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  movq %rax, {res}")           
+
             if t[0] == "BeginFunction":
                 funcname = t[1][:-1]
                 if funcname.endswith("main"):
