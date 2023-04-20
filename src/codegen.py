@@ -195,7 +195,7 @@ class GAS:
                     # reg3, load3 = reg.get_register(res)
                     # instructions.extend(load3)
 
-                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setg %al")
                     instructions.append(f"  movzbl %al, %eax")
@@ -204,7 +204,7 @@ class GAS:
 
                 elif op == "<":
                     # Load arg1 into a register
-                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setl %al")
                     instructions.append(f"  movzbl %al, %eax")
@@ -212,7 +212,7 @@ class GAS:
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == ">=":
-                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setge %al")
                     instructions.append(f"  movzbl %al, %eax")
@@ -220,7 +220,7 @@ class GAS:
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == "<=":
-                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setle %al")
                     instructions.append(f"  movzbl %al, %eax")
@@ -228,7 +228,7 @@ class GAS:
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == "==":
-                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  sete %al")
                     instructions.append(f"  movzbl %al, %eax")
@@ -236,7 +236,7 @@ class GAS:
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == "!=":
-                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setne %al")
                     instructions.append(f"  movzbl %al, %eax")
