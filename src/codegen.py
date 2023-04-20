@@ -151,23 +151,47 @@ class GAS:
 
                 elif op == "/":
                     # Divide the values and store the result in res
-                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+
+                    reg1, load1 = reg.get_register(arg1, "%rax")
+                    instructions.extend(load1)
+                    
+                    #instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
 
                     instructions.append(f"  cqto")
-                    instructions.append(f"  idivq {parse_tac_arg(arg2)}")
+
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+
+                    instructions.append(f"  idivq {reg2}")
                     res = parse_tac_arg(t[3])
+
                     instructions.append(f"  movq %rax, {res}")
                     # check completeness one more statement may be needded
 
                 elif op == "%":
                     # Load arg1 into a register
-                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    # instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    # instructions.append(f"  cqto")
+                    # instructions.append(f"  idivq {parse_tac_arg(arg2)}")
+                    # res = parse_tac_arg(t[3])
+
+
+                    reg1, load1 = reg.get_register(arg1, "%rax")
+                    instructions.extend(load1)
+                    
+                    #instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+
                     instructions.append(f"  cqto")
-                    instructions.append(f"  idivq {parse_tac_arg(arg2)}")
+
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+
+                    instructions.append(f"  idivq {reg2}")
                     res = parse_tac_arg(t[3])
+
+
                     instructions.append(f"  movq %rdx, {res}")
                     # check completeness one more statement may be needded
-
                 elif op == ">":
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg2)}, %rax")
