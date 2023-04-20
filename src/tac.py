@@ -60,6 +60,7 @@ class TAC:
         self.table.append(["stackpoint++", size])
 
     def free_stack(self, size):
+        return
         self.table.append(["stackpoint--", size])
 
     def add_entry(self, entry):

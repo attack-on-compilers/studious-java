@@ -389,7 +389,7 @@ class GAS:
                 instructions.append(f"  movq %rax, {parse_tac_arg(t[3])}")
             if t[0] == "fprintf":
                 lc = self.add_constant(t[2])
-                lent = len(t[2][1:-1])
+                lent = len(t[2]) - t[2].count("\\") + t[2].count("\\\\")  - 2;
                 instructions.append(f"  movq {parse_tac_arg(t[1])}, %rax")
                 instructions.append(f"  movq %rax, %rcx")
                 instructions.append(f"  movl ${lent}, %edx")
@@ -401,6 +401,10 @@ class GAS:
                 instructions.append(f"  movq %rax, %rdi")
                 instructions.append(f"  call fclose")
                 instructions.append(f"  movl $0, %eax")
+            if t[0] == "=":
+                reg1, load1 = reg.get_register(t[1])
+                instructions.extend(load1)
+                instructions.append(f"  movq {reg1}, {parse_tac_arg(t[2])}")
 
         self.instructions = instructions
 
