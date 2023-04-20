@@ -24,9 +24,6 @@ class Register:
 
     last_byte_map = dict(zip(super_registers, sub_registers))
 
-    def __init__(self):
-        print("Hola!")
-
     def lru_policy(self):
         ## use the lru policy
         # get the register with the least recent use
@@ -201,7 +198,7 @@ class GAS:
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setg %al")
-                    instructions.append(f"  movzbl %eax")
+                    instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
@@ -210,7 +207,7 @@ class GAS:
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setl %al")
-                    instructions.append(f"  movzbl %eax")
+                    instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
@@ -218,7 +215,7 @@ class GAS:
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setge %al")
-                    instructions.append(f"  movzbl %eax")
+                    instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
@@ -226,7 +223,7 @@ class GAS:
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setle %al")
-                    instructions.append(f"  movzbl %eax")
+                    instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
@@ -234,7 +231,7 @@ class GAS:
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  sete %al")
-                    instructions.append(f"  movzbl %eax")
+                    instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
@@ -242,7 +239,7 @@ class GAS:
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
                     instructions.append(f"  setne %al")
-                    instructions.append(f"  movzbl %eax")
+                    instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
@@ -389,7 +386,7 @@ class GAS:
                 instructions.append(f"  movq %rax, {parse_tac_arg(t[3])}")
             if t[0] == "fprintf":
                 lc = self.add_constant(t[2])
-                lent = len(t[2]) - t[2].count("\\") + t[2].count("\\\\")  - 2;
+                lent = len(t[2]) - t[2].count("\\") + t[2].count("\\\\") - 2
                 instructions.append(f"  movq {parse_tac_arg(t[1])}, %rax")
                 instructions.append(f"  movq %rax, %rcx")
                 instructions.append(f"  movl ${lent}, %edx")

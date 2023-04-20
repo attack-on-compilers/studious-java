@@ -1,6 +1,6 @@
 // If else statements
 private class TestIfElse {
-    public void calculateGrade(int score) {
+    public void main(int score) {
         int x=10;
         // z =x; Need to sort
         if (score >= 90)

@@ -52,9 +52,14 @@ if __name__ == "__main__":
 
         gas = GAS()
 
+        print("Generating x86 Mapping")
         gas.tac_to_x86_mapping(tac)
 
-        gas.tprint()
+        if args.verbose:
+            print("x86 Assembly:")
+            gas.tprint()
 
         with open("output.s", "w") as f:
             gas.fprint(f)
+
+        print("x86 Assembly written to output.s")
