@@ -140,6 +140,33 @@ class GAS:
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
+                elif op == "&":
+
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+
+                    instructions.append(f"  andq {parse_tac_arg(arg2)}, %rax")
+
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  movq %rax, {res}")  
+
+                elif op == "|":
+
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+
+                    instructions.append(f"  orq {parse_tac_arg(arg2)}, %rax")
+
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  movq %rax, {res}")  
+
+                elif op == "^":
+
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+
+                    instructions.append(f"  xorq {parse_tac_arg(arg2)}, %rax")
+
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  movq %rax, {res}")              
+
                 elif op == "*":
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
 
@@ -320,7 +347,12 @@ class GAS:
             if t[0] == "+=":
                 reg1, load1 = reg.get_register(t[1])
                 instructions.extend(load1)
-                instructions.append(f"  addq {reg1}, {parse_tac_arg(t[2])}")   
+                instructions.append(f"  addq {reg1}, {parse_tac_arg(t[2])}")  
+
+            if t[0] == "&=":
+                reg1, load1 = reg.get_register(t[1])
+                instructions.extend(load1)
+                instructions.append(f"  andq {reg1}, {parse_tac_arg(t[2])}")       
 
             if t[0] == "-=":
                 reg1, load1 = reg.get_register(t[1])
@@ -365,7 +397,16 @@ class GAS:
                 instructions.append(f"  idivq {reg2}")
                 res = parse_tac_arg(t[2])
 
-                instructions.append(f"  movq %rdx, {res}")         
+                instructions.append(f"  movq %rdx, {res}")    
+
+            if t[0] == "~":
+
+                instructions.append(f"  movq {parse_tac_arg(t[1])}, %rax")
+
+                instructions.append(f"  notq %rax")
+
+                res = parse_tac_arg(t[2])
+                instructions.append(f"  movq %rax, {res}")            
 
             if t[0] == "allocmem":
                 instructions.append(f"  movl ${t[1]}, %edi")
