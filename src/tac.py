@@ -28,6 +28,7 @@ class TAC:
         self.table.append(["=", "stackpoint", "basepoint"])
 
     def pop_param(self, param):
+        return
         self.table.append(["PopFromStack", param])
 
     def push_param(self, param, size=None):

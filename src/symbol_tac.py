@@ -1217,15 +1217,18 @@ def generate_tac(tree, begin="", end=""):
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 if funcname == "System.out.println" or funcname == "System.out.print":
                     args = get_Argument_list2(tree[3])
-                    for arg in args:
-                        if arg[0] == '"':
-                            tac.print_string(arg)
-                        else:
-                            try:
-                                intcast = int(arg)
-                                tac.print_int(intcast)
-                            except:
-                                tac.print_int(symbol_table.get_symbol_name(arg))
+                    if args is not None and len(args) > 0:
+                        for arg in args:
+                            if len(arg) == 0:
+                                continue
+                            if arg[0] == '"':
+                                tac.print_string(arg)
+                            else:
+                                try:
+                                    intcast = int(arg)
+                                    tac.print_int(intcast)
+                                except:
+                                    tac.print_int(symbol_table.get_symbol_name(arg))
                     if funcname == "System.out.println":
                         tac.print_newline()
                     return out
