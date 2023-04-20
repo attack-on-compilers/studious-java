@@ -92,6 +92,13 @@ class GAS:
     def __init__(self):
         self.x86instructions = []
         self.constants = [".LC0:", '  .string "%d"', ".LC1:", '  .string "\\n"']
+        self.rel_labels = [".LR0"]
+
+    
+    def gen_rel_label(self):
+        label = f".LR{len(self.rel_labels)}"
+        self.rel_labels.append(label)
+        return label
 
     def add_constant(self, c):
         label = f".LC{len(self.constants) // 2}"
@@ -102,6 +109,7 @@ class GAS:
     def tac_to_x86_mapping(self, tac):
         global reg
         reg = Register()
+        gen_rel_label = GAS()
         for t in tac.table:
             global instructions
             instructions = []
@@ -315,7 +323,40 @@ class GAS:
 
                     instructions.append(f"  shrq %cl, %rax")
                     res = parse_tac_arg(t[3])
-                    instructions.append(f"  movq %rax, {res}")           
+                    instructions.append(f"  movq %rax, {res}")     
+
+                elif op == "&&":
+
+                    ##neg cases
+
+                    reg1, load1 = reg.get_register(arg1)
+                    instructions.extend(load1)
+
+                    instructions.append(f"  cmpq $0, {reg1}")
+                    golabel1 = gen_rel_label.gen_rel_label()
+                    instructions.append(f"  je {golabel1}")
+
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+                    instructions.append(f"  cmpq $0, {reg2}")
+                    
+                    golabel2 = gen_rel_label.gen_rel_label()
+                    instructions.append(f"  je {golabel1}")
+                    instructions.append(f"  movl $1, %eax")
+
+                    instructions.append(f"  jmp {golabel2}")
+
+                    instructions.append(f"{golabel1}:")
+
+                    instructions.append(f"  movl $0, %eax")
+                    instructions.append(f"{golabel2}:")
+
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  cltq")
+                    instructions.append(f"  movq %rax, {res}")
+                
+
+
 
             if t[0] == "BeginFunction":
                 funcname = t[1][:-1]
