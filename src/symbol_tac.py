@@ -1238,14 +1238,21 @@ def generate_tac(tree, begin="", end=""):
                 tac.add_epilouge()
                 try:
                     argtype = sym.params
-                    tac.add_function_invocation(funcname)
+                    invsize = 0
                     if args is not None:
+                        invsize = (len(args) + 1)*8
+                        if invsize % 16 != 0:
+                            invsize += 8
+                            tac.add_function_param_align(funcname)
                         args.reverse()
                         argtype.reverse()
                         for i in range(len(args)):
                             tac.push_param(args[i], get_TypeSize(argtype[i]))
+                    else:
+                        invsize = 16
+                        tac.add_function_param_align(funcname)
                     tac.push_param(symbol_table.get_symbol_name("this"))
-                    tac.add_call(funcname, out, (len(args) + 2)*8)
+                    tac.add_call(funcname, out, invsize)
                 except Exception as e:
                     # print("#"*10,e)
                     pass

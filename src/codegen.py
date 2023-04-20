@@ -95,15 +95,6 @@ class GAS:
     def tac_to_x86_mapping(self, tac):
         instructions = []
         reg = Register()
-        # tac = TAC()
-        # tac.table = [
-        #     ['=', '5', 'test_13_main_block1_x#56'],
-        #     ['=', '6', 'test_13_main_block1_y#64'],
-        #     ['+', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
-        #     ['-', 'test_13_main_block1_x#56', 'test_13_main_block1_y#64', '__t_18#240'],
-        #     ['=', '__t_18#240', 'test_13_main_block1_z#72']
-        # ]
-        # Loop through each TAC instruction
         for t in tac.table:
             if len(t) == 4:
                 op, arg1, arg2, res = t[0], t[1], t[2], t[3]
@@ -339,9 +330,13 @@ class GAS:
                     instructions.append("main:")
                 else:
                     instructions.append(t[1])
+                fsize = tac.size[funcname]
+                # align to 16 bytes
+                if fsize % 16 != 0:
+                    fsize += 16 - fsize % 16 
                 instructions.append("  pushq %rbp")
                 instructions.append("  movq %rsp, %rbp")
-                instructions.append(f"  subq ${tac.size[funcname]}, %rsp")
+                instructions.append(f"  subq ${fsize}, %rsp")
 
             if t[0] == "Return":
                 if len(t) == 2:

@@ -78,7 +78,7 @@ class TAC:
         self.labels.append(label)
         return label
         
-    def add_function_invocation(self, label):
+    def add_function_param_align(self, label):
         self.table.append(["FunctionInvocation", label])
         return label
 

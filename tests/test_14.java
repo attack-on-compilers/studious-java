@@ -1,7 +1,9 @@
 public class test_14 {
     public int main(String[] args) {
-        testprint(1, 2, 3);
-        testprint2(1, 2);
+        int t = testprint(1, 2, 3);
+        int t1 = testprint2(1, 2);
+        System.out.print("ANSWER: " + t + "\tnexr\t" + t1 + "\t");
+        System.out.println("totot");
         return 1;
     }
 
