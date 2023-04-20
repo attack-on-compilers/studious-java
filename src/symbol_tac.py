@@ -1566,6 +1566,9 @@ def get_Argument_list(tree):
 def get_Argument_list2(tree):
     if type(tree) != tuple:
         return [tree]
+    if tree[1] == "(":
+        x = generate_tac(tree[2])
+        return [x]
     match len(tree):
         case 2:
             return get_Argument_list2(tree[1])

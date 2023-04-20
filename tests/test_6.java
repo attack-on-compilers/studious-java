@@ -12,6 +12,14 @@ public class test_6 {
         arr[7] = 6;
         arr[8] = 34;
         arr[9] = 0;
+        
+        System.out.println("Original Array: ");
+        int i=1;
+        while(i<10){
+            int x = arr[i];
+            System.out.print(x + " ");
+            i=i+1;
+        }
 
         // Displaying the original array
         System.out.println("Original Array: ");
@@ -41,7 +49,8 @@ public class test_6 {
     public static void display(int arr[]) {
         int i=1;
         while(i<6){
-            System.out.print(arr[i] + " ");
+            int x = arr[i];
+            System.out.print(x + " ");
             i=i+1;
         }
         System.out.println("");
