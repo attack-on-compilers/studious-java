@@ -16,7 +16,7 @@ public class test_15 {
         long f = a+b+c+d+e;
         long g = a*b*c*d*e*f*a*b*c*d*e*f;
         long h =100;                         // Uncommenting will make it work
-        long h =100;                         // Uncommenting will make it work
+        // long h =100;                         // Uncommenting will make it work
         // long x = fun(0);
         // long h = fun(1);
         int h1 =fun(fun(fun(1)));

@@ -71,8 +71,15 @@ class Register:
 
 
 def parse_tac_arg(field):
+    global reg
+    global instructions
     if type(field) == int:
         return f"${field}"
+    if field[-1] == ")":
+        reg1, load = reg.get_register(field[10:-1])
+        instructions.extend(load)
+        instructions.append(f"  movq {parse_tac_arg(field[10:-1])}, {reg1}")
+        return "(" + reg1 + ")"
     spl = field.split("#")
     if len(spl) == 1:
         return "$" + field
@@ -93,8 +100,10 @@ class GAS:
         return label
 
     def tac_to_x86_mapping(self, tac):
+        global reg
         reg = Register()
         for t in tac.table:
+            global instructions
             instructions = []
             if len(t) == 4:
                 op, arg1, arg2, res = t[0], t[1], t[2], t[3]
@@ -277,6 +286,7 @@ class GAS:
                 instructions.append(f"  call fclose")
                 instructions.append(f"  movl $0, %eax")
             if t[0] == "=":
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", t)
                 reg1, load1 = reg.get_register(t[1])
                 instructions.extend(load1)
                 instructions.append(f"  movq {reg1}, {parse_tac_arg(t[2])}")
@@ -292,6 +302,13 @@ class GAS:
                 instructions.append(f"  je {t[2]}")
             if t[0] == "Jump":
                 instructions.append(f"  jmp {t[1]}")
+            if t[0] == "Dereference":
+                reg1, load1 = reg.get_register(t[1])
+                instructions.extend(load1)
+                instructions.append(f"  movq {parse_tac_arg(t[1])}, {reg1}")
+                instructions.append(f"  movq ({reg1}), {reg1}")
+                instructions.append(f"  movq {reg1}, {parse_tac_arg(t[2])}")
+                instructions.append("# Dereference done")
 
             if len(instructions) == 0:
                 print("No instructions for", t)

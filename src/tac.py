@@ -95,3 +95,6 @@ class TAC:
     def tprint(self):
         for i in range(len(self.table)):
             print(self.table[i])
+
+    def deref(self, arg, result):
+        self.table.append(["Dereference", arg, result])

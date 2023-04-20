@@ -931,7 +931,12 @@ def generate_tac(tree, begin="", end=""):
                 tac.add("*", y, size, y)
                 tac.add("+", symbol_table.get_symbol_name(name), y, y)
                 right = generate_tac(tree[3])
-                tac.add3(tree[2][1], right, "(" + y + ")")
+                z = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.add_symbol(
+                    VariableSymbol(z, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+                )
+                symbol_table.get_method_else_class_symbol_table().size += 8
+                tac.add3(tree[2][1], right, "Reference(" + y + ")")
                 # print("XXXXXXXXXXXXXXXXXXX",name,dimensions,indices,symbol_table.get_symbol(name).data_type,size)
                 return y
             elif "." in get_Name(tree[1]):
@@ -1206,7 +1211,13 @@ def generate_tac(tree, begin="", end=""):
             # symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
             # symbol_table.get_method_else_class_symbol_table().size += 8
             # tac.add("[]", y, index, out)
-            return y
+            z = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+            symbol_table.add_symbol(
+                VariableSymbol(z, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
+            )
+            symbol_table.get_method_else_class_symbol_table().size += 8
+            tac.deref(y, z)
+            return z
         case "MethodInvocation":
             if len(tree) == 5:
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
