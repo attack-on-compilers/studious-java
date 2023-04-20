@@ -125,18 +125,20 @@ class GAS:
 
                 elif op == "-":
                     # Load arg1 into a register
-                    reg1, load1 = reg.get_register(arg1)
-                    instructions.extend(load1)
+                    # reg1, load1 = reg.get_register(arg1)
+                    # instructions.extend(load1)
 
-                    # Load arg2 into a register
-                    reg2, load2 = reg.get_register(arg2)
-                    instructions.extend(load2)
+                    # # Load arg2 into a register
+                    # reg2, load2 = reg.get_register(arg2)
+                    # instructions.extend(load2)
 
                     # Add the values and store the result in res
-                    instructions.append(f"  subq {reg1}, {reg2}")
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+
+                    instructions.append(f"  subq {parse_tac_arg(arg2)}, %rax")
 
                     res = parse_tac_arg(t[3])
-                    instructions.append(f"  movq {reg2}, {res}")
+                    instructions.append(f"  movq %rax, {res}")
 
                 elif op == "*":
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
