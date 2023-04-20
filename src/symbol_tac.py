@@ -871,9 +871,17 @@ def clear_stack_mem():
         pass
 
 
+labels = {"begin": "begin", "end": "end"}
+
+
 def generate_tac(tree, begin="", end=""):
     global block_count
     global tac
+    global labels
+    if begin != "":
+        labels["begin"] = begin
+    if end != "":
+        labels["end"] = end
     match tree[0]:
         case "VariableDeclarator":
             if symbol_table.get_symbol(get_Name(tree[1]).split("[")[0]).dims > 0 or symbol_table.get_symbol(
@@ -1240,7 +1248,7 @@ def generate_tac(tree, begin="", end=""):
                     argtype = sym.params
                     invsize = 0
                     if args is not None:
-                        invsize = (len(args) + 1)*8
+                        invsize = (len(args) + 1) * 8
                         if invsize % 16 != 0:
                             invsize += 8
                             tac.add_function_param_align(funcname)
@@ -1276,7 +1284,7 @@ def generate_tac(tree, begin="", end=""):
                         for i in range(len(args)):
                             tac.push_param(args[i], get_TypeSize(argtype[i]))
                     tac.push_param(symbol_table.get_symbol_name("this"))
-                    tac.add_call(funcname, out, (len(args) + 2)*8)
+                    tac.add_call(funcname, out, (len(args) + 2) * 8)
                 except Exception as e:
                     # print(e)
                     pass
@@ -1354,11 +1362,14 @@ def generate_tac(tree, begin="", end=""):
             return generate_tac(tree[1])
         case "DoStatement":
             begin_label = tac.gen_label()
+            cond_label = tac.gen_label()
             end_label = tac.gen_label()
             tac.add_label(begin_label)
-            generate_tac(tree[2], begin=begin_label, end=end_label)
+            generate_tac(tree[2], begin=cond_label, end=end_label)
+            tac.add_label(cond_label)
             cond = generate_tac(tree[5])
-            tac.cond_jump(cond, begin_label)
+            tac.add3("cmp", "1", cond)
+            tac.cond_jump("e", begin_label)
             tac.add_label(end_label)
         case "IfThenElseStatementNoShortIf":
             else_label = tac.gen_label()
@@ -1387,15 +1398,10 @@ def generate_tac(tree, begin="", end=""):
             end_label = tac.gen_label()
             tac.add_label(begin_label)
             cond = generate_tac(tree[5])
-            out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(
-                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
-            )
-            symbol_table.get_method_else_class_symbol_table().size += 8
-            tac.add3("!", cond, out)
-            tac.cond_jump(out, end_label)
+            tac.add3("cmp", "1", cond)
+            tac.cond_jump("ne", end_label)
             generate_tac(tree[7], begin=begin_label, end=end_label)
-            generate_tac(tree[9])
+            generate_tac(tree[9], begin=begin_label, end=end_label)
             tac.jump(begin_label)
             tac.add_label(end_label)
         case "IfThenStatement":
@@ -1434,15 +1440,9 @@ def generate_tac(tree, begin="", end=""):
             end_label = tac.gen_label()
             tac.add_label(begin_label)
             cond = generate_tac(tree[5])
-            out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(
-                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
-            )
-            symbol_table.get_method_else_class_symbol_table().size += 8
-            tac.add3("!", cond, out)
-            tac.cond_jump(out, end_label)
+            tac.add3("cmp", "1", cond)
+            tac.cond_jump("ne", end_label)
             generate_tac(tree[7], begin=begin_label, end=end_label)
-            print(symbol_table.current.name)
             try:
                 generate_tac(tree[9][1][1][1])
             except:
@@ -1459,13 +1459,8 @@ def generate_tac(tree, begin="", end=""):
             end_label = tac.gen_label()
             tac.add_label(begin_label)
             cond = generate_tac(tree[5])
-            out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(
-                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
-            )
-            symbol_table.get_method_else_class_symbol_table().size += 8
-            tac.add3("!", cond, out)
-            tac.cond_jump(out, end_label)
+            tac.add3("cmp", "1", cond)
+            tac.cond_jump("ne", end_label)
             generate_tac(tree[7], begin=begin_label, end=end_label)
             try:
                 generate_tac(tree[9][1][1][1])
@@ -1477,14 +1472,14 @@ def generate_tac(tree, begin="", end=""):
                 generate_tac(tree[9][1][1][2])
             else:
                 generate_tac(tree[9])
-            clear_stack_mem()
             symbol_table.exit_scope()
         case "StatementNoShortIf":
             return generate_tac(tree[1])
         case "BreakStatement":
-            tac.jump(end)
+            tac.jump(labels["end"])
         case "ContinueStatement":
-            tac.jump(begin)
+            print(labels)
+            tac.jump(labels["begin"])
         case "ReturnStatement":
             if len(tree) == 4:
                 out = generate_tac(tree[2])
@@ -1553,6 +1548,7 @@ def get_Argument_list(tree):
             else:
                 return get_Argument_list(tree[1]) + [generate_tac(tree[3])]
 
+
 def get_Argument_list2(tree):
     if type(tree) != tuple:
         return [tree]
@@ -1563,6 +1559,7 @@ def get_Argument_list2(tree):
             return [tree[0]]
         case 4:
             return get_Argument_list2(tree[1]) + get_Argument_list2(tree[3])
+
 
 def get_TypeSize(type):
     return 8
