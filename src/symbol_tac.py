@@ -1376,13 +1376,8 @@ def generate_tac(tree, begin="", end=""):
             end_label = tac.gen_label()
             tac.add_label(begin_label)
             cond = generate_tac(tree[3])
-            out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(
-                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
-            )
-            symbol_table.get_method_else_class_symbol_table().size += 8
-            tac.add3("!", cond, out)
-            tac.cond_jump(out, end_label)
+            tac.add3("cmp", "1", cond)
+            tac.cond_jump("ne", end_label)
             generate_tac(tree[5], begin=begin_label, end=end_label)
             tac.jump(begin_label)
             tac.add_label(end_label)
@@ -1426,13 +1421,8 @@ def generate_tac(tree, begin="", end=""):
             end_label = tac.gen_label()
             tac.add_label(begin_label)
             cond = generate_tac(tree[3])
-            notcond = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(
-                VariableSymbol(notcond, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
-            )
-            symbol_table.get_method_else_class_symbol_table().size += 8
-            tac.add3("!", cond, notcond)
-            tac.cond_jump(notcond, end_label)
+            tac.add3("cmp", "1", cond)
+            tac.cond_jump("ne", end_label)
             generate_tac(tree[5], begin=begin_label, end=end_label)
             tac.jump(begin_label)
             tac.add_label(end_label)
