@@ -108,9 +108,6 @@ class GAS:
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
 
-                    # reg3, load3 = reg.get_register(res)
-                    # instructions.extend(load3)
-
                     # Add the values and store the result in res
                     instructions.append(f"  addq {reg1}, {reg2}")
 
@@ -125,9 +122,6 @@ class GAS:
                     # Load arg2 into a register
                     reg2, load2 = reg.get_register(arg2)
                     instructions.extend(load2)
-
-                    # reg3, load3 = reg.get_register(res)
-                    # instructions.extend(load3)
 
                     # Add the values and store the result in res
                     instructions.append(f"  subq {reg1}, {reg2}")
@@ -145,17 +139,6 @@ class GAS:
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == "/":
-                    # Load arg1 into a register
-                    # reg1, load1 = reg.get_register(arg1)
-                    # instructions.extend(load1)
-
-                    # # Load arg2 into a register
-                    # reg2, load2 = reg.get_register(arg2)
-                    # instructions.extend(load2)
-
-                    # reg3, load3 = reg.get_register(res)
-                    # instructions.extend(load3)
-
                     # Divide the values and store the result in res
                     instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
 
@@ -175,19 +158,8 @@ class GAS:
                     # check completeness one more statement may be needded
 
                 elif op == ">":
-                    # Load arg1 into a register
-                    # reg1, load1 = reg.get_register(arg1)
-                    # instructions.extend(load1)
-
-                    # # Load arg2 into a register
-                    # reg2, load2 = reg.get_register(arg2)
-                    # instructions.extend(load2)
-
-                    # reg3, load3 = reg.get_register(res)
-                    # instructions.extend(load3)
-
-                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
-                    instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  cmpq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  setg %al")
                     instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
@@ -195,133 +167,44 @@ class GAS:
 
                 elif op == "<":
                     # Load arg1 into a register
-                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
-                    instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  cmpq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  setl %al")
                     instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == ">=":
-                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
-                    instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  cmpq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  setge %al")
                     instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == "<=":
-                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
-                    instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  cmpq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  setle %al")
                     instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == "==":
-                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
-                    instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  cmpq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  sete %al")
                     instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
 
                 elif op == "!=":
-                    instructions.append(f"  movq {parse_tac_arg(arg2)}, %rax")
-                    instructions.append(f"  cmpq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  movq {parse_tac_arg(arg1)}, %rax")
+                    instructions.append(f"  cmpq {parse_tac_arg(arg2)}, %rax")
                     instructions.append(f"  setne %al")
                     instructions.append(f"  movzbl %al, %eax")
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  movq %rax, {res}")
-
-                # elif op == "&&":
-                #     # Load arg1 into a register
-                #     reg1, load1 = reg.get_register(arg1)
-                #     instructions.extend(load1)
-
-                #     # Load arg2 into a register
-                #     reg2, load2 = reg.get_register(arg2)
-                #     instructions.extend(load2)
-
-                #     # reg3, load3 = reg.get_register(res)
-                #     # instructions.extend(load3)
-
-                #     instructions.append(f"  and {reg1}, {reg2}")
-
-                #     g = -1*(int)(t[3].split("#")[-1])
-
-                #     instructions.append(f"  mov {reg2}, {g}(%rbp)")
-
-                # elif op == "||":
-                #     # Load arg1 into a register
-                #     reg1, load1 = reg.get_register(arg1)
-                #     instructions.extend(load1)
-
-                #     # Load arg2 into a register
-                #     reg2, load2 = reg.get_register(arg2)
-                #     instructions.extend(load2)
-
-                #     # reg3, load3 = reg.get_register(res)
-                #     # instructions.extend(load3)
-
-                #     instructions.append(f"  or {reg1}, {reg2}")
-
-                #     g = -1*(int)(t[3].split("#")[-1])
-
-                #     instructions.append(f"  mov {reg2}, {g}(%rbp)")
-
-                # elif op == "^":
-                #     # Load arg1 into a register
-                #     reg1, load1 = reg.get_register(arg1)
-                #     instructions.extend(load1)
-
-                #     # Load arg2 into a register
-                #     reg2, load2 = reg.get_register(arg2)
-                #     instructions.extend(load2)
-
-                #     # reg3, load3 = reg.get_register(res)
-                #     # instructions.extend(load3)
-
-                #     instructions.append(f"  xor {reg1}, {reg2}")
-                #     g = -1*(int)(t[3].split("#")[-1])
-
-                #     instructions.append(f"  mov {reg2}, {g}(%rbp)")
-
-                # elif op == ">>":
-                #     # Load arg1 into a register
-                #     reg1, load1 = reg.get_register(arg1)
-                #     instructions.extend(load1)
-
-                #     # Load arg2 into a register
-                #     reg2, load2 = reg.get_register(arg2)
-                #     instructions.extend(load2)
-
-                #     # reg3, load3 = reg.get_register(res)
-                #     # instructions.extend(load3)
-
-                #     g = -1*(int)(t[3].split("#")[-1])
-
-                #     instructions.append(f"  mov {reg1}, {g}(%rbp)")
-
-                #     instructions.append(f"  shr {reg2}, {g}(%rbp)")
-
-                # elif op == "<<":
-                #     # Load arg1 into a register
-                #     reg1, load1 = reg.get_register(arg1)
-                #     instructions.extend(load1)
-
-                #     # Load arg2 into a register
-                #     reg2, load2 = reg.get_register(arg2)
-                #     instructions.extend(load2)
-
-                #     # reg3, load3 = reg.get_register(res)
-                #     # instructions.extend(load3)
-
-                #     g = -1*(int)(t[3].split("#")[-1])
-
-                #     instructions.append(f"  mov {reg1}, {g}(%rbp)")
-
-                #     instructions.append(f"  shl {reg2}, {g}(%rbp)")
 
             if t[0] == "BeginFunction":
                 funcname = t[1][:-1]
@@ -333,7 +216,7 @@ class GAS:
                 fsize = tac.size[funcname]
                 # align to 16 bytes
                 if fsize % 16 != 0:
-                    fsize += 16 - fsize % 16 
+                    fsize += 16 - fsize % 16
                 instructions.append("  pushq %rbp")
                 instructions.append("  movq %rsp, %rbp")
                 instructions.append(f"  subq ${fsize}, %rsp")
@@ -402,6 +285,15 @@ class GAS:
                 instructions.append(f"  movl ${t[1]}, %edi")
                 instructions.append(f"  call malloc")
                 instructions.append(f"  movq %rax, {parse_tac_arg(t[2])}")
+            if t[0] == "cmp":
+                instructions.append(f"  cmpq {parse_tac_arg(t[1])}, {parse_tac_arg(t[2])}")
+            if t[0] == "CondJump" and t[1] == "ne":
+                instructions.append(f"  jne {t[2]}")
+            if t[0] == "CondJump" and t[1] == "e":
+                instructions.append(f"  je {t[2]}")
+            if t[0] == "Jump":
+                instructions.append(f"  jmp {t[1]}")
+
 
         self.instructions = instructions
 
