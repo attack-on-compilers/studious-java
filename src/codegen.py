@@ -92,9 +92,8 @@ class GAS:
     def add_constant(self, c):
         label = f".LC{len(self.constants) // 2}"
         self.constants.append(label + ":")
-        self.constants.append(f'  .string {c}')
+        self.constants.append(f"  .string {c}")
         return label
-
 
     def tac_to_x86_mapping(self, tac):
         instructions = []
@@ -380,7 +379,28 @@ class GAS:
                 instructions.append(f"  movq ${lc}, %rdi")
                 instructions.append(f"  movl $0, %eax")
                 instructions.append(f"  call printf")
-
+            if t[0] == "fopen":
+                file_lc = self.add_constant(t[1])
+                mode_lc = self.add_constant(t[2])
+                instructions.append(f"  movq ${file_lc}, %rdi")
+                instructions.append(f"  movq ${mode_lc}, %rsi")
+                instructions.append(f"  movl $0, %eax")
+                instructions.append(f"  call fopen")
+                instructions.append(f"  movq %rax, {parse_tac_arg(t[3])}")
+            if t[0] == "fprintf":
+                lc = self.add_constant(t[2])
+                lent = len(t[2][1:-1])
+                instructions.append(f"  movq {parse_tac_arg(t[1])}, %rax")
+                instructions.append(f"  movq %rax, %rcx")
+                instructions.append(f"  movl ${lent}, %edx")
+                instructions.append(f"  movl $1, %esi")
+                instructions.append(f"  movl ${lc}, %edi")
+                instructions.append(f"  call fwrite")
+            if t[0] == "fclose":
+                instructions.append(f"  movq {parse_tac_arg(t[1])}, %rax")
+                instructions.append(f"  movq %rax, %rdi")
+                instructions.append(f"  call fclose")
+                instructions.append(f"  movl $0, %eax")
 
         self.instructions = instructions
 
@@ -395,6 +415,7 @@ class GAS:
             file.write(constant + "\n")
         for instruction in self.instructions:
             file.write(instruction + "\n")
+        file.write("\n")
 
 
 if __name__ == "__main__":

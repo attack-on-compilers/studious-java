@@ -9,7 +9,7 @@ public class test_15 {
         // long e = a+b+c+d;
         // int c = fun();
         System.out.println("appled");
-        System.out.println("apple"+5+"apple"+a);
+        System.out.println("apple "+5+"apple "+a);
         // long f = a+b+c+d+e;
         // long g = a*b*c*d*e*f*a*b*c*d*e*f;
         // return;

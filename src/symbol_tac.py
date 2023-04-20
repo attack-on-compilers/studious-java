@@ -1215,11 +1215,23 @@ def generate_tac(tree, begin="", end=""):
                         else:
                             try:
                                 intcast = int(arg)
-                                tac.print_int(arg)
+                                tac.print_int(intcast)
                             except:
                                 tac.print_int(symbol_table.get_symbol_name(arg))
                     if funcname == "System.out.println":
                         tac.print_newline()
+                    return out
+                if funcname.endswith("_fopen"):
+                    args = get_Argument_list2(tree[3])
+                    tac.add("fopen", args[0], args[1], out)
+                    return out
+                if funcname.endswith("_fprintf"):
+                    args = get_Argument_list2(tree[3])
+                    tac.add3("fprintf", symbol_table.get_symbol_name(args[0]), args[1])
+                    return out
+                if funcname.endswith("_fclose"):
+                    args = get_Argument_list2(tree[3])
+                    tac.add3("fclose", symbol_table.get_symbol_name(args[0]), out)
                     return out
                 args = get_Argument_list(tree[3])
                 sym = symbol_table.get_symbol(get_Name(tree[1]))
