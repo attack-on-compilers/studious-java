@@ -83,7 +83,7 @@ def parse_tac_arg(field):
 
 class GAS:
     def __init__(self):
-        self.instructions = []
+        self.x86instructions = []
         self.constants = [".LC0:", '  .string "%d"', ".LC1:", '  .string "\\n"']
 
     def add_constant(self, c):
@@ -93,9 +93,9 @@ class GAS:
         return label
 
     def tac_to_x86_mapping(self, tac):
-        instructions = []
         reg = Register()
         for t in tac.table:
+            instructions = []
             if len(t) == 4:
                 op, arg1, arg2, res = t[0], t[1], t[2], t[3]
 
@@ -220,7 +220,6 @@ class GAS:
                 instructions.append("  pushq %rbp")
                 instructions.append("  movq %rsp, %rbp")
                 instructions.append(f"  subq ${fsize}, %rsp")
-
             if t[0] == "Return":
                 if len(t) == 2:
                     reg1, load1 = reg.get_register(t[1])
@@ -294,19 +293,21 @@ class GAS:
             if t[0] == "Jump":
                 instructions.append(f"  jmp {t[1]}")
 
+            if len(instructions) == 0:
+                print("No instructions for", t)
 
-        self.instructions = instructions
+            self.x86instructions.extend(instructions)
 
     def tprint(self):
         for constant in self.constants:
             print(constant)
-        for instruction in self.instructions:
+        for instruction in self.x86instructions:
             print(instruction)
 
     def fprint(self, file):
         for constant in self.constants:
             file.write(constant + "\n")
-        for instruction in self.instructions:
+        for instruction in self.x86instructions:
             file.write(instruction + "\n")
         file.write("\n")
 
