@@ -354,6 +354,39 @@ class GAS:
                     res = parse_tac_arg(t[3])
                     instructions.append(f"  cltq")
                     instructions.append(f"  movq %rax, {res}")
+
+                elif op == "||":
+
+                    ##neg cases
+
+                    reg1, load1 = reg.get_register(arg1)
+                    instructions.extend(load1)
+
+                    instructions.append(f"  cmpq $0, {reg1}")
+                    golabel1 = gen_rel_label.gen_rel_label()
+                    instructions.append(f"  jne {golabel1}")
+
+                    reg2, load2 = reg.get_register(arg2)
+                    instructions.extend(load2)
+                    instructions.append(f"  cmpq $0, {reg2}")
+                    
+                    golabel2 = gen_rel_label.gen_rel_label()
+                    instructions.append(f"  je {golabel2}")
+
+                    instructions.append(f"{golabel1}:")
+                    instructions.append(f"  movl $1, %eax")
+
+                    golabel3 = gen_rel_label.gen_rel_label()
+                    instructions.append(f"  jmp {golabel3}")
+
+                    instructions.append(f"{golabel2}:")
+
+                    instructions.append(f"  movl $0, %eax")
+                    instructions.append(f"{golabel3}:")
+
+                    res = parse_tac_arg(t[3])
+                    instructions.append(f"  cltq")
+                    instructions.append(f"  movq %rax, {res}")    
                 
 
 
