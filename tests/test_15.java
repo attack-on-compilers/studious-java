@@ -1,10 +1,10 @@
 public class test_15 {
 
     static int fun(int x){
-        // if (x==1)
-        //     fun(x+2);
+        if (x<=0)
+            return x;
         System.out.println("fun "+x);
-        return (x+1);
+        return fun(x-1);
     }
     public static void main(String[] args) {
         long a =100;
@@ -15,6 +15,7 @@ public class test_15 {
         long e = a+b+c+d;
         long f = a+b+c+d+e;
         long g = a*b*c*d*e*f*a*b*c*d*e*f;
+        long h =100;                         // Uncommenting will make it work
         long h =100;                         // Uncommenting will make it work
         // long x = fun(0);
         // long h = fun(1);

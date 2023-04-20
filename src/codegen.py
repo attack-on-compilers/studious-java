@@ -398,6 +398,10 @@ class GAS:
                 reg1, load1 = reg.get_register(t[1])
                 instructions.extend(load1)
                 instructions.append(f"  movq {reg1}, {parse_tac_arg(t[2])}")
+            if t[0] == "allocmem":
+                instructions.append(f"  movl ${t[1]}, %edi")
+                instructions.append(f"  call malloc")
+                instructions.append(f"  movq %rax, {parse_tac_arg(t[2])}")
 
         self.instructions = instructions
 
