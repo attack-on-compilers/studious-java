@@ -483,10 +483,13 @@ class GAS:
                 instructions.append(f"  subq {reg1}, {parse_tac_arg(t[2])}")   
 
             if t[0] == "*=":
+                instructions.append(f"  movq {parse_tac_arg(t[2])}, %rax")   
+
                 reg1, load1 = reg.get_register(t[1])
                 instructions.extend(load1)
-                instructions.append(f"  imulq {parse_tac_arg(t[2])}, %rax")
-                instructions.append(f"  movq {reg1}, {parse_tac_arg(t[2])}")   
+                instructions.append(f"  imulq {parse_tac_arg(t[1])}, %rax")
+                instructions.append(f"  movq %rax, {parse_tac_arg(t[2])}")   
+
 
             if t[0] == "/=":
 
