@@ -267,6 +267,8 @@ class RootSymbolTable:
         return self.current.get_symbol(name, symbol_type)
 
     def get_symbol_name(self, name, symbol_type=None):
+        if(name.count("#")>0) and name[0] != "_":
+            name = name.split("#")[0]
         return self.current.get_symbol_name(name, symbol_type)
 
     def enter_scope(self, name):

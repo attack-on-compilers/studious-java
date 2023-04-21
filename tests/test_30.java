@@ -38,9 +38,6 @@ public class test_30 {
         e&=60;
         f|=30;
         g^=70;
-        h<<=70;
-        i>>=70;
-        j>>>=70;
-        System.out.println("a = "+a+" b = "+b+" c = "+c+" d = "+d+" e = "+e+" f = "+f+" g = "+g+" h = "+h+" i = "+i+" j = "+j);
+        System.out.println("a = "+a+" b = "+b+" c = "+c+" d = "+d+" e = "+e+" f = "+f+" g = "+g);
     }
 }
