@@ -3,7 +3,9 @@ ARG?=
 
 all: 
 	pip install -r requirements.txt
-	python ./src/parse.py
+	clear
+	python ./src/main.py -i ./tests/test_$(ARG).java -o src/javao
+	make build ARG=output
 	
 dev:
 	clear
@@ -16,7 +18,8 @@ dev-g: dev
 	xdg-open src/javao.svg
 
 graph:
-	dot -Tps $(FILE) -o src/ast.ps
+	dot -Tsvg src/javao.dot -o src/javao.svg
+	xdg-open src/javao.svg
 
 vgraph:
 	xdg-open src/ast.ps

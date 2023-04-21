@@ -1,26 +1,156 @@
-// Simple expressiona and implicit conversion
+// Test 31: Relational, Logical Operators with if statements
 public class test_2 {
-    public static void main(String[] args) {
-        int a = 1;
-        // int a = 1; // Is an error because of redeclaration
-        int b = 2;
-        int c = a + b + 7;
-        System.out.println(c);
-        double d = 1.0;
-        double e = 2;       // Implicit conversion from int to double
-        double f = d + e;
-        System.out.println(f);
-        char g = 'a';
-        char h = 'b';
-        int i = (g * h);    // Implicit conversion from char to int
-        System.out.println(i);
-        double j = 'a' + 45 ;
-        double k = 'a' + 45.0 ;
-        // float l = 'a' + 45.0 ; // Is an error because of implicit conversion from double to float
-        float m = 'a' + 45.0f ; // Is not an error
-        // int n =5 + 78l; // Is an error, on hold for now
-        int o =5 << 4;
-        int p =5 << 4; // Is an error
-        System.out.println(j+k+m+o+p);
+    public static void main(String args[])
+    {
+        int x=5;
+        // Relational Operators
+        if(x==5)
+            System.out.println("x==5");
+        else
+            System.out.println("NOT x==5");
+        if(x==7)
+            System.out.println("x==7");
+        else
+            System.out.println("NOT x==7");
+        if(x!=5)
+            System.out.println("x!=5");
+        else
+            System.out.println("NOT x!=5");
+        if(x!=7)
+            System.out.println("x!=7");
+        else
+            System.out.println("NOT x!=7");
+        if(x>5)
+            System.out.println("x>5");
+        else
+            System.out.println("NOT x>5");
+        if(x>7)
+            System.out.println("x>7");
+        else
+            System.out.println("NOT x>7");
+        if(x<5)
+            System.out.println("x<5");
+        else
+            System.out.println("NOT x<5");
+        if(x<7)
+            System.out.println("x<7");
+        else
+            System.out.println("NOT x<7");
+        if(x>=5)
+            System.out.println("x>=5");
+        else
+            System.out.println("NOT x>=5");
+        if(x>=7)
+            System.out.println("x>=7");
+        else
+            System.out.println("NOT x>=7");
+        if(x<=5)
+            System.out.println("x<=5");
+        else
+            System.out.println("NOT x<=5");
+        if(x<=7)
+            System.out.println("x<=7");
+        else
+            System.out.println("NOT x<=7");
+
+        // Logical Operators
+
+        if(x==5 && x==7)
+            System.out.println("x==5 && x==7");
+        else
+            System.out.println("NOT x==5 && x==7");
+        if(x==7 && x==5)
+            System.out.println("x==7 && x==5");
+        else
+            System.out.println("NOT x==7 && x==5");
+        if(x==5 && x==5)
+            System.out.println("x==5 && x==5");
+        else
+            System.out.println("NOT x==5 && x==5");
+        if(x==7 && x==7)
+            System.out.println("x==5 && x==5");
+        else
+            System.out.println("NOT x==5 && x==5");
+        if(x==5 || x==7)
+            System.out.println("x==5 || x==7");
+        else
+            System.out.println("NOT x==5 || x==7");
+        if(x==7 || x==5)
+            System.out.println("x==7 || x==5");
+        else
+            System.out.println("NOT x==7 || x==5");
+        if(x==5 || x==5)
+            System.out.println("x==5 || x==5");
+        else
+            System.out.println("NOT x==5 || x==5");
+        if(x==7 || x==7)
+            System.out.println("x==7 || x==7");
+        else
+            System.out.println("NOT x==7 || x==7");
+
+        if(!(x==5))
+            System.out.println("!(x==5)");
+        else
+            System.out.println("NOT !(x==5)");
+        if(!(x==7))
+            System.out.println("!(x==7)");
+        else
+            System.out.println("NOT !(x==7)");
+
+        //Some limited boolean support as well
+        if(true && false)
+            System.out.println("true && false");
+        else
+            System.out.println("NOT true && false");
+        if(false && true)
+            System.out.println("false && true");
+        else
+            System.out.println("NOT false && true");
+        if(true && true)
+            System.out.println("true && true");
+        else
+            System.out.println("NOT true && true");
+        if(false && false)
+            System.out.println("false && false");
+        else
+            System.out.println("NOT false && false");
+        if(true || false)
+            System.out.println("true || false");
+        else
+            System.out.println("NOT true || false");
+        if(false || true)
+            System.out.println("false || true");
+        else
+            System.out.println("NOT false || true");
+        if(true || true)
+            System.out.println("true || true");
+        else
+            System.out.println("NOT true || true");
+        if(false || false)
+            System.out.println("false || false");
+        else
+            System.out.println("NOT false || false");
+
+        // Slightly more complex boolean expressions
+        if(!(x==5) || !(x==7))
+            System.out.println("!(x==5) || !(x==7)");
+        else
+            System.out.println("NOT !(x==5) || !(x==7)");
+        if(!(x==7) || !(x==5))
+            System.out.println("!(x==7) || !(x==5)");
+        else
+            System.out.println("NOT !(x==7) || !(x==5)");
+        if(!(x==5) || !(x==5))
+            System.out.println("!(x==5) || !(x==5)");
+        else
+            System.out.println("NOT !(x==5) || !(x==5)");
+        if(!(x==7) || !(x==7))
+            System.out.println("!(x==7) || !(x==7)");
+        else
+            System.out.println("NOT !(x==7) || !(x==7)");
+        if(x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5)
+            System.out.println("x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5");
+        else
+            System.out.println("NOT x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5 && x==5");
     }
 }

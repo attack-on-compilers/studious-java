@@ -1,25 +1,46 @@
-// Single and multi-dimensional arrays, both local and instance variables
+// Test 33: if-else-if ladder, nested if-else-if ladder, block declarations
 public class test_4 {
-    int a;
-    int b,c,d;
-    int e = 5;
-    int i[][] = new int[5][5];
-    int j[][] = new int[5][];
-    int[][] k = new int[5][];
-    float l[];
-    char m[] = new char[5], n[] = new char[5], o=6;
-    double[][] q = new double[5][10], r = new double[5][], t={{4}};
-    public static void main(String[] args) {
-        int a;
-        int b,c,d;
-        int e = 5;
-        int i[][] = new int[5][5];
-        int j[][] = new int[5][];
-        int[][] k = new int[5][];
-        float l[];
-        char m[] = new char[5], n[] = new char[5], o=6;
-        double[][] q = new double[5][10], r = new double[5][];
-        q[4][5] = 5.0;      //Array access on LHS
-        q[7][8] = q[4][5];  //Array access on RHS
+    public static void main(String args[])
+    {
+        int a = 100;
+        if (a == 100)
+            System.out.println("a == 100");
+        if (a == 200)
+            System.out.println("a == 200");
+        else if(a<200)
+        {
+            int b = 5;
+            System.out.println("a < 200");
+            if(a>50)
+            {
+                System.out.println("a > 50");
+                if (a+b==105)
+                    System.out.println("a+b == 105");
+                else
+                    System.out.println("a+b != 105");
+                b=10;
+            }
+            else
+            {
+                System.out.println("a < 50");
+                if (a+b==105)
+                    System.out.println("a+b == 105");
+                else
+                    System.out.println("a+b != 105");
+                b=20;
+            }
+            if(b==10)
+                System.out.println("b == 10");
+            else if(b==20)
+                System.out.println("b == 20");
+        }
+        else
+            System.out.println("a > 200");
+        int b=55;
+        if (a+b==155)
+            System.out.println("a+b == 155");
+        else
+            System.out.println("a+b != 155");
+
     }
 }

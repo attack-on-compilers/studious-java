@@ -571,10 +571,9 @@ class GAS:
                 instructions.append(f"  movq {parse_tac_arg(t[1])}, {reg1}")
                 instructions.append(f"  movq ({reg1}), {reg1}")
                 instructions.append(f"  movq {reg1}, {parse_tac_arg(t[2])}")
-                instructions.append("# Dereference done")
 
-            if len(instructions) == 0:
-                print("No instructions for", t)
+            # if len(instructions) == 0:
+            #     print("No instructions for", t)
 
             self.x86instructions.extend(instructions)
 

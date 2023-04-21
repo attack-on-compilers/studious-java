@@ -236,7 +236,6 @@ class SymbolTable:
             symbol_table.tprint(level + 1)
 
     def fprint(self, prefix=""):
-        return
         symbols_with_symbol_tables = ["class", "method", "block", "interface"]
         symbol_tables = []
         file_name = prefix + "_" + str(self.name) + ".csv"

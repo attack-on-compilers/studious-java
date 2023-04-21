@@ -1,25 +1,20 @@
-/* package whatever; // don't place package name! */
+// Test 40: File Output using fprintf, fopen, fclose
+public class test_11 {
+    // We need these empty function declarations to make the code compile
+    int fopen(String filename, String mode){return 0;}
+    void fprintf(int f, String message){;}
+    void fclose(int f){;}
 
-import java.util.*;
-import java.lang.*;
-import java.io.*;
-
-/* Name of the class has to be "Main" only if the class is public. */
-class Main
-{
-	public static void main (String[] args) throws java.lang.Exception
-	{
-		myClass t = new myClass(100);
-        for (int i=0;i<=10;i++)
-        {
-            System.out.println(t.arr[i]);
-        }
-	}
-}
-
-class myClass {
-    int arr[];
-    myClass(int n) { //Constructor
-        arr = new int[n];
+    public void main(String[] args) {
+        int file = fopen("newfile", "w");
+        fprintf(file, "This is a statement");
+        fprintf(file, "This is a statement with newlines!\n\n\\n Changes the line!\n");
+        fprintf(file, "This is a statement\nahsdkhskd");
+        fprintf(file, "Escapes work!\t\\\\\\\\\\\\\\\\\\\\\\");
+        fprintf(file, "This is a statement\nahsdkhskd\n\n\n");
+        fclose(file);
+        file = fopen("newfile", "a");       // Append to the file
+        fprintf(file, "Appended this statement!\n");
+        fclose(file);
     }
 }

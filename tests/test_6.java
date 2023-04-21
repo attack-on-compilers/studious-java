@@ -1,58 +1,35 @@
-// Bubble Sort in Java using Arrays and Functions 
+// Test 35 : Recursion, Function calls with multiple arguments
 public class test_6 {
-    public static void main(String[] args) {
-        int[] arr = new int[10];
-        arr[0] = 1;
-        arr[1] = 56;
-        arr[2] = 23;
-        arr[3] = 12;
-        arr[4] = 19;
-        arr[5] = -9;
-        arr[6] = 2;
-        arr[7] = 6;
-        arr[8] = 34;
-        arr[9] = 0;
-        
-        System.out.println("Original Array: ");
-        int i=1;
-        while(i<10){
-            int x = arr[i];
-            System.out.print(x + " ");
-            i=i+1;
-        }
-
-        // Displaying the original array
-        System.out.println("Original Array: ");
-        display(arr);
-
-        // Sorting array elements using bubble sort
-        bubbleSort(arr);
-
-        // Displaying sorted array
-        System.out.println("Sorted Array: ");
-        display(arr);
+    static int x;
+    static long fib(int n)
+    {
+        if(n==0)
+            return 0;
+        if(n==1)
+            return 1;
+        // System.out.println("Fibonacci of "+n+" is "+(fib(n-1)+fib(n-2)));
+        return fib(n-1)+fib(n-2);
     }
 
-    public static void bubbleSort(int arr[]) {
-        int n = 6;
-        int i=1;
-        while(i<n-i){
-            if(arr[i]>arr[i+1]){
-                int temp=arr[i];
-                arr[i]=arr[i+1];
-                arr[i+1]=temp;
-            }
-        }
-        return;
+    static long fact(int n)
+    {
+        if(n==0)
+            return 1;
+        return n*fact(n-1);
     }
-
-    public static void display(int arr[]) {
-        int i=1;
-        while(i<6){
-            int x = arr[i];
-            System.out.print(x + " ");
-            i=i+1;
-        }
-        System.out.println("");
+    static int printargs(int x1, int x2, int x3, int x4, int x5, int x6, int x7, int x8, int x9, int x10)
+    {
+        System.out.println("x1="+x1+" x2="+x2+" x3="+x3+" x4="+x4+" x5="+x5+" x6="+x6+" x7="+x7+" x8="+x8+" x9="+x9+" x10="+x10);
+        return 0; 
+    }
+    public static void main(String args[])
+    {
+        short n=20;
+        byte m=15;
+        long a=fib(n);                  // Typecasting short to int
+        long b=fib(10);
+        long c=fact(m);                 // Typecasting byte to int
+        System.out.println("\nFibonacci of "+n+" is "+a +" and of "+ b+" is " + b + " and factorial of "+15+" is "+c);
+        printargs(1,2,3,4,5,6,7,8,9,10);
     }
 }

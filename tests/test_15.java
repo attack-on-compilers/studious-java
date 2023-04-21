@@ -1,35 +1,46 @@
-public class test_15 {
+// for, while, do-while, switch, nested blocks, variable declaration
+class test_15 {
 
-    static int fun(int x){
-        if (x<=0)
-            return x;
-        System.out.println("fun "+x);
-        return fun(x-1);
-    }
-    public static void main(String[] args) {
-        long a =100;
-        long b = 5;
-        System.out.println("a="+a+" b="+b);
-        long c = a*b;
-        long d = a+c;
-        long e = a+b+c+d;
-        long f = a+b+c+d+e;
-        long g = a*b*c*d*e*f*a*b*c*d*e*f;
-        long h =100;                         // Uncommenting will make it work
-        // long h =100;                         // Uncommenting will make it work
-        // long x = fun(0);
-        // long h = fun(1);
-        int h1 =fun(fun(fun(1)));
-        int h11 =fun(fun(1));
-        int h2 =fun(55);
-        // System.out.println(h);
-        System.out.println(h1);
-        System.out.println(h11);
-        System.out.println(h2);
-        // int i = 999;
-        System.out.println("a="+a+" b="+b+" c="+c+" d="+d+" e="+e +" f="+f+" g="+g +" h1="+h1 + " h2="+h2);
-        // System.out.println("apple "+5+"apple "+a);
-        
-        // return;
+    static int x;
+
+    public static void main(String args[]) {
+        int i; // Not an error as j and i are declared in the for loop
+        i = 0;
+        int j = 0;
+        while (i < 10) {
+            System.out.println("From while " + i);
+            while (j < 10) {
+                // System.out.println("nested while " + j);
+                j = j + 1;
+                int k = i * j + i + j;
+                System.out.println("Nested While: " + k);
+            }
+            j = 5;
+            i = i + 1;
+        }
+
+        int k = 0;
+
+        do {
+            System.out.println(k);
+            k = k + 1;
+            if(5>0)
+                continue;
+            System.out.println("This will not be printed");
+        } while (k < 10);
+
+        {
+            int s = 100;
+            // int i; // An error as i is already declared in the main method
+            {
+                int r;
+                {
+                    int t; // Nested blocks work
+                }
+                int t; // Not an error as t is declared in the aboveblock
+            }
+        }
+        int s; // Not an error as above s is declared in the block
+        int x = 1; // Not an error as x is declared in the class
     }
 }
