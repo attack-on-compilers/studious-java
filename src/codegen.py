@@ -488,10 +488,9 @@ class GAS:
                 instructions.append(f"  xorq {reg1}, {parse_tac_arg(t[2])}")  
 
             if t[0] == "!":
-                reg1, load1 = reg.get_register(t[1])
-                instructions.extend(load1)
-                instructions.append(f"  cmpq {reg1}, {parse_tac_arg(t[1])}")
-                instructions.append(f"  setne %al")
+
+                instructions.append(f"  cmpq $0, {parse_tac_arg(t[1])}")
+                instructions.append(f"  sete %al")
                 instructions.append(f"  movzbl %al, %eax")
                 instructions.append(f"  movq %rax, {parse_tac_arg(t[2])}")
 
