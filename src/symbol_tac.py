@@ -943,13 +943,22 @@ def generate_tac(tree, begin="", end=""):
                 # Non array access case (field access)
                 base, comp = get_Name(tree[1]).split(".")
                 sym = symbol_table.get_symbol(base)
-                offset = sym.offset
+                baseoffset = sym.offset
                 stype = sym.data_type
                 symtable = symbol_table.root.get_symbol(stype)
-                offset = f"{offset}, {symtable.symbol_table.symbols[comp].offset}"
+                offset = symtable.symbol_table.symbols[comp].offset
                 right = generate_tac(tree[3])
-                left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"({offset})"
-                tac.add3(tree[2][1], right, left)
+                left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"#{baseoffset}"
+
+                offsettemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.get_method_else_class_symbol_table().size += 8
+    
+                tac.add3("=", offset, offsettemp)
+                addrtemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.get_method_else_class_symbol_table().size += 8
+
+                tac.add("+", left, offsettemp, addrtemp)
+                tac.add3(tree[2][1], right, f"Reference({addrtemp})")
                 return left
             else:
                 # Non array field access
@@ -1151,24 +1160,30 @@ def generate_tac(tree, begin="", end=""):
             return tree[1]
         case "ClassInstanceCreationExpression":
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-            symbol_table.add_symbol(
-                VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
-            )
             symbol_table.get_method_else_class_symbol_table().size += 8
             args = get_Argument_list(tree[4])
             classname = get_Name(tree[2])
             sym = symbol_table.root.get_symbol(classname)
             tac.alloc_mem(sym.size, out)
             tac.add_epilouge()
+            funcname = f"{classname}_{classname}"
             try:
                 argtype = sym.symbol_table.symbols[classname].params
+                invsize = 0
                 if args is not None:
+                    invsize = (len(args) +1)*8
+                    if invsize % 16 != 0:
+                        invsize += 8
+                        tac.add_function_param_align(funcname)
                     args.reverse()
                     argtype.reverse()
                     for i in range(len(args)):
-                        tac.push_param(args[i], get_TypeSize(argtype[i]))
+                        tac.push_param(args[i], argtype[i])
+                else:
+                    invsize = 16
+                    tac.add_function_param_align(funcname)
                 tac.push_param(out)
-                tac.add_call(f"{classname}_{classname}", "__")
+                tac.add_call(funcname, "__")
             except Exception as e:
                 pass
             tac.add_epilouge()
@@ -1222,9 +1237,6 @@ def generate_tac(tree, begin="", end=""):
             if len(tree) == 5:
                 funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(
-                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
-                )
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 if funcname == "System.out.println" or funcname == "System.out.print":
                     args = get_Argument_list2(tree[3])
@@ -1280,29 +1292,6 @@ def generate_tac(tree, begin="", end=""):
                     pass
                 tac.add_epilouge()
                 return out
-            if len(tree) == 7:
-                funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
-                funcname += "." + get_Name(tree[3])
-                out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
-                symbol_table.add_symbol(
-                    VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, [])
-                )
-                symbol_table.get_method_else_class_symbol_table().size += 8
-                args = get_Argument_list(tree[5])
-                sym = symbol_table.get_symbol(get_Name(tree[1]))
-                try:
-                    argtype = sym.params
-                    if args is not None:
-                        args.reverse()
-                        argtype.reverse()
-                        for i in range(len(args)):
-                            tac.push_param(args[i], get_TypeSize(argtype[i]))
-                    tac.push_param(symbol_table.get_symbol_name("this"))
-                    tac.add_call(funcname, out, (len(args) + 2) * 8)
-                except Exception as e:
-                    # print(e)
-                    pass
-                return out
         case "ArrayCreationExpression":
             x = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
             symbol_table.add_symbol(
@@ -1332,12 +1321,27 @@ def generate_tac(tree, begin="", end=""):
                 if "." in gname:
                     base, comp = gname.split(".")
                     sym = symbol_table.get_symbol(base)
-                    offset = sym.offset
+                    baseoffset = sym.offset
                     stype = sym.data_type
                     symtable = symbol_table.root.get_symbol(stype)
-                    offset += symtable.symbol_table.symbols[comp].offset
-                    left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"({offset})"
-                    return left
+                    offset = symtable.symbol_table.symbols[comp].offset
+                    left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"#{baseoffset}"
+
+                    offsettemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                    symbol_table.get_method_else_class_symbol_table().size += 8
+
+                    addrtemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                    symbol_table.get_method_else_class_symbol_table().size += 8
+
+                    tac.add3("=", offset, offsettemp)
+                    tac.add("+", left, offsettemp, addrtemp)
+
+                    outtemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                    symbol_table.get_method_else_class_symbol_table().size += 8
+
+                    tac.deref(addrtemp, outtemp)
+
+                    return outtemp
                 return symbol_table.get_symbol_name(gname)
             except:
                 return

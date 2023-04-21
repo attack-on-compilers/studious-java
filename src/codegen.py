@@ -420,7 +420,8 @@ class GAS:
                 instructions.append(f"  pushq {parse_tac_arg(t[1])}")
             if t[0] == "ProcCall":
                 instructions.append(f"  call {t[1]}")
-                instructions.append(f"  movq %rax, {parse_tac_arg(t[2])}")
+                if(t[2] != "__"):
+                    instructions.append(f"  movq %rax, {parse_tac_arg(t[2])}")
             if t[0] == "addrsp":
                 instructions.append(f"  addq ${t[1]}, %rsp")
             if t[0] == "PrintNewline":
