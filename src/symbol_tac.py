@@ -207,8 +207,8 @@ def traverse_tree(tree):
             constructorSignature += ")"
             symbol_table.enter_scope(constructorName)
             offset = offset + [-16]
-            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, -8, [], 0, []))
-            offset[-1] = offset[-1] + 8
+            symbol_table.add_symbol(VariableSymbol("this", symbol_table.current.parent.name[:-13], 8, -16, [], 0, []))
+            offset[-1] = offset[-1] - 8
             for i in constructorParams:
                 fieldModifiers = []
                 fieldType = i[0]
@@ -602,6 +602,9 @@ def post_type_check(expression):
 def method_check(expression):
     if len(expression) == 5:
         methodInvocationName = get_Name(expression[1])
+
+        if "." in methodInvocationName:
+            return
 
         if (
             methodInvocationName == "System.out.println"
@@ -1155,6 +1158,8 @@ def generate_tac(tree, begin="", end=""):
         case "PrimaryNoNewArray":
             if len(tree) == 4:
                 return generate_tac(tree[2])
+            if type(tree[1]) == str:
+                return symbol_table.get_symbol_name("this")
             return generate_tac(tree[1])
         case "Literal":
             return tree[1]
@@ -1183,16 +1188,29 @@ def generate_tac(tree, begin="", end=""):
                     invsize = 16
                     tac.add_function_param_align(funcname)
                 tac.push_param(out)
-                tac.add_call(funcname, "__")
+                tac.add_call(funcname, "__", invsize)
             except Exception as e:
                 pass
             tac.add_epilouge()
             return out
         case "FieldAccess":
             try:
-                sym = symbol_table.get_symbol(get_Name(tree[1][1]))
-                var += "." + tree[3]
-                return var
+                base = generate_tac(tree[1])
+                sym = symbol_table.get_symbol("this")
+                classtype = sym.data_type
+                symtab = symbol_table.root.get_symbol(classtype).symbol_table
+                sym = symtab.get_symbol(tree[3])
+                offset = sym.offset
+                addrtemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.get_method_else_class_symbol_table().size += 8
+                tac.add("+", base, offset, addrtemp)
+
+                out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.get_method_else_class_symbol_table().size += 8
+
+                tac.deref(addrtemp, out)
+
+                return out
             except Exception as e:
                 pass
         case "ArrayAccess":

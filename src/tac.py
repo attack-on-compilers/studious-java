@@ -17,6 +17,8 @@ class TAC:
 
     def add3(self, op, arg1, result):
         self.table.append([op, arg1, result])
+        # if op == "=" and arg1 == None:
+            # raise Exception("Error: arg1 is None")
 
     def add_call(self, func, result, size=None):
         self.table.append(["ProcCall", func, result])
