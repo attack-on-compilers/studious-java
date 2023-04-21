@@ -27,8 +27,8 @@ class GoGo {
 
     public void foo(int a, int b)
        {
-        int p = this.a;
-            System.out.println("Hello" +a);
+        int p = this.a + a + b;
+            System.out.println("Hello" +p);
         int x = b;
 
         int arr[] = new int[5];

@@ -1253,7 +1253,20 @@ def generate_tac(tree, begin="", end=""):
             return z
         case "MethodInvocation":
             if len(tree) == 5:
-                funcname = symbol_table.get_symbol_name(get_Name(tree[1]))
+                thisused = True
+                thisaddr = ""
+                nameee = get_Name(tree[1])
+                if "." in nameee and "print" not in nameee:
+                    thisused = False
+                    thisaddr = symbol_table.get_symbol_name(nameee.split(".")[0])
+
+                    thisym = symbol_table.get_symbol(nameee.split(".")[0])
+                    classtype=thisym.data_type
+                    symtab = symbol_table.root.get_symbol(classtype).symbol_table
+                    funcname = symtab.get_symbol(nameee.split(".")[1]).name
+                    funcname = classtype + "_" + funcname
+                else:
+                    funcname = symbol_table.get_symbol_name(nameee)
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 if funcname == "System.out.println" or funcname == "System.out.print":
@@ -1286,10 +1299,10 @@ def generate_tac(tree, begin="", end=""):
                     tac.add3("fclose", symbol_table.get_symbol_name(args[0]), out)
                     return out
                 args = get_Argument_list(tree[3])
-                sym = symbol_table.get_symbol(get_Name(tree[1]))
+                # sym = symbol_table.get_symbol(get_Name(tree[1]))
                 tac.add_epilouge()
                 try:
-                    argtype = sym.params
+                    # argtype = sym.params
                     invsize = 0
                     if args is not None:
                         invsize = (len(args) + 1) * 8
@@ -1297,13 +1310,16 @@ def generate_tac(tree, begin="", end=""):
                             invsize += 8
                             tac.add_function_param_align(funcname)
                         args.reverse()
-                        argtype.reverse()
+                        # argtype.reverse()
                         for i in range(len(args)):
-                            tac.push_param(args[i], get_TypeSize(argtype[i]))
+                            tac.push_param(args[i], 8)
                     else:
                         invsize = 16
                         tac.add_function_param_align(funcname)
-                    tac.push_param(symbol_table.get_symbol_name("this"))
+                    if thisused:
+                        tac.push_param(symbol_table.get_symbol_name("this"))
+                    else:
+                        tac.push_param(thisaddr)
                     tac.add_call(funcname, out, invsize)
                 except Exception as e:
                     # print("#"*10,e)
