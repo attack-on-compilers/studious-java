@@ -18,8 +18,8 @@ dev-g: dev
 	xdg-open src/javao.svg
 
 graph:
-	dot -Tsvg src/javao.dot -o src/javao.svg
-	xdg-open src/javao.svg
+	dot -Tsvg src/javao.dot -o src/javao.ps
+	xdg-open src/javao.ps
 
 vgraph:
 	xdg-open src/ast.ps
