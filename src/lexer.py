@@ -254,6 +254,10 @@ def t_NULL_LITERAL(t):
 
 def t_BOOLEAN_LITERAL(t):
     r"(true|false)"
+    if t.value == "true":
+        t.value = "1"
+    else:
+        t.value = "0"
     return t
 
 

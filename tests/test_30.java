@@ -1,9 +1,9 @@
+// Test 30: Arithmetic, Increment/Decrement, Bitwise, Assignment Operators
 public class test_30 {
-    int x;
-    public void main(String args[])
+    public static void main(String args[])
     {
         // Arithmetic Operators
-        x=45;
+        int x=45;
         System.out.println("x = "+x);
         int a=7;
         int b=a+7;

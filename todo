@@ -1,2 +1,4 @@
 SYMBOL TABLE CSV is not generated
-
+! does not work
+can make booleans work
+add testcases for short, byte, int and long

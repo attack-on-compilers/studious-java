@@ -954,10 +954,12 @@ def generate_tac(tree, begin="", end=""):
                 left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"#{baseoffset}"
 
                 offsettemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.add_symbol(VariableSymbol(offsettemp, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
                 symbol_table.get_method_else_class_symbol_table().size += 8
     
                 tac.add3("=", offset, offsettemp)
                 addrtemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.add_symbol(VariableSymbol(addrtemp, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
                 symbol_table.get_method_else_class_symbol_table().size += 8
 
                 tac.add("+", left, offsettemp, addrtemp)
@@ -1165,6 +1167,7 @@ def generate_tac(tree, begin="", end=""):
             return tree[1]
         case "ClassInstanceCreationExpression":
             out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+            symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
             symbol_table.get_method_else_class_symbol_table().size += 8
             args = get_Argument_list(tree[4])
             classname = get_Name(tree[2])
@@ -1202,10 +1205,12 @@ def generate_tac(tree, begin="", end=""):
                 sym = symtab.get_symbol(tree[3])
                 offset = sym.offset
                 addrtemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.add_symbol(VariableSymbol(addrtemp, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 tac.add("+", base, offset, addrtemp)
 
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
                 symbol_table.get_method_else_class_symbol_table().size += 8
 
                 tac.deref(addrtemp, out)
@@ -1268,6 +1273,7 @@ def generate_tac(tree, begin="", end=""):
                 else:
                     funcname = symbol_table.get_symbol_name(nameee)
                 out = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                symbol_table.add_symbol(VariableSymbol(out, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
                 symbol_table.get_method_else_class_symbol_table().size += 8
                 if funcname == "System.out.println" or funcname == "System.out.print":
                     args = get_Argument_list2(tree[3])
@@ -1362,15 +1368,18 @@ def generate_tac(tree, begin="", end=""):
                     left = symbol_table.get_symbol_name(get_Name(tree[1])).split(".")[0] + f"#{baseoffset}"
 
                     offsettemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                    symbol_table.add_symbol(VariableSymbol(offsettemp, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
                     symbol_table.get_method_else_class_symbol_table().size += 8
 
                     addrtemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                    symbol_table.add_symbol(VariableSymbol(addrtemp, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
                     symbol_table.get_method_else_class_symbol_table().size += 8
 
                     tac.add3("=", offset, offsettemp)
                     tac.add("+", left, offsettemp, addrtemp)
 
                     outtemp = tac.new_temp() + "#" + str(symbol_table.get_method_else_class_symbol_table().size)
+                    symbol_table.add_symbol(VariableSymbol(outtemp, "long", 8, symbol_table.get_method_else_class_symbol_table().size, [], 0, []))
                     symbol_table.get_method_else_class_symbol_table().size += 8
 
                     tac.deref(addrtemp, outtemp)

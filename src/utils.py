@@ -471,6 +471,7 @@ def unop_type_check(operator, left_or_right, expression):
                 raise Exception("Unary operator ~ incompatible with type {}".format(left_or_right))
 
         case "!":
+            return
             if left_or_right == "boolean":
                 pass
             else:
